@@ -25,6 +25,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AddoTheme"
+        android:usesCleartextTraffic="true"
         android:preserveLegacyExternalStorage="true"
         tools:replace="android:theme">
 

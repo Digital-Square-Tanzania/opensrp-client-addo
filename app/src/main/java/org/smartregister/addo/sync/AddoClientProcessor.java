@@ -1,9 +1,12 @@
 package org.smartregister.addo.sync;
 
+import static org.smartregister.addo.util.Constants.EventType;
+
 import android.content.ContentValues;
 import android.content.Context;
 
 import org.apache.commons.lang3.StringUtils;
+import org.smartregister.addo.dao.EventDao;
 import org.smartregister.chw.anc.util.DBConstants;
 import org.smartregister.chw.anc.util.NCUtils;
 import org.smartregister.addo.application.AddoApplication;
@@ -103,6 +106,19 @@ public class AddoClientProcessor extends ClientProcessorForJava {
 
     protected void processEvents(ClientClassification clientClassification, Table vaccineTable, Table serviceTable, EventClient eventClient, Event event, String eventType) throws Exception {
         switch (eventType) {
+            case EventType.KVP_PREP_FOLLOWUP_VISIT:
+            case EventType.AGYW_BIO_MEDICAL_SERVICES:
+            case EventType.AGYW_BEHAVIORAL_SERVICES:
+            case EventType.AGYW_STRUCTURAL_SERVICES:
+            case EventType.CBHS_CLOSE_VISITS:
+            case EventType.CBHS_FOLLOWUP:
+            case EventType.UPDATE_CBHS_REGISTRATION:
+            case EventType.MOTHER_CHAMPION_SBCC_SESSIONS:
+            case EventType.MOTHER_CHAMPION_FOLLOWUP:
+                // List of events that are not used by the ADDO app that can be deleted
+                // This list should be updated over time to improve app performance
+                deleteUnusedEvents(event);
+                break;
             case VaccineIntentService.EVENT_TYPE:
             case RecurringIntentService.EVENT_TYPE:
                 if (serviceTable == null) {
@@ -526,6 +542,21 @@ public class AddoClientProcessor extends ClientProcessorForJava {
 
             // Utils.context().commonrepository(CoreConstants.TABLE_NAME.CHILD).populateSearchValues(baseEntityId, DBConstants.KEY.DATE_REMOVED, new SimpleDateFormat("yyyy-MM-dd").format(eventDate), null);
 
+        }
+    }
+
+
+    /**
+     * Deletes the unused events from the database.
+     * This method deletes an event from the database based on its event ID, if the event is deemed unused.
+     * Unused events are those events that are not required by the ADDO app and can be safely deleted.
+     *
+     * @param event The event to be deleted. Must not be null.
+     *              The event object should contain the event ID to identify the event to be deleted.
+     */
+    private void deleteUnusedEvents(Event event) {
+        if (event != null && event.getEventId() != null) {
+            EventDao.deleteEventByEventId(event.getEventId());
         }
     }
 }

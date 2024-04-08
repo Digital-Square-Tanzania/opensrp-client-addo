@@ -106,6 +106,15 @@ public class AddoClientProcessor extends ClientProcessorForJava {
 
     protected void processEvents(ClientClassification clientClassification, Table vaccineTable, Table serviceTable, EventClient eventClient, Event event, String eventType) throws Exception {
         switch (eventType) {
+            case EventType.KVP_PrEP_REGISTRATION:
+            case EventType.PrEP_FOLLOWUP_VISIT:
+            case EventType.KVP_REGISTRATION:
+            case EventType.PrEP_REGISTRATION:
+            case EventType.KVP_BIO_MEDICAL_SERVICE_VISIT:
+            case EventType.KVP_BEHAVIORAL_SERVICE_VISIT:
+            case EventType.KVP_STRUCTURAL_SERVICE_VISIT:
+            case EventType.KVP_OTHER_SERVICE_VISIT:
+            case EventType.PrEP_CLIENT_NOT_ELIGIBLE:
             case EventType.KVP_PREP_FOLLOWUP_VISIT:
             case EventType.AGYW_BIO_MEDICAL_SERVICES:
             case EventType.AGYW_BEHAVIORAL_SERVICES:
@@ -548,15 +557,15 @@ public class AddoClientProcessor extends ClientProcessorForJava {
 
     /**
      * Deletes the unused events from the database.
-     * This method deletes an event from the database based on its event ID, if the event is deemed unused.
+     * This method deletes an event from the database based on its event Type, if the event is deemed unused.
      * Unused events are those events that are not required by the ADDO app and can be safely deleted.
      *
      * @param event The event to be deleted. Must not be null.
      *              The event object should contain the event ID to identify the event to be deleted.
      */
     private void deleteUnusedEvents(Event event) {
-        if (event != null && event.getEventId() != null) {
-            EventDao.deleteEventByEventId(event.getEventId());
+        if (event != null && event.getEventType() != null) {
+            EventDao.deleteEventByEventType(event.getEventType());
         }
     }
 }

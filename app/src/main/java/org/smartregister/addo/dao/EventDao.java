@@ -61,14 +61,14 @@ public class EventDao extends AbstractDao {
     }
 
     /**
-     * Deletes an event from the database by its event ID.
+     * Deletes an event from the database by its event Type.
      * This method deletes the event with the specified event ID from the event table in the database.
      *
-     * @param eventId The ID of the event to be deleted. Must not be null.
-     *                The event with the specified ID will be removed from the database.
+     * @param eventType The event type to be deleted. Must not be null.
+     *                The event with the specified Type will be removed from the database.
      */
-    public static void deleteEventByEventId(String eventId) {
-        String sql2 = "delete from event where eventId = '" + eventId + "'";
+    public static void deleteEventByEventType(String eventType) {
+        String sql2 = "delete from event where eventType = '" + eventType + "'";
         updateDB(sql2);
     }
 }

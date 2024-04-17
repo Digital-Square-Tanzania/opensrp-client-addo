@@ -400,7 +400,7 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
     public int getReferralCount() {
         Cursor c = null;
         try {
-            String query = "select count(*) from task where status = 'READY' AND priority = 2";
+            String query = "select count(*) from task where status = 'READY' AND priority = 3";
 
             c = AddoApplication.getInstance().getRepository().getReadableDatabase().query(query);
 

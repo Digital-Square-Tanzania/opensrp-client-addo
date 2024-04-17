@@ -32,7 +32,7 @@ public class AddoTaskServiceHelper extends TaskServiceHelper {
     @Override
     protected Set<String> getPlanDefinitionIds() {
         Set<String> res = new HashSet<>();
-        res.add("5270285b-5a3b-4647-b772-c0b3c52e2b71");
+        res.add("6270285b-5a3b-4647-b772-c0b3c52e2b72");
         return res;
     }
 }

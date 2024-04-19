@@ -57,6 +57,7 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
     private String familyHead;
     private String primaryCaregiver;
     private String familyName;
+    private String villageSelected;
 
     @Override
     protected void onCreation() {
@@ -85,6 +86,7 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
         familyHead = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_HEAD);
         primaryCaregiver = getIntent().getStringExtra(Constants.INTENT_KEY.PRIMARY_CAREGIVER);
         familyName = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_NAME);
+        villageSelected = getIntent().getStringExtra(org.smartregister.addo.util.Constants.INTENT_KEY.VILLAGE_SELECTED);
         presenter = new FamilyProfilePresenter(this, new FamilyProfileModel(familyName), familyBaseEntityId, familyHead, primaryCaregiver, familyName);
     }
 

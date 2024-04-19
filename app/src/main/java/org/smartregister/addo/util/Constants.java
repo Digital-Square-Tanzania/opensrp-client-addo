@@ -351,6 +351,7 @@ public class Constants {
         public static final String VILLAGE_TOWN = "village_town";
         public static final String FAMILY_NAME = "family_name";
         public static final String GO_TO_DUE_PAGE = "go_to_due_page";
+        public static final String VILLAGE_SELECTED = "village_selected";
     }
 
     public static class ProfileActivityResults {

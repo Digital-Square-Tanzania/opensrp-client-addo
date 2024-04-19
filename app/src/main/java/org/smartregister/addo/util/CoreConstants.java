@@ -14,7 +14,7 @@ import static org.smartregister.addo.util.CoreJsonFormUtils.ENCOUNTER_TYPE;
 public class CoreConstants {
 
     public static final String ENTITY_ID = "entity_id";
-    public static final String REFERRAL_PLAN_ID = "5270285b-5a3b-4647-b772-c0b3c52e2b71";
+    public static final String REFERRAL_PLAN_ID = "6270285b-5a3b-4647-b772-c0b3c52e2b72";
     public static String EC_CLIENT_FIELDS = "ec_client_fields.json";
     public static String IGNORE = "ignore";
 
@@ -639,6 +639,7 @@ public class CoreConstants {
         public static final String GESTATION_AGE = "gestation_age";
         public static final String IS_PROBLEM = "is_problem";
         public static final String REFERRAL_CODE = "Referral";
+        public static final String LINKAGE_CODE = "Linkage";
 
 
         public static class FAMILY_MEMBER {

@@ -13,9 +13,12 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.smartregister.addo.R;
+import org.smartregister.addo.util.CoreConstants;
+import org.smartregister.addo.util.ReferralUtils;
 import org.smartregister.chw.referral.util.DBConstants;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.cursoradapter.RecyclerViewProvider;
+import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.util.Utils;
 import org.smartregister.view.contract.SmartRegisterClient;
 import org.smartregister.view.contract.SmartRegisterClients;
@@ -43,14 +46,16 @@ public class AddoVillageClientsProvider implements RecyclerViewProvider<AddoVill
     private final View.OnClickListener paginationClickListener;
     private final Context context;
     private final Set<org.smartregister.configurableviews.model.View> visibleColumns;
+    private final String villageSelected;
 
     public AddoVillageClientsProvider(Context context, View.OnClickListener paginationClickListener, View.OnClickListener onClickListener,
-                                      Set<org.smartregister.configurableviews.model.View> visibleColumns) {
+                                      Set<org.smartregister.configurableviews.model.View> visibleColumns, String villageSelected) {
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.onClickListener = onClickListener;
         this.paginationClickListener = paginationClickListener;
         this.context = context;
         this.visibleColumns = visibleColumns;
+        this.villageSelected = villageSelected;
     }
 
     @Override
@@ -71,6 +76,7 @@ public class AddoVillageClientsProvider implements RecyclerViewProvider<AddoVill
             viewHolder.patientName.setText(patientName);
 
             setAddressAndGender(pc, viewHolder);
+            setHasRefarral(pc, viewHolder);
 
             // add patient listener
             viewHolder.patientColumn.setOnClickListener(onClickListener);
@@ -93,6 +99,15 @@ public class AddoVillageClientsProvider implements RecyclerViewProvider<AddoVill
             gender = context.getString(R.string.female);
         }
         fillValue(viewHolder.textViewAddressAndGender, gender);
+    }
+
+    public void setHasRefarral(CommonPersonObjectClient pc, RegisterViewHolder viewHolder){
+        if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID, LocationHelper.getInstance().getOpenMrsLocationId(villageSelected), pc.entityId(), CoreConstants.JsonAssets.LINKAGE_CODE)){
+            viewHolder.textViewHasReferral.setTextColor(context.getResources().getColor(R.color.alert_urgent_red));
+            viewHolder.textViewHasReferral.setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.textViewHasReferral.setVisibility(View.GONE);
+        }
     }
 
     protected static void fillValue(TextView v, String value) {

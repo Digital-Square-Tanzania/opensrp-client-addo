@@ -316,6 +316,46 @@ public class Constants {
         public static final String ANC_HOME_VISIT = "ANC Home Visit";
         public static final String UPDATE_ANC_REGISTRATION = "Update ANC Registration";
         public static final String PREGNANCY_OUTCOME = "Pregnancy Outcome";
+
+        public static final String ANC_FIRST_FACILITY_VISIT = "ANC First Facility Visit";
+
+        public static final String ANC_RECURRING_FACILITY_VISIT = "ANC Recurring Facility Visit";
+
+        public static final String MOTHER_CHAMPION_FOLLOWUP = "Mother Champion Followup";
+
+        public static final String MOTHER_CHAMPION_SBCC_SESSIONS = "Mother Champion SBCC Sessions";
+
+        public static final String CBHS_FOLLOWUP = "CBHS Followup";
+
+        public static final String CBHS_CLOSE_VISITS = "CBHS Close Visits";
+
+        public static final String UPDATE_CBHS_REGISTRATION = "Update CBHS Registration";
+
+        public static final String AGYW_STRUCTURAL_SERVICES = "AGYW Structural Services";
+
+        public static final String AGYW_BEHAVIORAL_SERVICES = "AGYW Behavioral Services";
+
+        public static final String AGYW_BIO_MEDICAL_SERVICES = "AGYW Bio Medical Services";
+
+        public static final String KVP_PREP_FOLLOWUP_VISIT = "Kvp PrEP Follow-up Visit";
+
+        public static final String KVP_PrEP_REGISTRATION = "KVP PrEP Registration";
+
+        public static final String PrEP_FOLLOWUP_VISIT = "PrEP Follow-up Visit";
+
+        public static final String KVP_REGISTRATION = "KVP Registration";
+
+        public static final String PrEP_REGISTRATION = "PrEP Registration";
+
+        public static final String KVP_BIO_MEDICAL_SERVICE_VISIT = "KVP Bio Medical Service Visit";
+
+        public static final String KVP_BEHAVIORAL_SERVICE_VISIT = "KVP Behavioral Service Visit";
+
+        public static final  String KVP_STRUCTURAL_SERVICE_VISIT = "KVP Structural Service Visit";
+
+        public static final String KVP_OTHER_SERVICE_VISIT = "KVP Other Service Visit";
+
+        public static final String PrEP_CLIENT_NOT_ELIGIBLE = "PrEP Client Not Eligible";
     }
 
     public static class RELATIONSHIP {

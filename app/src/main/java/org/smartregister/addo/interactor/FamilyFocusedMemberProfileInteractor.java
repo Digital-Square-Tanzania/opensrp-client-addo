@@ -48,13 +48,16 @@ public class FamilyFocusedMemberProfileInteractor implements FamilyFocusedMember
     private String relationalId;
     private FormUtils formUtils;
 
+    private String village;
+
     @VisibleForTesting
     FamilyFocusedMemberProfileInteractor(AppExecutors appExecutors) {
         this.appExecutors = appExecutors;
     }
 
-    public FamilyFocusedMemberProfileInteractor() {
+    public FamilyFocusedMemberProfileInteractor(String village) {
         this(new AppExecutors());
+        this.village = village;
     }
 
 
@@ -137,7 +140,7 @@ public class FamilyFocusedMemberProfileInteractor implements FamilyFocusedMember
         if (baseEvent != null) {
             baseEvent.setFormSubmissionId(JsonFormUtils.generateRandomUUIDString());
             JsonFormUtils.tagEvent(allSharedPreferences, baseEvent);
-            baseEvent.setLocationId(getClientLocationId(relationalId));
+            baseEvent.setLocationId(getClientLocationId(village));
 
             String visitID = (editMode) ?
                     visitRepository().getLatestVisit(memberID, getEncounterType(memberID)).getVisitId() :
@@ -218,15 +221,8 @@ public class FamilyFocusedMemberProfileInteractor implements FamilyFocusedMember
         }
     }
 
-    private String getClientLocationId(String baseEntityId) {
-        final CommonPersonObject familyObject = getCommonRepository(Utils.metadata().familyRegister.tableName).findByBaseEntityId(baseEntityId);
-        final CommonPersonObjectClient pClient = new CommonPersonObjectClient(familyObject.getCaseId(),
-                familyObject.getDetails(), "");
-        pClient.setColumnmaps(familyObject.getColumnmaps());
-
-        String villageTown = Utils.getValue(pClient.getColumnmaps(), DBConstants.KEY.VILLAGE_TOWN, false);
-
-        return LocationHelper.getInstance().getOpenMrsLocationId(villageTown);
+    private String getClientLocationId(String village) {
+        return LocationHelper.getInstance().getOpenMrsLocationId(village);
     }
 
     @Override

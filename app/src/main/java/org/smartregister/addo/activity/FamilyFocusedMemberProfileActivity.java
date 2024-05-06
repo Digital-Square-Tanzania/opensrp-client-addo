@@ -168,7 +168,8 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         baseEntityId = getIntent().getStringExtra(Constants.INTENT_KEY.BASE_ENTITY_ID);
         familyHead = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_HEAD);
         primaryCaregiver = getIntent().getStringExtra(Constants.INTENT_KEY.PRIMARY_CAREGIVER);
-        villageTown = getIntent().getStringExtra(Constants.INTENT_KEY.VILLAGE_TOWN);
+        // Use the village selected by addo which would be the village as defined in the hierarchy
+        villageTown = getIntent().getStringExtra(org.smartregister.addo.util.Constants.INTENT_KEY.VILLAGE_SELECTED);
         familyName = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_NAME);
         PhoneNumber = commonPersonObject.getColumnmaps().get(org.smartregister.addo.util.Constants.JsonAssets.FAMILY_MEMBER.PHONE_NUMBER);
         memberObject = new MemberObject(commonPersonObject);
@@ -405,8 +406,8 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                 String jsonString = data.getStringExtra(Constants.JSON_FORM_EXTRA.JSON);
                 JSONObject form = new JSONObject(jsonString);
 
-                // complete any referrals
-                FamilyDao.completeTasksForEntity(baseEntityId);
+                // complete any linkage first
+                ReferralUtils.closeLinkageAndOpenFollowUp(baseEntityId, form.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE), jsonString, villageTown);
 
                 // Check if it is ANC, PNC or Child Danger sing screening and handle medication based on the screening results
                 String encounterType = form.optString(JsonFormUtils.ENCOUNTER_TYPE);

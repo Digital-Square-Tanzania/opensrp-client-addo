@@ -37,7 +37,7 @@ public class FamilyFocusedMemberProfileActivityPresenter implements FamilyFocuse
         this.familyName = familyName;
         this.primaryCaregiver = primaryCaregiver;
         this.villageTown = villageTown;
-        this.interactor = new FamilyFocusedMemberProfileInteractor();
+        this.interactor = new FamilyFocusedMemberProfileInteractor(villageTown);
 
     }
 

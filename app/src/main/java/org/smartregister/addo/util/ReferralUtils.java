@@ -1,13 +1,5 @@
 package org.smartregister.addo.util;
 
-import static org.smartregister.AllConstants.SYNC_STATUS;
-import static org.smartregister.addo.util.CoreConstants.BUSINESS_STATUS.LINKED;
-import static org.smartregister.addo.util.CoreConstants.DB_CONSTANTS.BUSINESS_STATUS;
-import static org.smartregister.addo.util.CoreConstants.DB_CONSTANTS.FOR;
-import static org.smartregister.addo.util.CoreConstants.DB_CONSTANTS.STATUS;
-
-import android.content.ContentValues;
-
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.utils.FormUtils;
 
@@ -23,10 +15,11 @@ import org.smartregister.domain.Task;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
-import org.smartregister.util.DateUtil;
+import org.smartregister.repository.TaskRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import timber.log.Timber;
@@ -148,24 +141,43 @@ public class ReferralUtils {
 
         if (StringUtils.isBlank(baseEntityId))
             return;
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(STATUS, Task.TaskStatus.COMPLETED.name());
-        contentValues.put(SYNC_STATUS, BaseRepository.TYPE_Unsynced);
-        contentValues.put("last_modified", DateUtil.getMillis(new DateTime()));
 
-        int linkageClosed = AddoApplication.getInstance().getRepository()
-                .getWritableDatabase().update("task", contentValues,
-                String.format("%s = ? AND %s =? AND %s =?", FOR, STATUS, BUSINESS_STATUS),
-                        new String[]{baseEntityId, Task.TaskStatus.READY.name(), LINKED});
+        List<String> updatedTaskIds = updateLinkageTasksFor(baseEntityId);
 
         // If there is a task updated for this entity id then open a followup task
-        if (linkageClosed > 0) {
-            createFollowUpTask(baseEntityId, focus, jsonString, villageTown);
+        if (!updatedTaskIds.isEmpty()) {
+            for (String updatedTaskId : updatedTaskIds) {
+                createFollowUpTask(baseEntityId, focus, jsonString, villageTown, updatedTaskId);
+            }
         }
 
     }
 
-    private static void createFollowUpTask(String baseEntityId, String focus, String jsonString, String villageTown) {
+    private static List<String> updateLinkageTasksFor(String baseEntityId) {
+
+        TaskRepository taskRepository = AddoApplication.getInstance().getTaskRepository();
+        Set<Task> tasks = taskRepository.getTasksByEntityAndCode(
+                CoreConstants.ADDO_LINKAGE_PLAN_ID,
+                Utils.getAddoLocationId(),
+                baseEntityId,
+                CoreConstants.JsonAssets.LINKAGE_CODE);
+
+        List<String> updatedTaskIds = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getStatus() == Task.TaskStatus.READY) {
+                task.setStatus(Task.TaskStatus.COMPLETED);
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                task.setLastModified(new DateTime());
+                taskRepository.addOrUpdate(task);
+                updatedTaskIds.add(task.getIdentifier());
+            }
+
+        }
+
+        return updatedTaskIds;
+    }
+
+    private static void createFollowUpTask(String baseEntityId, String focus, String jsonString, String villageTown, String updatedTaskId) {
 
         Task task = new Task();
         task.setIdentifier(UUID.randomUUID().toString());
@@ -191,6 +203,7 @@ public class ReferralUtils {
         task.setSyncStatus(BaseRepository.TYPE_Created);
         task.setRequester(allSharedPreferences.getANMPreferredName(allSharedPreferences.fetchRegisteredANM()));
         task.setLocation(locationHelper.getOpenMrsLocationId(villageTown));
+        task.setReasonReference(updatedTaskId);
         AddoApplication.getInstance().getTaskRepository().addOrUpdate(task);
     }
 

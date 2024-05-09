@@ -645,6 +645,32 @@
         "spacer_height": "20dp"
       },
       {
+        "key": "hf_facilities",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "hf_facilities",
+        "type": "check_box",
+        "label": "{{step2_minor_illnesses_label}}",
+        "text_color": "#000000",
+        "exclusive": [
+          "chk_none"
+        ],
+        "options": [
+          {
+            "key": "dccfe326-ebdc-4302-b381-4167cb00453d",
+            "text": "DUTUMI - Kibaha DC",
+            "value": false,
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "dccfe326-ebdc-4302-b381-4167cb00453d"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "{{step2_minor_illness_err}}"
+        }
+      },
+      {
         "key": "save",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",

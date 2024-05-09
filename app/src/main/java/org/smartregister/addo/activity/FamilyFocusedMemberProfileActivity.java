@@ -363,7 +363,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         form.setHideSaveLabel(true);
         form.setWizard(true);
 
-        List<JSONObject> facilitiesdde= org.smartregister.addo.util.Utils.getWardFacilities();
+        List<JSONObject> facilities= org.smartregister.addo.util.Utils.getWardFacilities();
 
         Intent intent = new Intent(this, ReferralWizardFormActivity.class);
         intent.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonForm.toString());

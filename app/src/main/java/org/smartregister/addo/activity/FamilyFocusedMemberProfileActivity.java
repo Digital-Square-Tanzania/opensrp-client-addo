@@ -51,6 +51,7 @@ import org.smartregister.view.activity.BaseProfileActivity;
 import org.smartregister.view.customcontrols.CustomFontTextView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -361,6 +362,8 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         form.setSaveLabel("FINISH");
         form.setHideSaveLabel(true);
         form.setWizard(true);
+
+        List<JSONObject> facilitiesdde= org.smartregister.addo.util.Utils.getWardFacilities();
 
         Intent intent = new Intent(this, ReferralWizardFormActivity.class);
         intent.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonForm.toString());

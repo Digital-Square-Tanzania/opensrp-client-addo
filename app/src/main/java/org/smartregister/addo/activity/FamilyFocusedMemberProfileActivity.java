@@ -51,6 +51,7 @@ import org.smartregister.view.activity.BaseProfileActivity;
 import org.smartregister.view.customcontrols.CustomFontTextView;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -363,7 +364,34 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         form.setHideSaveLabel(true);
         form.setWizard(true);
 
-        List<JSONObject> facilities= org.smartregister.addo.util.Utils.getWardFacilities();
+        try {
+            JSONArray fields = JsonFormUtils.fields(jsonForm);
+            JSONObject hf_facilities = JsonFormUtils.getFieldJSONObject(fields, "hf_facilities");
+            JSONArray facilityArrayOption = hf_facilities.getJSONArray("options");
+            JSONArray facilityArrayOptionExclusive = hf_facilities.getJSONArray("exclusive");
+
+            List<JSONObject> facilities= org.smartregister.addo.util.Utils.getWardFacilities();
+            assert facilities != null;
+            for (JSONObject facility : facilities) {
+                JSONObject node = facility.getJSONObject("node");
+                String locationId = node.getString("locationId");
+                String name = node.getString("name");
+
+                // Add the locationId for exclusive selection
+                facilityArrayOptionExclusive.put(locationId);
+
+                JSONObject newOption = new JSONObject();
+                newOption.put("key", locationId);
+                newOption.put("text", name);
+                newOption.put("value", false);
+                newOption.put("openmrs_entity", "concept");
+                newOption.put("openmrs_entity_id", name);
+
+                facilityArrayOption.put(newOption);
+            }
+        } catch (JSONException e) {
+            Timber.e(e);
+        }
 
         Intent intent = new Intent(this, ReferralWizardFormActivity.class);
         intent.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonForm.toString());

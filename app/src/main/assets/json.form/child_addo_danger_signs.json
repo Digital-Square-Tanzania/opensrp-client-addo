@@ -640,6 +640,35 @@
         }
       },
       {
+        "key": "spacer",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "spacer",
+        "type": "spacer"
+      },
+      {
+        "key": "hf_facilities",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "hf_facilities",
+        "type": "check_box",
+        "label": "{{step3_hf_facilities_label}}",
+        "text_color": "#000000",
+        "exclusive": [],
+        "options": [],
+        "v_required": {
+          "value": "true",
+          "err": "{{step3_hf_facilities_label_err}}"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "child_addo_danger_signs_relevance.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "save_n_refer",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",

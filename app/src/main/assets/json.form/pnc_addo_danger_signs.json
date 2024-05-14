@@ -505,6 +505,44 @@
         "spacer_height": "20dp"
       },
       {
+        "key": "hf_facilities",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "hf_facilities",
+        "type": "check_box",
+        "label": "{{step3_hf_facilities_label}}",
+        "text_color": "#000000",
+        "exclusive": [],
+        "options": [],
+        "v_required": {
+          "value": "true",
+          "err": "{{step3_hf_facilities_label_err}}"
+        },
+        "relevance": {
+          "step2:danger_signs_present_mama": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "chk_fever",
+                  "chk_bleeding_vaginally",
+                  "chk_server_headache",
+                  "chk_convulsions",
+                  "chk_difficulty_breathing",
+                  "chk_severe_leg_pain",
+                  "chk_unusual_behaviour",
+                  "chk_swelling_of_breast",
+                  "chk_severe_abdominal_pain",
+                  "chk_vaginal_discharge",
+                  "chk_blurred_vision",
+                  "chk_loss_conscioueness",
+                  "chk_urination"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
         "key": "save_n_refer",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",

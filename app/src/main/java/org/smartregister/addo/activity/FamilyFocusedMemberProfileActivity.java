@@ -385,7 +385,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                 newOption.put("text", name);
                 newOption.put("value", false);
                 newOption.put("openmrs_entity", "concept");
-                newOption.put("openmrs_entity_id", name);
+                newOption.put("openmrs_entity_id", locationId);
 
                 facilityArrayOption.put(newOption);
             }

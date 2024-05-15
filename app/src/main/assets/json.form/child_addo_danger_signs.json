@@ -669,6 +669,26 @@
         }
       },
       {
+        "key": "referral_appointment_date",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "referral_appointment_date",
+        "type": "date_picker",
+        "hint": "{{step3_referral_appointment_date_hint}}",
+        "min_date": "today",
+        "v_required": {
+          "value": "true",
+          "err": "{{step3_referral_appointment_date_hint_err}}"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "child_addo_danger_signs_relevance.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "save_n_refer",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",

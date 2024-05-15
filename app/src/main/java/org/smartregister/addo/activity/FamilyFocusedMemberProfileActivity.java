@@ -292,13 +292,13 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
 
             case R.id.tv_focused_client_screening:
                 if (isChildClient()) {
-                    startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getChildAddoDangerSigns()), getResources().getString(R.string.danger_sign_title_child));
+                    startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getChildAddoDangerSigns()), getResources().getString(R.string.danger_sign_title_child), true);
                 } else if (isAncClient()) {
-                    startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getAncAddoDangerSigns()), getResources().getString(R.string.danger_sign_title_anc));
+                    startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getAncAddoDangerSigns()), getResources().getString(R.string.danger_sign_title_anc), true);
                 } else if (isPncClient()) {
-                    startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getPncAddoDangerSigns()), getResources().getString(R.string.danger_sign_title_pnc));
+                    startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getPncAddoDangerSigns()), getResources().getString(R.string.danger_sign_title_pnc), true);
                 } else if (isAdolescentClient()) {
-                    startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getAdolescentAddoScreening()), getResources().getString(R.string.danger_signs_title_adolescent));
+                    startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getAdolescentAddoScreening()), getResources().getString(R.string.danger_signs_title_adolescent), true);
                 } else {
                     Toast.makeText(this, "You clicked a client that is not in the focused group screening", Toast.LENGTH_SHORT).show();
                 }
@@ -309,7 +309,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                 break;
 
             case R.id.tv_focused_client_dispense:
-                startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getAddoAttendPrescriptionsFromHf()), getString(R.string.attend_prescription_form_title));
+                startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getAddoAttendPrescriptionsFromHf()), getString(R.string.attend_prescription_form_title), false);
                 break;
 
             default:
@@ -354,7 +354,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         return AdolescentDao.isAdolescentMember(baseEntityId);
     }
 
-    public void startFormActivity(JSONObject jsonForm, String formTitle) {
+    public void startFormActivity(JSONObject jsonForm, String formTitle, boolean displayHF) {
         Form form = new Form();
         form.setName(formTitle);
         form.setActionBarBackground(R.color.family_actionbar);
@@ -364,7 +364,18 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         form.setHideSaveLabel(true);
         form.setWizard(true);
 
-        try {
+        if(displayHF) displayReferralFacilities(jsonForm);
+
+        Intent intent = new Intent(this, ReferralWizardFormActivity.class);
+        intent.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonForm.toString());
+        intent.putExtra(Constants.WizardFormActivity.EnableOnCloseDialog, false);
+        intent.putExtra(JsonFormConstants.JSON_FORM_KEY.FORM, form);
+        intent.putExtra(JsonFormConstants.PERFORM_FORM_TRANSLATION, true);
+        startActivityForResult(intent, org.smartregister.family.util.JsonFormUtils.REQUEST_CODE_GET_JSON);
+    }
+
+    public void displayReferralFacilities(JSONObject jsonForm){
+        try{
             JSONArray fields = JsonFormUtils.fields(jsonForm);
             JSONObject hf_facilities = JsonFormUtils.getFieldJSONObject(fields, "hf_facilities");
             JSONArray facilityArrayOption = hf_facilities.getJSONArray("options");
@@ -389,16 +400,9 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
 
                 facilityArrayOption.put(newOption);
             }
-        } catch (JSONException e) {
+        }catch (JSONException e){
             Timber.e(e);
         }
-
-        Intent intent = new Intent(this, ReferralWizardFormActivity.class);
-        intent.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonForm.toString());
-        intent.putExtra(Constants.WizardFormActivity.EnableOnCloseDialog, false);
-        intent.putExtra(JsonFormConstants.JSON_FORM_KEY.FORM, form);
-        intent.putExtra(JsonFormConstants.PERFORM_FORM_TRANSLATION, true);
-        startActivityForResult(intent, org.smartregister.family.util.JsonFormUtils.REQUEST_CODE_GET_JSON);
     }
 
     public void startFormActivityForSingleForms(JSONObject jsonForm, String formTitle) {
@@ -612,7 +616,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
             updateFormField(fields, "danger_signs_captured", dangerSigns);
             updateFormField(fields, "addo_medication_to_give", suggestedMeds);
             updateFormField(fields, "referral_status", referralStatus);
-            startFormActivity(form, getResources().getString(R.string.dispense_medication_title));
+            startFormActivity(form, getResources().getString(R.string.dispense_medication_title), false);
         } catch (JSONException e) {
             Timber.e(e);
         }

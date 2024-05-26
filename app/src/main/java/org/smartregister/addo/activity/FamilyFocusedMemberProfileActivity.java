@@ -470,6 +470,8 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                         }
                     }
                     if (!buttonAction.isEmpty()) {
+                        String facilityValue = JsonFormUtils.getValue(form, "chw_referral_hf");
+                        String facility = facilityValue.substring(2, facilityValue.length() - 2);
                         // Check if the client has referral already or not
                         if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID, LocationHelper.getInstance().getOpenMrsLocationId(villageTown), baseEntityId, CoreConstants.JsonAssets.REFERRAL_CODE)) {
                             closeOpenNewReferral(this, new OnDialogButtonClick() {
@@ -478,7 +480,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                                     // Close referral
                                     FamilyDao.archiveHFTasksForEntity(baseEntityId);
                                     // Open a new referral
-                                    ReferralUtils.createReferralTask(baseEntityId, form.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE), jsonString, villageTown);
+                                    ReferralUtils.createReferralTask(baseEntityId, form.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE), jsonString, villageTown, facility);
 
                                     // Dispense
                                     checkDSPresentProposedMedsAndDispense(form);
@@ -492,7 +494,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                             });
                         } else {
                             //refer
-                            ReferralUtils.createReferralTask(baseEntityId, form.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE), jsonString, villageTown);
+                            ReferralUtils.createReferralTask(baseEntityId, form.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE), jsonString, villageTown, facility);
                             checkDSPresentProposedMedsAndDispense(form);
 
                         }

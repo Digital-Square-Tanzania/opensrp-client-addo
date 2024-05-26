@@ -26,7 +26,7 @@ import timber.log.Timber;
 
 public class ReferralUtils {
 
-    public static void createReferralTask(String baseEntityId, String focus, String jsonString, String villageTown) {
+    public static void createReferralTask(String baseEntityId, String focus, String jsonString, String villageTown, String facility) {
         Task task = new Task();
         task.setIdentifier(UUID.randomUUID().toString());
 
@@ -34,11 +34,11 @@ public class ReferralUtils {
         AllSharedPreferences allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
         LocationHelper locationHelper = LocationHelper.getInstance();
 
-        task.setPlanIdentifier(CoreConstants.REFERRAL_PLAN_ID);
-        task.setGroupIdentifier(locationHelper.getOpenMrsLocationId(villageTown));
+        task.setPlanIdentifier(CoreConstants.REFERRAL_PLAN_ID_2);
+        task.setGroupIdentifier(facility);
         task.setStatus(Task.TaskStatus.READY);
         task.setBusinessStatus(CoreConstants.BUSINESS_STATUS.REFERRED);
-        task.setPriority(1);
+        task.setPriority(3);
         task.setCode(CoreConstants.JsonAssets.REFERRAL_CODE);
         task.setDescription(referralProblems);
         task.setFocus(focus);
@@ -50,7 +50,7 @@ public class ReferralUtils {
         task.setOwner(allSharedPreferences.fetchRegisteredANM());
         task.setSyncStatus(BaseRepository.TYPE_Created);
         task.setRequester(allSharedPreferences.getANMPreferredName(allSharedPreferences.fetchRegisteredANM()));
-        task.setLocation(locationHelper.getOpenMrsLocationId(villageTown));
+        task.setLocation(Utils.getAddoLocationId());
         AddoApplication.getInstance().getTaskRepository().addOrUpdate(task);
     }
 

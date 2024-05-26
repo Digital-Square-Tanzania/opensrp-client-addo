@@ -1,5 +1,7 @@
 package org.smartregister.addo.contract;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.view.contract.BaseProfileContract;
 
@@ -49,6 +51,8 @@ public interface FamilyFocusedMemberProfileContract {
 
         boolean checkIfVisitTasksDone();
 
+        void submitReferralEvent(String baseEntityId, JSONArray jsonArray);
+
     }
 
     interface Interactor {
@@ -60,6 +64,8 @@ public interface FamilyFocusedMemberProfileContract {
         void checkIfTasksDoneWithin24H(String baseEntityId, InteractorCallBack callBack);
 
         void submitVisit(boolean editMode, String memberID, Map<String, String> formForSubmission, InteractorCallBack callBack);
+
+        void submitReferralEvent(String baseEntityId, JSONArray jsonArray);
 
     }
 

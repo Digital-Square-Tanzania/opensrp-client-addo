@@ -5,6 +5,8 @@ import static org.smartregister.util.Utils.getName;
 import android.app.Activity;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.smartregister.addo.contract.FamilyFocusedMemberProfileContract;
 import org.smartregister.addo.interactor.FamilyFocusedMemberProfileInteractor;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -140,6 +142,11 @@ public class FamilyFocusedMemberProfileActivityPresenter implements FamilyFocuse
     public boolean checkIfVisitTasksDone() {
         interactor.checkIfTasksDoneWithin24H(baseEntityId, this);
         return false;
+    }
+
+    @Override
+    public void submitReferralEvent(String baseEntityId, JSONArray jsonArray) {
+        interactor.submitReferralEvent(baseEntityId, jsonArray);
     }
 
     @Override

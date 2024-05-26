@@ -141,7 +141,7 @@
         "key": "danger_signs_present_child",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
-        "openmrs_entity_id": "159860AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "openmrs_entity_id": "danger_signs_present_child",
         "type": "check_box",
         "label": "{{step2_danger_signs_present_label}}",
         "label_text_style": "normal",
@@ -155,259 +155,259 @@
             "text": "{{step2_danger_sign_cough}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "143264AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "openmrs_entity_id": "chk_coughing"
           },
           {
             "key": "chk_difficult_breathing",
             "text": "{{step2_danger_difficult_breathing}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "142373AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "openmrs_entity_id": "chk_difficult_breathing"
           },
           {
             "key": "chk_fast_breathing",
             "text": "{{step2_danger_fast_breathing}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "125061AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "openmrs_entity_id": "chk_fast_breathing"
           },
           {
             "key": "chk_chest_indrawing",
             "text": "{{step2_danger_chest_indrawing}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "136768AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "openmrs_entity_id": "chk_chest_indrawing"
           },
           {
             "key": "chk_difficult_drinking",
             "text": "{{step2_danger_difficult_drinking}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "159861AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "openmrs_entity_id": "chk_difficult_drinking"
           },
           {
             "key": "chk_convulsions",
             "text": "{{step2_danger_convulsions}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "164483AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "openmrs_entity_id": "chk_convulsions"
           },
           {
             "key": "chk_grunting_voice",
             "text": "{{step2_danger_grunting_voice}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "156534AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "openmrs_entity_id": "chk_grunting_voice"
           },
           {
             "key": "chk_weak",
             "text": "{{step2_danger_weak}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_weak"
           },
           {
             "key": "chk_extreme_cold_or_hot",
             "text": "{{step2_danger_extreme_cold_or_hot}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_extreme_cold_or_hot"
           },
           {
             "key": "chk_body_chills",
             "text": "{{step2_danger_body_chills}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_body_chills"
           },
           {
             "key": "chk_severe_vomit",
             "text": "{{step2_danger_severe_vomit}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_severe_vomit"
           },
           {
             "key": "chk_lack_of_appetite",
             "text": "{{step2_danger_lack_of_appetite}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_lack_of_appetite"
           },
           {
             "key": "chk_watery_stool_3_times_a_day",
             "text": "{{step2_danger_watery_stool_3_times_a_day}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_watery_stool_3_times_a_day"
           },
           {
             "key": "chk_watery_stool_for_14_days_more",
             "text": "{{step2_danger_watery_stool_for_14_days_more}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_watery_stool_for_14_days_more"
           },
           {
             "key": "chk_bloody_stool",
             "text": "{{step2_danger_bloody_stool}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_bloody_stool"
           },
           {
             "key": "chk_sunk_eyes",
             "text": "{{step2_danger_sunk_eyes}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_sunk_eyes"
           },
           {
             "key": "chk_excessive_crying_discomfort",
             "text": "{{step2_danger_excessive_crying_discomfort}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_excessive_crying_discomfort"
           },
           {
             "key": "chk_feels_thirsty",
             "text": "{{step2_danger_feels_thirsty}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_feels_thirsty"
           },
           {
             "key": "chk_oversleeping",
             "text": "{{step2_danger_oversleeping}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_oversleeping"
           },
           {
             "key": "chk_redness_around_umbilical",
             "text": "{{step2_danger_redness_around_umbilical}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_redness_around_umbilical"
           },
           {
             "key": "chk_body_rashes",
             "text": "{{step2_danger_body_rashes}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "512AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "openmrs_entity_id": "chk_body_rashes"
           },
           {
             "key": "chk_eye_discharge",
             "text": "{{step2_danger_eye_discharge}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "142246AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "openmrs_entity_id": "chk_eye_discharge"
           },
           {
             "key": "chk_malnutrition",
             "text": "{{step2_danger_malnutrition}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_malnutrition"
           },
           {
             "key": "chk_not_getting_better",
             "text": "{{step2_danger_not_getting_better}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_not_getting_better"
           },
           {
             "key": "chk_blue_lips",
             "text": "{{step2_danger_blue_lips}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_blue_lips"
           },
           {
             "key": "chk_constipation",
             "text": "{{step2_danger_constipation}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_constipation"
           },
           {
             "key": "chk_no_movement",
             "text": "{{step2_danger_no_movement}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_no_movement"
           },
           {
             "key": "chk_jaundiced",
             "text": "{{step2_danger_jaundiced}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_jaundiced"
           },
           {
             "key": "chk_cold_flu",
             "text": "{{step2_danger_cold_flu}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_cold_flu"
           },
           {
             "key": "chk_sore_throat",
             "text": "{{step2_danger_sore_throat}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_sore_throat"
           },
           {
             "key": "chk_sneezing",
             "text": "{{step2_danger_sneezing}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_sneezing"
           },
           {
             "key": "chk_headache",
             "text": "{{step2_danger_headache}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_headache"
           },
           {
             "key": "chk_mild_diarrhea_without_blood",
             "text": "{{step2_danger_mild_diarrhea_without_blood}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_mild_diarrhea_without_blood"
           },
           {
             "key": "chk_minor_skin_infections",
             "text": "{{step2_danger_minor_skin_infections}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_minor_skin_infections"
           },
           {
             "key": "chk_minor_wound_cuts",
             "text": "{{step2_danger_minor_wound_cuts}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_minor_wound_cuts"
           },
           {
             "key": "chk_other",
             "text": "{{step2_danger_other}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": ""
+            "openmrs_entity_id": "chk_other"
           },
           {
             "key": "chk_none",
             "text": "{{step2_danger_none}}",
             "value": false,
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "openmrs_entity_id": "chk_none"
           }
         ],
         "v_required": {
@@ -647,10 +647,10 @@
         "type": "spacer"
       },
       {
-        "key": "hf_facilities",
+        "key": "chw_referral_hf",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
-        "openmrs_entity_id": "hf_facilities",
+        "openmrs_entity_id": "chw_referral_hf",
         "type": "check_box",
         "label": "{{step3_hf_facilities_label}}",
         "text_color": "#000000",

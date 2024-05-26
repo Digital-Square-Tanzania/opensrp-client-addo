@@ -505,10 +505,10 @@
         "spacer_height": "20dp"
       },
       {
-        "key": "hf_facilities",
+        "key": "chw_referral_hf",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
-        "openmrs_entity_id": "hf_facilities",
+        "openmrs_entity_id": "chw_referral_hf",
         "type": "check_box",
         "label": "{{step3_hf_facilities_label}}",
         "text_color": "#000000",

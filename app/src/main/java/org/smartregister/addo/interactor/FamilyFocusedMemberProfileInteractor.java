@@ -3,10 +3,15 @@ package org.smartregister.addo.interactor;
 import androidx.annotation.VisibleForTesting;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
+import org.joda.time.DateTime;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.addo.application.AddoApplication;
 import org.smartregister.addo.contract.FamilyFocusedMemberProfileContract;
 import org.smartregister.addo.dao.AdolescentDao;
 import org.smartregister.addo.dao.AncDao;
@@ -26,11 +31,15 @@ import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.tag.FormTag;
+import org.smartregister.family.FamilyLibrary;
 import org.smartregister.family.util.AppExecutors;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.sync.helper.ECSyncHelper;
+import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.FormUtils;
 
 import java.text.SimpleDateFormat;
@@ -39,6 +48,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import timber.log.Timber;
 
@@ -49,6 +59,9 @@ public class FamilyFocusedMemberProfileInteractor implements FamilyFocusedMember
     private FormUtils formUtils;
 
     private String village;
+
+    public static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
 
     @VisibleForTesting
     FamilyFocusedMemberProfileInteractor(AppExecutors appExecutors) {
@@ -104,6 +117,34 @@ public class FamilyFocusedMemberProfileInteractor implements FamilyFocusedMember
         };
 
         appExecutors.diskIO().execute(runnable);
+    }
+
+    @Override
+    public void submitReferralEvent(String baseEntityId, JSONArray jsonArray) {
+        try{
+            final ECSyncHelper syncHelper = AddoApplication.getInstance().getEcSyncHelper();
+            AllSharedPreferences allSharedPreferences = org.smartregister.util.Utils.getAllSharedPreferences();
+            FormTag formTag = formTag(allSharedPreferences);
+            JSONObject metadata= new JSONObject();
+            Event event = org.smartregister.util.JsonFormUtils.createEvent(jsonArray, metadata, formTag, baseEntityId,"Referral Registration","ec_referral");
+            event.setEventId(UUID.randomUUID().toString());
+            JSONObject eventJson = new JSONObject(gson.toJson(event));
+            Timber.e("%S", eventJson);
+//            syncHelper.addEvent(baseEntityId, eventJson);
+        }catch (JSONException e){
+            Timber.e(e);
+        }
+    }
+
+    private FormTag formTag(AllSharedPreferences allSharedPreferences) {
+        FormTag formTag = new FormTag();
+        formTag.providerId = allSharedPreferences.fetchRegisteredANM();
+        formTag.appVersion = FamilyLibrary.getInstance().getApplicationVersion();
+        formTag.databaseVersion = FamilyLibrary.getInstance().getDatabaseVersion();
+        formTag.team = allSharedPreferences.fetchDefaultTeam(allSharedPreferences.fetchRegisteredANM());
+        formTag.teamId = allSharedPreferences.fetchDefaultTeamId(allSharedPreferences.fetchRegisteredANM());
+        formTag.locationId = getClientLocationId(village);
+        return formTag;
     }
 
     protected void submitVisit(final boolean editMode, final String memberID, final Map<String, String> dsForm, String parentEventType) throws Exception {

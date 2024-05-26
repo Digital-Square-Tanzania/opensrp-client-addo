@@ -50,9 +50,15 @@ import org.smartregister.util.FormUtils;
 import org.smartregister.view.activity.BaseProfileActivity;
 import org.smartregister.view.customcontrols.CustomFontTextView;
 
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -64,6 +70,8 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
     public static final String ANC_DANGER_SIGN_SCREENING_ENCOUNTER = "ANC Danger Signs";
     public static final String PNC_DANGER_SIGN_SCREENING_ENCOUNTER = "PNC Danger Signs";
     public static final String ADOLESCENT_SCREENING_ENCOUNTER = "Adolescent Addo Screening";
+    public static final String REFERRAL_BUSINESS_STATUS = "PENDING";
+    public static final String REFERRAL_TYPE = "addo_to_facility_referral";
     protected ViewPagerAdapter adapter;
     protected MemberObject memberObject;
     private TextView nameView;
@@ -377,7 +385,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
     public void displayReferralFacilities(JSONObject jsonForm){
         try{
             JSONArray fields = JsonFormUtils.fields(jsonForm);
-            JSONObject hf_facilities = JsonFormUtils.getFieldJSONObject(fields, "hf_facilities");
+            JSONObject hf_facilities = JsonFormUtils.getFieldJSONObject(fields, "chw_referral_hf");
             JSONArray facilityArrayOption = hf_facilities.getJSONArray("options");
             JSONArray facilityArrayOptionExclusive = hf_facilities.getJSONArray("exclusive");
 
@@ -501,6 +509,111 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
 
             } catch (JSONException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    public JSONArray createReferralForm(JSONObject form, String encounterType){
+        try{
+            JSONArray referralFormArray = form.getJSONObject("step3").getJSONArray("fields");
+            JSONArray fields = JsonFormUtils.fields(form);
+            JSONObject dangerSignsJsonObject = new JSONObject();
+            String chwReferralService = "";
+            switch(encounterType) {
+                case CHILD_DANGER_SIGN_SCREENING_ENCOUNTER:
+                    dangerSignsJsonObject = JsonFormUtils.getFieldJSONObject(fields,"danger_signs_present_child");
+                    chwReferralService = CHILD_DANGER_SIGN_SCREENING_ENCOUNTER;
+                    break;
+                case ANC_DANGER_SIGN_SCREENING_ENCOUNTER:
+                    dangerSignsJsonObject = JsonFormUtils.getFieldJSONObject(fields,"danger_signs_present");
+                    chwReferralService = ANC_DANGER_SIGN_SCREENING_ENCOUNTER;
+                    break;
+                case PNC_DANGER_SIGN_SCREENING_ENCOUNTER:
+                    dangerSignsJsonObject = JsonFormUtils.getFieldJSONObject(fields,"danger_signs_present_mama");
+                    chwReferralService = PNC_DANGER_SIGN_SCREENING_ENCOUNTER;
+                    break;
+                case ADOLESCENT_SCREENING_ENCOUNTER:
+                    dangerSignsJsonObject = JsonFormUtils.getFieldJSONObject(fields,"adolescent_condition_present");
+                    chwReferralService = ADOLESCENT_SCREENING_ENCOUNTER;
+                    break;
+            }
+
+            // Combine the checkbox values
+            dangerSignsJsonObject.put(JsonFormUtils.COMBINE_CHECKBOX_OPTION_VALUES,true);
+
+            // Rename the key for danger sign JSONObject to match UCS
+            dangerSignsJsonObject.put("key","problem");
+
+            //Convert referral appointment date to timestamp
+            convertAppointmentDate(fields);
+
+            //Add other referral form fields
+            referralFormArray.put(dangerSignsJsonObject);
+            referralFormArray.put(createReferralFormField("referral_status", REFERRAL_BUSINESS_STATUS));
+            referralFormArray.put(createReferralFormField("chw_referral_service", chwReferralService));
+            referralFormArray.put(createReferralFormField("referral_date", Long.toString(Calendar.getInstance().getTimeInMillis())));
+            referralFormArray.put(createReferralFormField("referral_type", REFERRAL_TYPE));
+            referralFormArray.put(createReferralFormField("referral_time", referralTime()));
+
+            // Remove unwanted fields
+            removeFieldsFromJSONArray(referralFormArray, "asterisk_symbol", "save_n_refer");
+
+            return  referralFormArray;
+        }catch (JSONException e){
+            Timber.e(e);
+        }
+        return  null;
+    }
+
+    private void convertAppointmentDate(JSONArray fields){
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            JSONObject appointment_date = JsonFormUtils.getFieldJSONObject(fields, "referral_appointment_date");
+            String value = appointment_date.getString(JsonFormUtils.VALUE);
+            Date formattedDate = dateFormat.parse(value);
+            assert formattedDate != null;
+            long unixTimestamp = formattedDate.getTime();
+            appointment_date.put("value", String.valueOf(unixTimestamp));
+        }catch (Exception e){
+            Timber.e(e);
+        }
+    }
+
+    private JSONObject createReferralFormField(String key, String value){
+        try{
+            JSONObject referralTypeJsonObject = new JSONObject();
+            referralTypeJsonObject.put("key", key);
+            referralTypeJsonObject.put("text", "name");
+            referralTypeJsonObject.put("type", key);
+            referralTypeJsonObject.put("value", value);
+            referralTypeJsonObject.put("openmrs_entity", "concept");
+            referralTypeJsonObject.put("openmrs_entity_id", key);
+            return referralTypeJsonObject;
+        }catch (Exception e){
+            Timber.e(e);
+        }
+        return  null;
+    }
+
+    public String referralTime(){
+        Date now = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+        return dateFormat.format(now);
+    }
+
+    public static void removeFieldsFromJSONArray(JSONArray jsonArray, String... keysToRemove) {
+        for (int i = jsonArray.length() -1 ; i >= 0; i--) {
+            try {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                for (String key : keysToRemove) {
+                    String jsonKeyValue = jsonObject.getString(JsonFormUtils.KEY);
+                    if(jsonKeyValue.equals(key)){
+                        jsonArray.remove(i);
+                        break;
+                    }
+                }
+            } catch (JSONException e) {
+                Timber.e(e);
             }
         }
     }

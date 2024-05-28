@@ -346,5 +346,9 @@ public class Utils extends org.smartregister.family.util.Utils {
         return Gender.FEMALE.toString().equalsIgnoreCase(gender) ? context().getStringResource(R.string.female) : context().getStringResource(R.string.male);
     }
 
+    public static String getAddoLocationId() {
+        return context().allSharedPreferences().fetchUserLocalityId(context().allSharedPreferences().fetchRegisteredANM());
+    }
+
 }
 

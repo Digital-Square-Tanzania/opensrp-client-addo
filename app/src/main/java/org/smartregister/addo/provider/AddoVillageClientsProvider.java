@@ -18,7 +18,6 @@ import org.smartregister.addo.util.ReferralUtils;
 import org.smartregister.chw.referral.util.DBConstants;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.cursoradapter.RecyclerViewProvider;
-import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.util.Utils;
 import org.smartregister.view.contract.SmartRegisterClient;
 import org.smartregister.view.contract.SmartRegisterClients;
@@ -102,7 +101,7 @@ public class AddoVillageClientsProvider implements RecyclerViewProvider<AddoVill
     }
 
     public void setHasRefarral(CommonPersonObjectClient pc, RegisterViewHolder viewHolder){
-        if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID, LocationHelper.getInstance().getOpenMrsLocationId(villageSelected), pc.entityId(), CoreConstants.JsonAssets.LINKAGE_CODE)){
+        if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID, org.smartregister.addo.util.Utils.getAddoLocationId(), pc.entityId(), CoreConstants.JsonAssets.LINKAGE_CODE)){
             viewHolder.textViewHasReferral.setTextColor(context.getResources().getColor(R.color.alert_urgent_red));
             viewHolder.textViewHasReferral.setVisibility(View.VISIBLE);
         }else{

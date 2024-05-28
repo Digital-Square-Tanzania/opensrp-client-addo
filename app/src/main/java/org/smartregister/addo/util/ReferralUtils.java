@@ -15,9 +15,11 @@ import org.smartregister.domain.Task;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
+import org.smartregister.repository.TaskRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import timber.log.Timber;
@@ -134,4 +136,75 @@ public class ReferralUtils {
 
         return !AddoApplication.getInstance().getTaskRepository().getTasksByEntityAndCode(planId, groupId, forEntity, code).isEmpty();
     }
+
+    public static void closeLinkageAndOpenFollowUp(String baseEntityId, String focus, String jsonString, String villageTown) {
+
+        if (StringUtils.isBlank(baseEntityId))
+            return;
+
+        List<String> updatedTaskIds = updateLinkageTasksFor(baseEntityId);
+
+        // If there is a task updated for this entity id then open a followup task
+        if (!updatedTaskIds.isEmpty()) {
+            for (String updatedTaskId : updatedTaskIds) {
+                createFollowUpTask(baseEntityId, focus, jsonString, villageTown, updatedTaskId);
+            }
+        }
+
+    }
+
+    private static List<String> updateLinkageTasksFor(String baseEntityId) {
+
+        TaskRepository taskRepository = AddoApplication.getInstance().getTaskRepository();
+        Set<Task> tasks = taskRepository.getTasksByEntityAndCode(
+                CoreConstants.ADDO_LINKAGE_PLAN_ID,
+                Utils.getAddoLocationId(),
+                baseEntityId,
+                CoreConstants.JsonAssets.LINKAGE_CODE);
+
+        List<String> updatedTaskIds = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getStatus() == Task.TaskStatus.READY) {
+                task.setStatus(Task.TaskStatus.COMPLETED);
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                task.setLastModified(new DateTime());
+                taskRepository.addOrUpdate(task);
+                updatedTaskIds.add(task.getIdentifier());
+            }
+
+        }
+
+        return updatedTaskIds;
+    }
+
+    private static void createFollowUpTask(String baseEntityId, String focus, String jsonString, String villageTown, String updatedTaskId) {
+
+        Task task = new Task();
+        task.setIdentifier(UUID.randomUUID().toString());
+
+        String followUpProblems = getReferralProblems(jsonString);
+        AllSharedPreferences allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
+        LocationHelper locationHelper = LocationHelper.getInstance();
+
+        task.setPlanIdentifier(CoreConstants.REFERRAL_PLAN_ID);
+        task.setGroupIdentifier(locationHelper.getOpenMrsLocationId(villageTown));
+        task.setStatus(Task.TaskStatus.READY);
+        task.setBusinessStatus(CoreConstants.BUSINESS_STATUS.TO_FOLLOW_UP);
+        task.setPriority(1);
+        task.setCode(CoreConstants.JsonAssets.FOLLOW_UP_VISIT_CODE);
+        task.setDescription(followUpProblems);
+        task.setFocus(focus);
+        task.setForEntity(baseEntityId);
+        DateTime now = new DateTime();
+        task.setExecutionStartDate(now);
+        task.setAuthoredOn(now);
+        task.setLastModified(now);
+        task.setOwner(allSharedPreferences.fetchRegisteredANM());
+        task.setSyncStatus(BaseRepository.TYPE_Created);
+        task.setRequester(allSharedPreferences.getANMPreferredName(allSharedPreferences.fetchRegisteredANM()));
+        task.setLocation(locationHelper.getOpenMrsLocationId(villageTown));
+        task.setReasonReference(updatedTaskId);
+        AddoApplication.getInstance().getTaskRepository().addOrUpdate(task);
+    }
+
 }

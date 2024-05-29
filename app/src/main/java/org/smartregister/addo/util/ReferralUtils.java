@@ -18,6 +18,7 @@ import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.TaskRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -55,6 +56,7 @@ public class ReferralUtils {
     }
 
     private static String getReferralProblems(String jsonString) {
+        String[] dangerSignKeysArray = { Constants.DANGER_SIGN_KEYS.CHILD, Constants.DANGER_SIGN_KEYS.ANC, Constants.DANGER_SIGN_KEYS.PNC, Constants.DANGER_SIGN_KEYS.ADOLESCENT};
         String referralProblems = "";
         List<String> formValues = new ArrayList<>();
         try {
@@ -62,7 +64,8 @@ public class ReferralUtils {
             JSONArray fields = FormUtils.getMultiStepFormFields(problemJson);
             for (int i = 0; i < fields.length(); i++) {
                 JSONObject field = fields.getJSONObject(i);
-                if (field.optBoolean(CoreConstants.JsonAssets.IS_PROBLEM, true)) {
+                String key = field.getString("key");
+                if (Arrays.asList(dangerSignKeysArray).contains(key)) {
                     if (field.has(JsonFormConstants.TYPE) && JsonFormConstants.CHECK_BOX.equals(field.getString(JsonFormConstants.TYPE))) {
                         if (field.has(JsonFormConstants.OPTIONS_FIELD_NAME)) {
                             JSONArray options = field.getJSONArray(JsonFormConstants.OPTIONS_FIELD_NAME);

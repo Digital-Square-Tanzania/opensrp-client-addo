@@ -473,7 +473,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                         String facilityValue = JsonFormUtils.getValue(form, "chw_referral_hf");
                         String facility = facilityValue.substring(2, facilityValue.length() - 2);
                         // Check if the client has referral already or not
-                        if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID, LocationHelper.getInstance().getOpenMrsLocationId(villageTown), baseEntityId, CoreConstants.JsonAssets.REFERRAL_CODE)) {
+                        if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID_2, facility, baseEntityId, CoreConstants.JsonAssets.REFERRAL_CODE)) {
                             closeOpenNewReferral(this, new OnDialogButtonClick() {
                                 @Override
                                 public void onOkButtonClick() {

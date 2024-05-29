@@ -479,8 +479,12 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                                 public void onOkButtonClick() {
                                     // Close referral
                                     FamilyDao.archiveHFTasksForEntity(baseEntityId);
+
                                     // Open a new referral
                                     ReferralUtils.createReferralTask(baseEntityId, form.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE), jsonString, villageTown, facility);
+
+                                    // Create a referral event
+                                    presenter().submitReferralEvent(baseEntityId, createReferralForm(jsonString, encounterType));
 
                                     // Dispense
                                     checkDSPresentProposedMedsAndDispense(form);
@@ -495,6 +499,10 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                         } else {
                             //refer
                             ReferralUtils.createReferralTask(baseEntityId, form.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE), jsonString, villageTown, facility);
+
+                            // Create a referral event
+                            presenter().submitReferralEvent(baseEntityId, createReferralForm(jsonString, encounterType));
+
                             checkDSPresentProposedMedsAndDispense(form);
 
                         }
@@ -515,8 +523,9 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         }
     }
 
-    public JSONArray createReferralForm(JSONObject form, String encounterType){
+    public JSONArray createReferralForm(String jsonString, String encounterType){
         try{
+            JSONObject form = new JSONObject(jsonString);
             JSONArray referralFormArray = form.getJSONObject("step3").getJSONArray("fields");
             JSONArray fields = JsonFormUtils.fields(form);
             JSONObject dangerSignsJsonObject = new JSONObject();

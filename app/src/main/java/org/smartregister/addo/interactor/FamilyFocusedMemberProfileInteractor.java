@@ -130,7 +130,7 @@ public class FamilyFocusedMemberProfileInteractor implements FamilyFocusedMember
             event.setEventId(UUID.randomUUID().toString());
             JSONObject eventJson = new JSONObject(gson.toJson(event));
             Timber.e("%S", eventJson);
-//            syncHelper.addEvent(baseEntityId, eventJson);
+            syncHelper.addEvent(baseEntityId, eventJson);
         }catch (JSONException e){
             Timber.e(e);
         }

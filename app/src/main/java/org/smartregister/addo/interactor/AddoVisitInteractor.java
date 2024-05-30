@@ -1,6 +1,7 @@
 package org.smartregister.addo.interactor;
 
 import org.smartregister.addo.dao.AncDao;
+import org.smartregister.addo.dao.VisitDao;
 import org.smartregister.chw.anc.contract.BaseAncHomeVisitContract;
 import org.smartregister.chw.anc.domain.MemberObject;
 import org.smartregister.chw.anc.interactor.BaseAncHomeVisitInteractor;
@@ -38,7 +39,7 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
 
     @Override
     public MemberObject getMemberClient(String memberID) {
-        return AncDao.getMember(memberID);
+        return VisitDao.getMember(memberID);
     }
 
     @Override

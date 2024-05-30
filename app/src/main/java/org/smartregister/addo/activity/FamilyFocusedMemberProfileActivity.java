@@ -73,6 +73,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
     private ImageView commoditiesCheckView;
     private ImageView dispenseDoneCheckView;
     private CustomFontTextView ctvScreeningMed, ctvCommodities, ctvDispense;
+    private CustomFontTextView recordAddoVisit;
     private ProgressBar progressBar;
     private View familyHeadView;
     private View primaryCaregiverView;
@@ -157,6 +158,9 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         ctvDispense = findViewById(R.id.tv_focused_client_dispense);
         progressBar.setVisibility(View.GONE);
         ctvDispense.setOnClickListener(this);
+
+        recordAddoVisit = findViewById(R.id.textview_record_addo_visit);
+        recordAddoVisit.setOnClickListener(this);
 
         checkIfVisitTasksDone();
     }
@@ -308,7 +312,9 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
             case R.id.tv_focused_client_dispense:
                 startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getAddoAttendPrescriptionsFromHf()), getString(R.string.attend_prescription_form_title));
                 break;
-
+            case R.id.textview_record_addo_visit:
+                AddoVisitActivity.startMe(this, memberObject, false);
+                break;
             default:
                 super.onClick(view);
                 break;

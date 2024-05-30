@@ -101,6 +101,10 @@
             android:label="@string/monthly_activity"
             android:theme="@style/AddoTheme.NoActionBar" />
 
+        <activity android:name=".activity.AddoVisitActivity"
+            android:label="Addo Visit"
+            android:theme="@style/AddoTheme.NoActionBar"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

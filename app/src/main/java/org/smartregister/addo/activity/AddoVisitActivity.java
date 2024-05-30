@@ -108,7 +108,12 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
 
     @Override
     public void initializeActions(LinkedHashMap<String, BaseAncHomeVisitAction> map) {
-        super.initializeActions(map);
-        redrawVisitUI();
+        actionList.clear();
+        actionList.putAll(map);
+
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+        displayProgressBar(false);
     }
 }

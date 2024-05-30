@@ -13,6 +13,7 @@ import org.smartregister.chw.anc.contract.BaseAncHomeVisitContract;
 import org.smartregister.chw.anc.domain.MemberObject;
 import org.smartregister.chw.anc.domain.VisitDetail;
 import org.smartregister.chw.anc.model.BaseAncHomeVisitAction;
+import org.smartregister.chw.anc.util.AppExecutors;
 import org.smartregister.chw.anc.util.JsonFormUtils;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.family.util.Utils;
@@ -28,19 +29,16 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
 
     protected LinkedHashMap<String, BaseAncHomeVisitAction> actionList;
     Context context;
-
+    private BaseAncHomeVisitContract.InteractorCallBack callback;
     @Override
     public LinkedHashMap<String, BaseAncHomeVisitAction> calculateActions(BaseAncHomeVisitContract.View view, MemberObject memberObject, BaseAncHomeVisitContract.InteractorCallBack callBack) throws BaseAncHomeVisitAction.ValidationException {
         actionList = new LinkedHashMap<>();
         context = view.getContext();
+        callback = callBack;
 
         try {
             //add action here
-            evaluatePrescriptionsNote(context);
-            evaluateDangerSigns(context);
-            evaluateMedicationDispensed(context);
-            evaluateCommodities(context);
-
+            evaluatePrescriptionsNote(context, actionList);
         }catch (Exception e){
             Timber.e(e);
         }
@@ -48,17 +46,19 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         return actionList;
     }
 
-    private void evaluatePrescriptionsNote(final Context context) throws Exception {
+    private void evaluatePrescriptionsNote(final Context context,
+                                           LinkedHashMap<String, BaseAncHomeVisitAction> actionList) throws Exception {
 
         BaseAncHomeVisitAction prescription_note = new BaseAncHomeVisitAction.Builder(context, context.getString(R.string.evalueate_prescription_note))
                 .withOptional(false)
                 .withFormName(Constants.JSON_FORM.ANC_HOME_VISIT.getAddoPrescriptionNote())
-                .withHelper(new PrescriptionNoteHelper(actionList))
+                .withHelper(new PrescriptionNoteHelper())
                 .build();
         actionList.put(context.getString(R.string.evalueate_prescription_note), prescription_note);
     }
 
-    private void evaluateDangerSigns(final Context context) throws Exception {
+    private void evaluateDangerSigns(final Context context,
+                                     LinkedHashMap<String, BaseAncHomeVisitAction> actionList) throws Exception {
         BaseAncHomeVisitAction danger_signs = new BaseAncHomeVisitAction.Builder(context, context.getString(R.string.anc_home_visit_danger_signs))
                 .withOptional(false)
                 .withFormName(Constants.JSON_FORM.ANC_HOME_VISIT.getAncAddoDangerSign())
@@ -67,7 +67,8 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         actionList.put(context.getString(R.string.anc_home_visit_danger_signs), danger_signs);
     }
 
-    private void evaluateMedicationDispensed(final Context context) throws Exception {
+    private void evaluateMedicationDispensed(final Context context,
+                                             LinkedHashMap<String, BaseAncHomeVisitAction> actionList) throws Exception {
         BaseAncHomeVisitAction medication_dispensed = new BaseAncHomeVisitAction.Builder(context, context.getString(R.string.evalueate_medication_dispensed))
                 .withOptional(false)
                 .withFormName(Constants.JSON_FORM.ANC_HOME_VISIT.getAddoCommodities())
@@ -76,7 +77,8 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         actionList.put(context.getString(R.string.evalueate_medication_dispensed), medication_dispensed);
     }
 
-    private void evaluateCommodities(final Context context) throws Exception {
+    private void evaluateCommodities(final Context context,
+                                     LinkedHashMap<String, BaseAncHomeVisitAction> actionList) throws Exception {
         BaseAncHomeVisitAction commodities = new BaseAncHomeVisitAction.Builder(context, context.getString(R.string.evalueate_commodities))
                 .withOptional(false)
                 .withFormName(Constants.JSON_FORM.ANC_HOME_VISIT.getAddoCommodities())
@@ -86,7 +88,8 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         actionList.put(context.getString(R.string.evalueate_commodities), commodities);
     }
 
-    private void evaluatePrescriptions(final Context context) throws Exception {
+    private void evaluatePrescriptions(final Context context,
+                                       LinkedHashMap<String, BaseAncHomeVisitAction> actionList) throws Exception {
 
         BaseAncHomeVisitAction prescription_from_hf = new BaseAncHomeVisitAction.Builder(context, context.getString(R.string.evalueate_prescription))
                 .withOptional(false)
@@ -106,6 +109,10 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         return formUtils;
     }
 
+    private void refreshActionList() {
+        new AppExecutors().mainThread().execute(() -> callback.preloadActions(actionList));
+    }
+
     //Action Helper Classes
 
     class PrescriptionNoteHelper extends HomeVisitActionHelper {
@@ -114,12 +121,8 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         String prescriptionNoteAvailable = "";
         String jsonPayload;
 
-        LinkedHashMap<String, BaseAncHomeVisitAction> mActionList;
+        //LinkedHashMap<String, BaseAncHomeVisitAction> mActionList;
         Context mContext;
-
-        PrescriptionNoteHelper(LinkedHashMap<String, BaseAncHomeVisitAction> actionList){
-            mActionList = actionList;
-        }
 
         @Override
         public void onJsonFormLoaded(String jsonString, Context context, Map<String, List<VisitDetail>> details) {
@@ -133,19 +136,19 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         }
 
         @Override
-        public void onPayloadReceived(BaseAncHomeVisitAction baseAncHomeVisitAction) {
-            Timber.d("onPayloadReceived");
-        }
-
-        @Override
         public void onPayloadReceived(String jsonPayload) {
             try {
                 JSONObject jsonObject = new JSONObject(jsonPayload);
-                prescriptionNoteAvailable = JsonFormUtils.getCheckBoxValue(jsonObject, "client_prescription_note_available");
+                prescriptionNoteAvailable = JsonFormUtils.getValue(jsonObject, "client_prescription_note_available");
                 hasPrescription = prescriptionNoteAvailable.contains("client_prescription_yes");
             }catch (JSONException e){
                 Timber.e(e);
             }
+        }
+
+        @Override
+        public void onPayloadReceived(BaseAncHomeVisitAction baseAncHomeVisitAction) {
+            Timber.d("onPayloadReceived");
         }
 
         @Override
@@ -162,11 +165,15 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         public String postProcess(String jsonPayload) {
             try {
                 if (hasPrescription){
-                    evaluatePrescriptions(mContext);
+                    actionList.clear();
+                    evaluatePrescriptions(mContext, actionList);
+                    refreshActionList();
                 }else{
-                    evaluateDangerSigns(mContext);
-                    evaluateMedicationDispensed(mContext);
-                    evaluateCommodities(mContext);
+                    actionList.clear();
+                    evaluateDangerSigns(mContext, actionList);
+                    evaluateMedicationDispensed(mContext, actionList);
+                    evaluateCommodities(mContext, actionList);
+                    refreshActionList();
                 }
             }catch (Exception e){
                 Timber.e(e);

@@ -19,6 +19,7 @@ import org.smartregister.chw.anc.domain.MemberObject;
 import org.smartregister.chw.anc.presenter.BaseAncHomeVisitPresenter;
 import org.smartregister.family.util.Constants;
 import org.smartregister.family.util.JsonFormUtils;
+import org.smartregister.family.util.Utils;
 import org.smartregister.util.LangUtils;
 
 public class AddoVisitActivity extends BaseAncHomeVisitActivity {
@@ -66,7 +67,7 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
         form.setActionBarBackground(R.color.family_actionbar);
         form.setWizard(false);
 
-        Intent intent = new Intent(this, ReferralWizardFormActivity.class);
+        Intent intent = new Intent(this, Utils.metadata().familyMemberFormActivity);
         intent.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonForm.toString());
         intent.putExtra(Constants.WizardFormActivity.EnableOnCloseDialog, false);
         intent.putExtra(JsonFormConstants.JSON_FORM_KEY.FORM, form);
@@ -88,6 +89,7 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == org.smartregister.chw.anc.util.Constants.REQUEST_CODE_GET_JSON){
             if (resultCode == RESULT_OK){
                 /*

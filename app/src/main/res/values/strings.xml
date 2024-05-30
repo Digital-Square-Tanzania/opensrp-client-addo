@@ -499,4 +499,9 @@
     <string name="patient_name">Patient Name</string>
     <string name="client_avatar">Client Avatar</string>
 
+    <string name="evalueate_commodities">Give Commodities</string>
+    <string name="evalueate_medication_dispensed">Medication Dispensed</string>
+    <string name="evalueate_prescription">Prescription from HF or Malaria Lab Tests</string>
+    <string name="evalueate_prescription_note"> Prescription Note </string>
+
 </resources>

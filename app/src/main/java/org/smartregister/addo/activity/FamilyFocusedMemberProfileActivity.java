@@ -590,8 +590,8 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         }
     }
 
-    private JSONObject createReferralFormField(String key, String value){
-        try{
+    private JSONObject createReferralFormField(String key, Object value) {
+        try {
             JSONObject referralTypeJsonObject = new JSONObject();
             referralTypeJsonObject.put("key", key);
             referralTypeJsonObject.put("text", "name");
@@ -599,11 +599,17 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
             referralTypeJsonObject.put("value", value);
             referralTypeJsonObject.put("openmrs_entity", "concept");
             referralTypeJsonObject.put("openmrs_entity_id", key);
+
+            // Add additional field for referral_date key
+            if ("referral_date".equals(key)) {
+                referralTypeJsonObject.put("openmrs_data_type", "date");
+            }
+
             return referralTypeJsonObject;
-        }catch (Exception e){
+        } catch (Exception e) {
             Timber.e(e);
         }
-        return  null;
+        return null;
     }
 
     public String referralTime(){

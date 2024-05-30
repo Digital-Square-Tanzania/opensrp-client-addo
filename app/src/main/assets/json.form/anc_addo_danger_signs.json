@@ -576,6 +576,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "referral_appointment_date",
+        "openmrs_data_type": "date",
         "type": "date_picker",
         "hint": "{{step3_referral_appointment_date_hint}}",
         "min_date": "today",

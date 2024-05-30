@@ -224,6 +224,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:id="@+id/action_items_focused_member"
+            android:visibility="gone"
             layout="@layout/view_record_services_focused"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

@@ -16,11 +16,14 @@ import org.smartregister.addo.R;
 import org.smartregister.addo.interactor.AddoVisitInteractor;
 import org.smartregister.chw.anc.activity.BaseAncHomeVisitActivity;
 import org.smartregister.chw.anc.domain.MemberObject;
+import org.smartregister.chw.anc.model.BaseAncHomeVisitAction;
 import org.smartregister.chw.anc.presenter.BaseAncHomeVisitPresenter;
 import org.smartregister.family.util.Constants;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
 import org.smartregister.util.LangUtils;
+
+import java.util.LinkedHashMap;
 
 public class AddoVisitActivity extends BaseAncHomeVisitActivity {
 
@@ -101,5 +104,11 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
             }
         }
 
+    }
+
+    @Override
+    public void initializeActions(LinkedHashMap<String, BaseAncHomeVisitAction> map) {
+        super.initializeActions(map);
+        redrawVisitUI();
     }
 }

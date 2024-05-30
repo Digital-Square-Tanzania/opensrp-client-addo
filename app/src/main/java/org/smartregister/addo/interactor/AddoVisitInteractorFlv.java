@@ -167,14 +167,13 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
                 if (hasPrescription){
                     actionList.clear();
                     evaluatePrescriptions(mContext, actionList);
-                    refreshActionList();
                 }else{
-                    actionList.clear();
+                    actionList.remove(mContext.getString(R.string.evalueate_prescription_note));
                     evaluateDangerSigns(mContext, actionList);
                     evaluateMedicationDispensed(mContext, actionList);
                     evaluateCommodities(mContext, actionList);
-                    refreshActionList();
                 }
+                refreshActionList();
             }catch (Exception e){
                 Timber.e(e);
             }

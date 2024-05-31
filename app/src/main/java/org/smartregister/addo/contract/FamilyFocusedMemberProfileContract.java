@@ -3,6 +3,7 @@ package org.smartregister.addo.contract;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.tag.FormTag;
 import org.smartregister.view.contract.BaseProfileContract;
 
 import java.util.Map;
@@ -51,7 +52,7 @@ public interface FamilyFocusedMemberProfileContract {
 
         boolean checkIfVisitTasksDone();
 
-        void submitReferralEvent(String baseEntityId, JSONArray jsonArray);
+        void submitReferralEvent(String baseEntityId, JSONArray jsonArray, FormTag formTag);
 
     }
 
@@ -65,7 +66,7 @@ public interface FamilyFocusedMemberProfileContract {
 
         void submitVisit(boolean editMode, String memberID, Map<String, String> formForSubmission, InteractorCallBack callBack);
 
-        void submitReferralEvent(String baseEntityId, JSONArray jsonArray);
+        void submitReferralEvent(String baseEntityId, JSONArray jsonArray, FormTag formTag);
 
     }
 

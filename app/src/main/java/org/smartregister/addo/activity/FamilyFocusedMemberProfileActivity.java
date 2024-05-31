@@ -38,6 +38,8 @@ import org.smartregister.addo.util.JsonFormUtils;
 import org.smartregister.addo.util.ReferralUtils;
 import org.smartregister.chw.anc.domain.MemberObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.tag.FormTag;
+import org.smartregister.family.FamilyLibrary;
 import org.smartregister.family.activity.FamilyWizardFormActivity;
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.family.model.BaseFamilyProfileMemberModel;
@@ -45,6 +47,7 @@ import org.smartregister.family.util.Constants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.helper.ImageRenderHelper;
 import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.simprint.OnDialogButtonClick;
 import org.smartregister.util.FormUtils;
 import org.smartregister.view.activity.BaseProfileActivity;
@@ -60,6 +63,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
@@ -448,6 +452,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
             try {
                 String jsonString = data.getStringExtra(Constants.JSON_FORM_EXTRA.JSON);
                 JSONObject form = new JSONObject(jsonString);
+                AllSharedPreferences allSharedPreferences = org.smartregister.util.Utils.getAllSharedPreferences();
 
                 // complete any linkage first
                 ReferralUtils.closeLinkageAndOpenFollowUp(baseEntityId, form.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE), jsonString, villageTown);
@@ -472,6 +477,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                     if (!buttonAction.isEmpty()) {
                         String facilityValue = JsonFormUtils.getValue(form, "chw_referral_hf");
                         String facility = facilityValue.substring(2, facilityValue.length() - 2);
+                        FormTag formTag = formTag(allSharedPreferences);
                         // Check if the client has referral already or not
                         if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID_2, facility, baseEntityId, CoreConstants.JsonAssets.REFERRAL_CODE)) {
                             closeOpenNewReferral(this, new OnDialogButtonClick() {
@@ -481,10 +487,10 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                                     FamilyDao.archiveHFTasksForEntity(baseEntityId);
 
                                     // Open a new referral
-                                    ReferralUtils.createReferralTask(baseEntityId, form.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE), jsonString, villageTown, facility);
+                                    ReferralUtils.createReferralTask(baseEntityId, form.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE), jsonString, villageTown, facility, formTag.formSubmissionId);
 
                                     // Create a referral event
-                                    presenter().submitReferralEvent(baseEntityId, createReferralForm(jsonString, encounterType));
+                                    presenter().submitReferralEvent(baseEntityId, createReferralForm(jsonString, encounterType), formTag);
 
                                     // Dispense
                                     checkDSPresentProposedMedsAndDispense(form);
@@ -498,10 +504,10 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                             });
                         } else {
                             //refer
-                            ReferralUtils.createReferralTask(baseEntityId, form.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE), jsonString, villageTown, facility);
+                            ReferralUtils.createReferralTask(baseEntityId, form.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE), jsonString, villageTown, facility, formTag.formSubmissionId);
 
                             // Create a referral event
-                            presenter().submitReferralEvent(baseEntityId, createReferralForm(jsonString, encounterType));
+                            presenter().submitReferralEvent(baseEntityId, createReferralForm(jsonString, encounterType), formTag);
 
                             checkDSPresentProposedMedsAndDispense(form);
 
@@ -521,6 +527,18 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                 e.printStackTrace();
             }
         }
+    }
+
+    private FormTag formTag(AllSharedPreferences allSharedPreferences) {
+        FormTag formTag = new FormTag();
+        formTag.providerId = allSharedPreferences.fetchRegisteredANM();
+        formTag.appVersion = FamilyLibrary.getInstance().getApplicationVersion();
+        formTag.databaseVersion = FamilyLibrary.getInstance().getDatabaseVersion();
+        formTag.team = allSharedPreferences.fetchDefaultTeam(allSharedPreferences.fetchRegisteredANM());
+        formTag.teamId = allSharedPreferences.fetchDefaultTeamId(allSharedPreferences.fetchRegisteredANM());
+        formTag.locationId = LocationHelper.getInstance().getOpenMrsLocationId(villageTown);
+        formTag.formSubmissionId = UUID.randomUUID().toString();
+        return formTag;
     }
 
     public JSONArray createReferralForm(String jsonString, String encounterType){

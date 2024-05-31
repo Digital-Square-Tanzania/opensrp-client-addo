@@ -27,7 +27,7 @@ import timber.log.Timber;
 
 public class ReferralUtils {
 
-    public static void createReferralTask(String baseEntityId, String focus, String jsonString, String villageTown, String facility) {
+    public static void createReferralTask(String baseEntityId, String focus, String jsonString, String villageTown, String facility, String formSubmissionId) {
         Task task = new Task();
         task.setIdentifier(UUID.randomUUID().toString());
 
@@ -51,7 +51,8 @@ public class ReferralUtils {
         task.setOwner(allSharedPreferences.fetchRegisteredANM());
         task.setSyncStatus(BaseRepository.TYPE_Created);
         task.setRequester(allSharedPreferences.getANMPreferredName(allSharedPreferences.fetchRegisteredANM()));
-        task.setLocation(Utils.getAddoLocationId());
+        task.setLocation(locationHelper.getOpenMrsLocationId(villageTown));
+        task.setReasonReference(formSubmissionId);
         AddoApplication.getInstance().getTaskRepository().addOrUpdate(task);
     }
 

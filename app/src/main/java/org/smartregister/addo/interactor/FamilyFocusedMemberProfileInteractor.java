@@ -120,11 +120,11 @@ public class FamilyFocusedMemberProfileInteractor implements FamilyFocusedMember
     }
 
     @Override
-    public void submitReferralEvent(String baseEntityId, JSONArray jsonArray) {
+    public void submitReferralEvent(String baseEntityId, JSONArray jsonArray, FormTag formTag) {
         try{
             final ECSyncHelper syncHelper = AddoApplication.getInstance().getEcSyncHelper();
             AllSharedPreferences allSharedPreferences = org.smartregister.util.Utils.getAllSharedPreferences();
-            FormTag formTag = formTag(allSharedPreferences);
+//            FormTag formTag = formTag(allSharedPreferences);
             JSONObject metadata= new JSONObject();
             Event event = org.smartregister.util.JsonFormUtils.createEvent(jsonArray, metadata, formTag, baseEntityId,"Referral Registration","ec_referral");
             event.setEventId(UUID.randomUUID().toString());
@@ -134,17 +134,6 @@ public class FamilyFocusedMemberProfileInteractor implements FamilyFocusedMember
         }catch (JSONException e){
             Timber.e(e);
         }
-    }
-
-    private FormTag formTag(AllSharedPreferences allSharedPreferences) {
-        FormTag formTag = new FormTag();
-        formTag.providerId = allSharedPreferences.fetchRegisteredANM();
-        formTag.appVersion = FamilyLibrary.getInstance().getApplicationVersion();
-        formTag.databaseVersion = FamilyLibrary.getInstance().getDatabaseVersion();
-        formTag.team = allSharedPreferences.fetchDefaultTeam(allSharedPreferences.fetchRegisteredANM());
-        formTag.teamId = allSharedPreferences.fetchDefaultTeamId(allSharedPreferences.fetchRegisteredANM());
-        formTag.locationId = getClientLocationId(village);
-        return formTag;
     }
 
     protected void submitVisit(final boolean editMode, final String memberID, final Map<String, String> dsForm, String parentEventType) throws Exception {

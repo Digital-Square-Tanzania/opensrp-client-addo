@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.smartregister.addo.contract.FamilyFocusedMemberProfileContract;
 import org.smartregister.addo.interactor.FamilyFocusedMemberProfileInteractor;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.tag.FormTag;
 import org.smartregister.family.contract.FamilyProfileMemberContract;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
@@ -145,8 +146,8 @@ public class FamilyFocusedMemberProfileActivityPresenter implements FamilyFocuse
     }
 
     @Override
-    public void submitReferralEvent(String baseEntityId, JSONArray jsonArray) {
-        interactor.submitReferralEvent(baseEntityId, jsonArray);
+    public void submitReferralEvent(String baseEntityId, JSONArray jsonArray, FormTag formTag) {
+        interactor.submitReferralEvent(baseEntityId, jsonArray, formTag);
     }
 
     @Override

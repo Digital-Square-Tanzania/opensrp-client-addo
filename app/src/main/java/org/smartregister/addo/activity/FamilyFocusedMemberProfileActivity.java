@@ -49,6 +49,7 @@ import org.smartregister.simprint.OnDialogButtonClick;
 import org.smartregister.util.FormUtils;
 import org.smartregister.view.activity.BaseProfileActivity;
 import org.smartregister.view.customcontrols.CustomFontTextView;
+import org.smartregister.addo.util.Constants.FamilyMemberType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -313,7 +314,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                 startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getAddoAttendPrescriptionsFromHf()), getString(R.string.attend_prescription_form_title));
                 break;
             case R.id.textview_record_addo_visit:
-                AddoVisitActivity.startMe(this, memberObject, false);
+                AddoVisitActivity.startMe(this, memberObject, false, getFamilyMemberType());
                 break;
             default:
                 super.onClick(view);
@@ -631,4 +632,18 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         return imageResourceId;
 
     }
+
+    private FamilyMemberType getFamilyMemberType() {
+        if (isChildClient()) {
+            return FamilyMemberType.CHILD;
+        }
+        if (isPncClient()) {
+            return FamilyMemberType.PNC;
+        }
+        if (isAncClient()) {
+            return FamilyMemberType.ANC;
+        }
+        return FamilyMemberType.Other;
+    }
+
 }

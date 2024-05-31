@@ -404,5 +404,5 @@ public class Constants {
         public static final String PREFERENCE_PRODUCTION_ENVIRONMENT_SWITCH = "enable_production";
     }
 
-    public enum FamilyMemberType {ANC, PNC, Other}
+    public enum FamilyMemberType {CHILD, ANC, PNC, Other}
 }

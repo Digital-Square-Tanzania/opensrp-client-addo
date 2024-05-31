@@ -2,6 +2,7 @@ package org.smartregister.addo.interactor;
 
 import org.smartregister.addo.dao.AncDao;
 import org.smartregister.addo.dao.VisitDao;
+import org.smartregister.addo.util.Constants.FamilyMemberType;
 import org.smartregister.chw.anc.contract.BaseAncHomeVisitContract;
 import org.smartregister.chw.anc.domain.MemberObject;
 import org.smartregister.chw.anc.interactor.BaseAncHomeVisitInteractor;
@@ -17,6 +18,12 @@ import timber.log.Timber;
 public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
 
     private Flavor flavor = new AddoVisitInteractorFlv();
+
+    private final FamilyMemberType clientType;
+
+    public AddoVisitInteractor(FamilyMemberType clientType) {
+        this.clientType = clientType;
+    }
 
     public Flavor getFlavor() {
         return flavor;
@@ -54,7 +61,7 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
             final LinkedHashMap<String, BaseAncHomeVisitAction> actionList = new LinkedHashMap<>();
 
             try {
-                for (Map.Entry<String, BaseAncHomeVisitAction> entry : flavor.calculateActions(view, memberObject, callBack).entrySet()) {
+                for (Map.Entry<String, BaseAncHomeVisitAction> entry : flavor.calculateActions(view, memberObject, callBack, clientType).entrySet()) {
                     actionList.put(entry.getKey(), entry.getValue());
                 }
             } catch (BaseAncHomeVisitAction.ValidationException e) {
@@ -69,7 +76,10 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
 
     public interface Flavor {
 
-        LinkedHashMap<String, BaseAncHomeVisitAction> calculateActions(final BaseAncHomeVisitContract.View view, MemberObject memberObject, final BaseAncHomeVisitContract.InteractorCallBack callBack) throws BaseAncHomeVisitAction.ValidationException;
+        LinkedHashMap<String, BaseAncHomeVisitAction> calculateActions(final BaseAncHomeVisitContract.View view,
+                                                                       MemberObject memberObject,
+                                                                       final BaseAncHomeVisitContract.InteractorCallBack callBack,
+                                                                       final FamilyMemberType clientType) throws BaseAncHomeVisitAction.ValidationException;
 
         void addExtraObs(Event baseEvent);
 

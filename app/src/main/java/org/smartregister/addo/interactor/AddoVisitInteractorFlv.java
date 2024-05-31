@@ -7,6 +7,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.addo.R;
 import org.smartregister.addo.util.Constants;
+import org.smartregister.addo.util.Constants.FamilyMemberType;
+import org.smartregister.addo.util.CoreConstants;
 import org.smartregister.chw.anc.actionhelper.DangerSignsHelper;
 import org.smartregister.chw.anc.actionhelper.HomeVisitActionHelper;
 import org.smartregister.chw.anc.contract.BaseAncHomeVisitContract;
@@ -30,15 +32,18 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
     protected LinkedHashMap<String, BaseAncHomeVisitAction> actionList;
     Context context;
     private BaseAncHomeVisitContract.InteractorCallBack callback;
+
+    private FamilyMemberType clientType;
     @Override
-    public LinkedHashMap<String, BaseAncHomeVisitAction> calculateActions(BaseAncHomeVisitContract.View view, MemberObject memberObject, BaseAncHomeVisitContract.InteractorCallBack callBack) throws BaseAncHomeVisitAction.ValidationException {
+    public LinkedHashMap<String, BaseAncHomeVisitAction> calculateActions(BaseAncHomeVisitContract.View view, MemberObject memberObject, BaseAncHomeVisitContract.InteractorCallBack callBack, FamilyMemberType clientType) throws BaseAncHomeVisitAction.ValidationException {
         actionList = new LinkedHashMap<>();
         context = view.getContext();
         callback = callBack;
+        this.clientType = clientType;
 
         try {
             //add action here
-            evaluatePrescriptionsNote(context, actionList);
+            evaluatePrescriptionsNote(context, actionList, clientType);
         }catch (Exception e){
             Timber.e(e);
         }
@@ -47,7 +52,9 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
     }
 
     private void evaluatePrescriptionsNote(final Context context,
-                                           LinkedHashMap<String, BaseAncHomeVisitAction> actionList) throws Exception {
+                                           LinkedHashMap<String, BaseAncHomeVisitAction> actionList, FamilyMemberType clientType) throws Exception {
+
+
 
         BaseAncHomeVisitAction prescription_note = new BaseAncHomeVisitAction.Builder(context, context.getString(R.string.evalueate_prescription_note))
                 .withOptional(false)
@@ -57,11 +64,24 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         actionList.put(context.getString(R.string.evalueate_prescription_note), prescription_note);
     }
 
+    private String getDangerSignsFormName(Constants.FamilyMemberType clientType) {
+        switch (clientType) {
+            case CHILD:
+                return CoreConstants.JSON_FORM.getChildAddoDangerSigns();
+            case ANC:
+                return CoreConstants.JSON_FORM.getAncAddoDangerSigns();
+            case PNC:
+                return CoreConstants.JSON_FORM.getPncAddoDangerSigns();
+            default:
+                return "";
+        }
+    }
+
     private void evaluateDangerSigns(final Context context,
                                      LinkedHashMap<String, BaseAncHomeVisitAction> actionList) throws Exception {
         BaseAncHomeVisitAction danger_signs = new BaseAncHomeVisitAction.Builder(context, context.getString(R.string.anc_home_visit_danger_signs))
                 .withOptional(false)
-                .withFormName(Constants.JSON_FORM.ANC_HOME_VISIT.getAncAddoDangerSign())
+                .withFormName(getDangerSignsFormName(clientType))
                 .withHelper(new DangerSignsHelper())
                 .build();
         actionList.put(context.getString(R.string.anc_home_visit_danger_signs), danger_signs);

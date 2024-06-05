@@ -643,9 +643,9 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         for (int i = jsonArray.length() -1 ; i >= 0; i--) {
             try {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                for (String key : keysToRemove) {
-                    String jsonKeyValue = jsonObject.getString("key");
-                    if(jsonKeyValue.equals(key)){
+                for (String value : keysToRemove) {
+                    String jsonValue = jsonObject.getString("key");
+                    if(jsonValue.equals(value)){
                         jsonArray.remove(i);
                         break;
                     }

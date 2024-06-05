@@ -643,6 +643,9 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         if (isAncClient()) {
             return FamilyMemberType.ANC;
         }
+        if (isAdolescentClient()) {
+            return FamilyMemberType.ADOLESCENT;
+        }
         return FamilyMemberType.Other;
     }
 

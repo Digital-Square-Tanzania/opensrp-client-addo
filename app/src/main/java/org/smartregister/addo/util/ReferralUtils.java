@@ -57,7 +57,7 @@ public class ReferralUtils {
     }
 
     private static String getReferralProblems(String jsonString) {
-        String[] dangerSignKeysArray = { Constants.DANGER_SIGN_KEYS.CHILD, Constants.DANGER_SIGN_KEYS.ANC, Constants.DANGER_SIGN_KEYS.PNC, Constants.DANGER_SIGN_KEYS.ADOLESCENT};
+        String[] dangerSignKeysArray = { Constants.DangerSignKeys.CHILD, Constants.DangerSignKeys.ANC, Constants.DangerSignKeys.PNC, Constants.DangerSignKeys.ADOLESCENT};
         String referralProblems = "";
         List<String> formValues = new ArrayList<>();
         try {

@@ -565,6 +565,9 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                     dangerSignsJsonObject = JsonFormUtils.getFieldJSONObject(fields,"adolescent_condition_present");
                     chwReferralService = ADOLESCENT_SCREENING_ENCOUNTER;
                     break;
+                default:
+                    Timber.e("Encounter type not recognized: %S", encounterType);
+                    break;
             }
 
             // Combine the checkbox values
@@ -641,7 +644,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
             try {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 for (String key : keysToRemove) {
-                    String jsonKeyValue = jsonObject.getString(JsonFormUtils.KEY);
+                    String jsonKeyValue = jsonObject.getString("key");
                     if(jsonKeyValue.equals(key)){
                         jsonArray.remove(i);
                         break;

@@ -123,8 +123,6 @@ public class FamilyFocusedMemberProfileInteractor implements FamilyFocusedMember
     public void submitReferralEvent(String baseEntityId, JSONArray jsonArray, FormTag formTag) {
         try{
             final ECSyncHelper syncHelper = AddoApplication.getInstance().getEcSyncHelper();
-            AllSharedPreferences allSharedPreferences = org.smartregister.util.Utils.getAllSharedPreferences();
-//            FormTag formTag = formTag(allSharedPreferences);
             JSONObject metadata= new JSONObject();
             Event event = org.smartregister.util.JsonFormUtils.createEvent(jsonArray, metadata, formTag, baseEntityId,"Referral Registration","ec_referral");
             event.setEventId(UUID.randomUUID().toString());

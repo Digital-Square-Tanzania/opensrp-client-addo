@@ -74,7 +74,7 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
         form.setActionBarBackground(R.color.family_actionbar);
         form.setWizard(false);
 
-        Intent intent = new Intent(this, Utils.metadata().familyMemberFormActivity);
+        Intent intent = new Intent(this, ReferralWizardFormActivity.class);
         intent.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonForm.toString());
         intent.putExtra(Constants.WizardFormActivity.EnableOnCloseDialog, false);
         intent.putExtra(JsonFormConstants.JSON_FORM_KEY.FORM, form);

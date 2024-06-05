@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.addo.R;
+import org.smartregister.addo.actionhelper.AddoDangerSignsHelper;
 import org.smartregister.addo.util.Constants;
 import org.smartregister.addo.util.Constants.FamilyMemberType;
 import org.smartregister.addo.util.CoreConstants;
@@ -72,6 +73,8 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
                 return CoreConstants.JSON_FORM.getAncAddoDangerSigns();
             case PNC:
                 return CoreConstants.JSON_FORM.getPncAddoDangerSigns();
+            case ADOLESCENT:
+                return CoreConstants.JSON_FORM.getAdolescentAddoScreening();
             default:
                 return "";
         }
@@ -82,7 +85,7 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         BaseAncHomeVisitAction danger_signs = new BaseAncHomeVisitAction.Builder(context, context.getString(R.string.anc_home_visit_danger_signs))
                 .withOptional(false)
                 .withFormName(getDangerSignsFormName(clientType))
-                .withHelper(new DangerSignsHelper())
+                .withHelper(new AddoDangerSignsHelper())
                 .build();
         actionList.put(context.getString(R.string.anc_home_visit_danger_signs), danger_signs);
     }

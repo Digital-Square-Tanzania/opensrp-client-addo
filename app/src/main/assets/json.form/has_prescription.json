@@ -1,0 +1,106 @@
+{
+  "validate_on_submit": true,
+  "show_errors_on_submit": true,
+  "skip_blank_steps": true,
+  "properties_file_name": "has_prescription",
+  "count": "1",
+  "encounter_type": "ADDO Visit - Has Prescription",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "{{step1_title}}",
+    "fields": [
+      {
+        "key": "prescription",
+        "type": "label",
+        "text": "{{step1_start_message}}",
+        "label_text_size": "16sp",
+        "label_text_style": "bold"
+      },
+      {
+        "key": "spacer",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "spacer",
+        "type": "spacer",
+        "spacer_height": "20dp"
+      },
+      {
+        "key": "client_prescription_note_available",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "163748AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "type": "check_box",
+        "exclusive": [
+          "client_prescription_yes"
+        ],
+        "label": "{{step1_client_prescription_label}}",
+        "options": [
+          {
+            "key": "client_prescription_yes",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "text": "{{step1_client_prescription_yes}}",
+            "text_size": "18px",
+            "value": "false"
+          },
+          {
+            "key": "client_prescription_no",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "text": "{{step1_client_prescription_no}}",
+            "text_size": "18px",
+            "value": "false"
+          }
+        ],
+        "v_required" : {
+          "value" : "true",
+          "err": "{{step1_client_prescription_err}}"
+        }
+      }
+    ]
+  }
+}

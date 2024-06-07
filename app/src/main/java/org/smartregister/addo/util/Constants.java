@@ -128,6 +128,11 @@ public class Constants {
             private static final String TT_IMMUNIZATION = "anc_hv_tt_immunization";
             private static final String IPTP_SP = "anc_hv_anc_iptp_sp";
 
+            private static final String ANC_ADDO_DANGER_SIGN = "anc_addo_danger_signs";
+            private static final String ADDO_COMMODITIES = "addo_commodities";
+            private static final String ADDO_PRESCRIPTIONS_FROM_LAB = "addo_attend_prescriptions_from_lab_results";
+            private static final String ADDO_PRESCRIPTION_NOTE = "has_prescription";
+
             private static final String HEALTH_FACILITY_VISIT = "anc_hv_health_facility_visit";
             private static final String FAMILY_PLANNING = "anc_hv_family_planning";
             private static final String NUTRITION_STATUS = "anc_hv_nutrition_status";
@@ -136,6 +141,22 @@ public class Constants {
             private static final String OBSERVATION_AND_ILLNESS = "anc_hv_observations";
             private static final String REMARKS_AND_COMMENTS = "anc_hv_remarks_and_comments";
             private static final String EARLY_CHILDHOOD_DEVELOPMENT = "early_childhood_development";
+
+            public static String getAncAddoDangerSign() {
+                return ANC_ADDO_DANGER_SIGN;
+            }
+
+            public static String getAddoCommodities() {
+                return ADDO_COMMODITIES;
+            }
+
+            public static String getAddoPrescriptionsFromLab() {
+                return ADDO_PRESCRIPTIONS_FROM_LAB;
+            }
+
+            public static String getAddoPrescriptionNote() {
+                return ADDO_PRESCRIPTION_NOTE;
+            }
 
             public static String getDangerSigns() {
                 return Utils.getLocalForm(DANGER_SIGNS);
@@ -383,7 +404,7 @@ public class Constants {
         public static final String PREFERENCE_PRODUCTION_ENVIRONMENT_SWITCH = "enable_production";
     }
 
-    public enum FamilyMemberType {ANC, PNC, Other}
+    public enum FamilyMemberType {CHILD, ANC, PNC, ADOLESCENT, Other}
 
     public static final class DangerSignKeys {
         public static final String CHILD = "danger_signs_present_child";
@@ -391,4 +412,5 @@ public class Constants {
         public static final String PNC = "danger_signs_present_mama";
         public static final String ADOLESCENT = "adolescent_condition_present";
     }
+
 }

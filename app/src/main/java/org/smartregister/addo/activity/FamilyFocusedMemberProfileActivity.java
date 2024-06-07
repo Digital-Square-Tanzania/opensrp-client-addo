@@ -52,6 +52,7 @@ import org.smartregister.simprint.OnDialogButtonClick;
 import org.smartregister.util.FormUtils;
 import org.smartregister.view.activity.BaseProfileActivity;
 import org.smartregister.view.customcontrols.CustomFontTextView;
+import org.smartregister.addo.util.Constants.FamilyMemberType;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -87,6 +88,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
     private ImageView commoditiesCheckView;
     private ImageView dispenseDoneCheckView;
     private CustomFontTextView ctvScreeningMed, ctvCommodities, ctvDispense;
+    private CustomFontTextView recordAddoVisit;
     private ProgressBar progressBar;
     private View familyHeadView;
     private View primaryCaregiverView;
@@ -171,6 +173,9 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         ctvDispense = findViewById(R.id.tv_focused_client_dispense);
         progressBar.setVisibility(View.GONE);
         ctvDispense.setOnClickListener(this);
+
+        recordAddoVisit = findViewById(R.id.textview_record_addo_visit);
+        recordAddoVisit.setOnClickListener(this);
 
         checkIfVisitTasksDone();
     }
@@ -323,7 +328,9 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
             case R.id.tv_focused_client_dispense:
                 startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getAddoAttendPrescriptionsFromHf()), getString(R.string.attend_prescription_form_title), false);
                 break;
-
+            case R.id.textview_record_addo_visit:
+                AddoVisitActivity.startMe(this, memberObject, false, getFamilyMemberType());
+                break;
             default:
                 super.onClick(view);
                 break;
@@ -812,4 +819,21 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         return imageResourceId;
 
     }
+
+    private FamilyMemberType getFamilyMemberType() {
+        if (isChildClient()) {
+            return FamilyMemberType.CHILD;
+        }
+        if (isPncClient()) {
+            return FamilyMemberType.PNC;
+        }
+        if (isAncClient()) {
+            return FamilyMemberType.ANC;
+        }
+        if (isAdolescentClient()) {
+            return FamilyMemberType.ADOLESCENT;
+        }
+        return FamilyMemberType.Other;
+    }
+
 }

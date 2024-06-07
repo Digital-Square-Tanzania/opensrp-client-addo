@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jeasy.rules.api.Rules;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.smartregister.AllConstants;
 import org.smartregister.addo.R;
 import org.smartregister.addo.application.AddoApplication;
 import org.smartregister.addo.dao.AncDao;
@@ -309,7 +310,8 @@ public class AddoMemberRegisterProvider extends FamilyMemberRegisterProvider {
     }
 
     public void setHasRefarral(CommonPersonObjectClient pc, RegisterViewHolder viewHolder){
-        if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID, LocationHelper.getInstance().getOpenMrsLocationId(villageSelected), pc.entityId(), CoreConstants.JsonAssets.LINKAGE_CODE)){
+        if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID, Utils.getAddoLocationId(),
+                pc.entityId(), CoreConstants.JsonAssets.LINKAGE_CODE)){
             viewHolder.textViewHasReferral.setTextColor(context.getResources().getColor(R.color.alert_urgent_red));
             viewHolder.textViewHasReferral.setVisibility(View.VISIBLE);
         }else{

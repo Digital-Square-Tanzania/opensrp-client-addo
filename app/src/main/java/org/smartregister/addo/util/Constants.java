@@ -405,4 +405,12 @@ public class Constants {
     }
 
     public enum FamilyMemberType {CHILD, ANC, PNC, ADOLESCENT, Other}
+
+    public static final class DangerSignKeys {
+        public static final String CHILD = "danger_signs_present_child";
+        public static final String ANC = "danger_signs_present";
+        public static final String PNC = "danger_signs_present_mama";
+        public static final String ADOLESCENT = "adolescent_condition_present";
+    }
+
 }

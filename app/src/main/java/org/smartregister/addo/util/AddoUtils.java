@@ -14,6 +14,8 @@ import org.smartregister.addo.application.AddoApplication;
 import org.smartregister.util.FormUtils;
 import org.smartregister.util.Utils;
 
+import java.util.List;
+
 import timber.log.Timber;
 
 public class AddoUtils extends Utils {
@@ -158,6 +160,39 @@ public class AddoUtils extends Utils {
             }
         }
         return formUtils;
+    }
+
+    public static String displayReferralFacilities(JSONObject jsonForm){
+        try{
+            JSONArray fields = org.smartregister.addo.util.JsonFormUtils.fields(jsonForm);
+            JSONObject hf_facilities = org.smartregister.addo.util.JsonFormUtils.getFieldJSONObject(fields, "chw_referral_hf");
+            JSONArray facilityArrayOption = hf_facilities.getJSONArray("options");
+            JSONArray facilityArrayOptionExclusive = hf_facilities.getJSONArray("exclusive");
+
+            List<JSONObject> facilities= org.smartregister.addo.util.Utils.getWardFacilities();
+            assert facilities != null;
+            for (JSONObject facility : facilities) {
+                JSONObject node = facility.getJSONObject("node");
+                String locationId = node.getString("locationId");
+                String name = node.getString("name");
+
+                // Add the locationId for exclusive selection
+                facilityArrayOptionExclusive.put(locationId);
+
+                JSONObject newOption = new JSONObject();
+                newOption.put("key", locationId);
+                newOption.put("text", name);
+                newOption.put("value", false);
+                newOption.put("openmrs_entity", "concept");
+                newOption.put("openmrs_entity_id", locationId);
+
+                facilityArrayOption.put(newOption);
+            }
+            return jsonForm.toString();
+        }catch (JSONException e){
+            Timber.e(e);
+        }
+        return null;
     }
 
 }

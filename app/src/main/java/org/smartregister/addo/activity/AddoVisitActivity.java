@@ -26,15 +26,21 @@ import org.smartregister.addo.util.Constants.FamilyMemberType;
 
 import java.util.LinkedHashMap;
 
+import timber.log.Timber;
+
 public class AddoVisitActivity extends BaseAncHomeVisitActivity {
 
     protected FamilyMemberType clientType;
-    public static void startMe(Activity activity, MemberObject memberObject, boolean isEditMode, FamilyMemberType familyMemberType){
+
+    private String villageTown;
+
+    public static void startMe(Activity activity, MemberObject memberObject, boolean isEditMode, FamilyMemberType familyMemberType, String villageTown){
         Intent intent = new Intent(activity, AddoVisitActivity.class);
         intent.putExtra("MemberObject", memberObject);
         intent.putExtra(BASE_ENTITY_ID, memberObject.getBaseEntityId());
         intent.putExtra(EDIT_MODE, isEditMode);
         intent.putExtra("family_member_type", familyMemberType.name());
+        intent.putExtra("villageTown", villageTown);
         activity.startActivityForResult(intent, org.smartregister.chw.anc.util.Constants.REQUEST_CODE_HOME_VISIT);
     }
 
@@ -42,6 +48,7 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
     protected void onCreate(Bundle savedInstanceState) {
         baseEntityID = this.getIntent().getStringExtra(BASE_ENTITY_ID);
         clientType = FamilyMemberType.valueOf(this.getIntent().getStringExtra("family_member_type"));
+        villageTown = this.getIntent().getStringExtra("villageTown");
         super.onCreate(savedInstanceState);
     }
 
@@ -50,7 +57,7 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
         presenter = new BaseAncHomeVisitPresenter(
                 memberObject,
                 this,
-                new AddoVisitInteractor(clientType)//Interactor instance here
+                new AddoVisitInteractor(clientType, villageTown)//Interactor instance here
         );
     }
 
@@ -99,6 +106,8 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == org.smartregister.chw.anc.util.Constants.REQUEST_CODE_GET_JSON){
             if (resultCode == RESULT_OK){
+                String json = data.getStringExtra(Constants.INTENT_KEY.JSON);
+                Timber.e("json%S", json);
                 /*
 
                 1. Save the forms filled in actions here

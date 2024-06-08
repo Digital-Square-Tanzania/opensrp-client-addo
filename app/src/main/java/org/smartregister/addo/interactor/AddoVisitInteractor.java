@@ -1,9 +1,23 @@
 package org.smartregister.addo.interactor;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.smartregister.addo.R;
+import org.smartregister.addo.application.AddoApplication;
 import org.smartregister.addo.dao.VisitDao;
+import org.smartregister.addo.util.AddoUtils;
 import org.smartregister.addo.util.Constants;
 import org.smartregister.addo.util.Constants.FamilyMemberType;
 import org.smartregister.addo.util.CoreConstants;
+import org.smartregister.addo.util.JsonFormUtils;
+import org.smartregister.addo.util.ReferralUtils;
+import org.smartregister.chw.anc.AncLibrary;
 import org.smartregister.chw.anc.contract.BaseAncHomeVisitContract;
 import org.smartregister.chw.anc.domain.MemberObject;
 import org.smartregister.chw.anc.interactor.BaseAncHomeVisitInteractor;
@@ -11,14 +25,23 @@ import org.smartregister.chw.anc.model.BaseAncHomeVisitAction;
 import org.smartregister.chw.anc.util.VisitUtils;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.clientandeventmodel.Obs;
+import org.smartregister.domain.tag.FormTag;
+import org.smartregister.family.FamilyLibrary;
+import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.sync.helper.ECSyncHelper;
+import org.smartregister.util.DateTimeTypeConverter;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import timber.log.Timber;
 
@@ -28,8 +51,15 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
 
     private final FamilyMemberType clientType;
 
-    public AddoVisitInteractor(FamilyMemberType clientType) {
+    private final String villageTown;
+
+    public static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
+
+    public AddoVisitInteractor(FamilyMemberType clientType, String villageTown) {
         this.clientType = clientType;
+        this.villageTown = villageTown;
+
     }
 
     public Flavor getFlavor() {
@@ -139,4 +169,64 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
 
     }
 
+    protected void submitVisit(boolean editMode, String memberID, Map<String, BaseAncHomeVisitAction> map, String parentEventType) throws Exception {
+         super.submitVisit(editMode, memberID, map, parentEventType);
+
+        FormTag formTag = formTag(org.smartregister.util.Utils.getAllSharedPreferences());
+
+        String dangerSignJsonString = "";
+        String medicationJsonString = "";
+
+        for (Map.Entry<String, BaseAncHomeVisitAction> entry : map.entrySet()) {
+            if (entry.getKey().equals(AddoApplication.getInstance().getContext().getStringResource(R.string.anc_home_visit_danger_signs))) {
+                dangerSignJsonString = entry.getValue().getJsonPayload();
+            } else if (entry.getKey().equals(AddoApplication.getInstance().getContext().getStringResource(R.string.evalueate_medication_dispensed))) {
+                medicationJsonString = entry.getValue().getJsonPayload();
+            }
+        }
+
+        JSONObject dangerSignJsonObject = new JSONObject(dangerSignJsonString);
+
+        String facilityValue = JsonFormUtils.getValue(dangerSignJsonObject, "chw_referral_hf");
+        String facility =  facilityValue.substring(2, facilityValue.length() - 2);
+
+        // Create a referral task
+        ReferralUtils.createReferralTask(memberID,
+                dangerSignJsonObject.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE),
+                dangerSignJsonString,
+                villageTown,
+                facility,
+                formTag.formSubmissionId);
+
+        // Create referral event
+        submitReferralEvent(memberID,
+                AddoUtils.createReferralForm(dangerSignJsonObject, new JSONObject(medicationJsonString)),
+                formTag);
+    }
+
+    public void submitReferralEvent(String baseEntityId, JSONArray jsonArray, FormTag formTag) {
+        try{
+            final ECSyncHelper syncHelper = AddoApplication.getInstance().getEcSyncHelper();
+            JSONObject metadata= new JSONObject();
+            Event event = org.smartregister.util.JsonFormUtils.createEvent(jsonArray, metadata, formTag, baseEntityId,"Referral Registration","ec_referral");
+            event.setEventId(UUID.randomUUID().toString());
+            JSONObject eventJson = new JSONObject(gson.toJson(event));
+            Timber.e("%S", eventJson);
+            syncHelper.addEvent(baseEntityId, eventJson);
+        }catch (JSONException e){
+            Timber.e(e);
+        }
+    }
+
+    private FormTag formTag(AllSharedPreferences allSharedPreferences) {
+        FormTag formTag = new FormTag();
+        formTag.providerId = allSharedPreferences.fetchRegisteredANM();
+        formTag.appVersion = FamilyLibrary.getInstance().getApplicationVersion();
+        formTag.databaseVersion = FamilyLibrary.getInstance().getDatabaseVersion();
+        formTag.team = allSharedPreferences.fetchDefaultTeam(allSharedPreferences.fetchRegisteredANM());
+        formTag.teamId = allSharedPreferences.fetchDefaultTeamId(allSharedPreferences.fetchRegisteredANM());
+        formTag.locationId = LocationHelper.getInstance().getOpenMrsLocationId(villageTown);
+        formTag.formSubmissionId = UUID.randomUUID().toString();
+        return formTag;
+    }
 }

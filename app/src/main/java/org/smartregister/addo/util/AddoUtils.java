@@ -14,6 +14,10 @@ import org.smartregister.addo.application.AddoApplication;
 import org.smartregister.util.FormUtils;
 import org.smartregister.util.Utils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
@@ -195,4 +199,122 @@ public class AddoUtils extends Utils {
         return null;
     }
 
+    public static JSONArray createReferralForm(JSONObject dangerSignJsonObject, JSONObject medicationJsonObject){
+        try{
+            String encounterType = dangerSignJsonObject.optString(JsonFormUtils.ENCOUNTER_TYPE);
+            JSONArray referralFormArray = dangerSignJsonObject.getJSONObject("step3").getJSONArray("fields");
+            JSONArray fields = JsonFormUtils.fields(dangerSignJsonObject);
+            JSONObject dangerSignsJsonObject = new JSONObject();
+            String chwReferralService = "";
+            switch(encounterType) {
+                case CHILD_DANGER_SIGN_SCREENING_ENCOUNTER:
+                    dangerSignsJsonObject = JsonFormUtils.getFieldJSONObject(fields,"danger_signs_present_child");
+                    chwReferralService = CHILD_DANGER_SIGN_SCREENING_ENCOUNTER;
+                    break;
+                case ANC_DANGER_SIGN_SCREENING_ENCOUNTER:
+                    dangerSignsJsonObject = JsonFormUtils.getFieldJSONObject(fields,"danger_signs_present");
+                    chwReferralService = ANC_DANGER_SIGN_SCREENING_ENCOUNTER;
+                    break;
+                case PNC_DANGER_SIGN_SCREENING_ENCOUNTER:
+                    dangerSignsJsonObject = JsonFormUtils.getFieldJSONObject(fields,"danger_signs_present_mama");
+                    chwReferralService = PNC_DANGER_SIGN_SCREENING_ENCOUNTER;
+                    break;
+                case ADOLESCENT_SCREENING_ENCOUNTER:
+                    dangerSignsJsonObject = JsonFormUtils.getFieldJSONObject(fields,"adolescent_condition_present");
+                    chwReferralService = ADOLESCENT_SCREENING_ENCOUNTER;
+                    break;
+                default:
+                    Timber.e("Encounter type not recognized: %S", encounterType);
+                    break;
+            }
+
+            // Combine the checkbox values
+            dangerSignsJsonObject.put(JsonFormUtils.COMBINE_CHECKBOX_OPTION_VALUES,true);
+
+            // Rename the key for danger sign JSONObject to match UCS
+            dangerSignsJsonObject.put("key","problem");
+
+            //Convert referral appointment date to timestamp
+            convertDateToLong(fields, "referral_appointment_date");
+
+            //Add other referral form fields
+            referralFormArray.put(dangerSignsJsonObject);
+            referralFormArray.put(createReferralFormField("referral_status", Constants.REFERRAL_BUSINESS_STATUS));
+            referralFormArray.put(createReferralFormField("chw_referral_service", chwReferralService));
+            referralFormArray.put(createReferralFormField("referral_date", Long.toString(Calendar.getInstance().getTimeInMillis())));
+            referralFormArray.put(createReferralFormField("referral_type", Constants.REFERRAL_TYPE));
+            referralFormArray.put(createReferralFormField("referral_time", currentDateTime()));
+
+            // Remove unwanted fields
+            removeFieldsFromJSONArray(referralFormArray, "asterisk_symbol", "save_n_refer");
+
+            // Add meds dispensed
+            JSONObject medications_selected = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(medicationJsonObject), "medications_selected");
+            referralFormArray.put(medications_selected);
+
+            return  referralFormArray;
+        }catch (JSONException e){
+            Timber.e(e);
+        }
+        return  null;
+    }
+
+    private static JSONObject createReferralFormField(String key, Object value) {
+        try {
+            JSONObject referralTypeJsonObject = new JSONObject();
+            referralTypeJsonObject.put("key", key);
+            referralTypeJsonObject.put("text", "name");
+            referralTypeJsonObject.put("type", key);
+            referralTypeJsonObject.put("value", value);
+            referralTypeJsonObject.put("openmrs_entity", "concept");
+            referralTypeJsonObject.put("openmrs_entity_id", key);
+
+            // Add additional field for referral_date key
+            if ("referral_date".equals(key)) {
+                referralTypeJsonObject.put("openmrs_data_type", "date");
+            }
+
+            return referralTypeJsonObject;
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+        return null;
+    }
+
+    public static void convertDateToLong(JSONArray fields, String fieldName) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            JSONObject dateField = JsonFormUtils.getFieldJSONObject(fields, fieldName);
+            String value = dateField.getString(JsonFormUtils.VALUE);
+            Date formattedDate = dateFormat.parse(value);
+            assert formattedDate != null;
+            long unixTimestamp = formattedDate.getTime();
+            dateField.put("value", String.valueOf(unixTimestamp));
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+    }
+
+    public static String currentDateTime(){
+        Date now = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+        return dateFormat.format(now);
+    }
+
+    public static void removeFieldsFromJSONArray(JSONArray jsonArray, String... keysToRemove) {
+        for (int i = jsonArray.length() -1 ; i >= 0; i--) {
+            try {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                for (String value : keysToRemove) {
+                    String jsonValue = jsonObject.getString("key");
+                    if(jsonValue.equals(value)){
+                        jsonArray.remove(i);
+                        break;
+                    }
+                }
+            } catch (JSONException e) {
+                Timber.e(e);
+            }
+        }
+    }
 }

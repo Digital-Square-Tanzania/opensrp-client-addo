@@ -185,23 +185,41 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
             }
         }
 
-        JSONObject dangerSignJsonObject = new JSONObject(dangerSignJsonString);
+        if (!getButtonAction(dangerSignJsonString).isEmpty()){
+            JSONObject dangerSignJsonObject = new JSONObject(dangerSignJsonString);
 
-        String facilityValue = JsonFormUtils.getValue(dangerSignJsonObject, "chw_referral_hf");
-        String facility =  facilityValue.substring(2, facilityValue.length() - 2);
+            String facilityValue = JsonFormUtils.getValue(dangerSignJsonObject, "chw_referral_hf");
+            String facility =  facilityValue.substring(2, facilityValue.length() - 2);
 
-        // Create a referral task
-        ReferralUtils.createReferralTask(memberID,
-                dangerSignJsonObject.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE),
-                dangerSignJsonString,
-                villageTown,
-                facility,
-                formTag.formSubmissionId);
+            // Create a referral task
+            ReferralUtils.createReferralTask(memberID,
+                    dangerSignJsonObject.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE),
+                    dangerSignJsonString,
+                    villageTown,
+                    facility,
+                    formTag.formSubmissionId);
 
-        // Create referral event
-        submitReferralEvent(memberID,
-                AddoUtils.createReferralForm(dangerSignJsonObject, new JSONObject(medicationJsonString)),
-                formTag);
+            // Create referral event
+            submitReferralEvent(memberID,
+                    AddoUtils.createReferralForm(dangerSignJsonObject, new JSONObject(medicationJsonString)),
+                    formTag);
+        }
+    }
+
+    public String getButtonAction(String dangerSignJsonObject) {
+        String buttonAction = "";
+        try {
+            JSONObject jsonObject = JsonFormUtils.getFieldJSONObject(
+                    JsonFormUtils.fields(new JSONObject(dangerSignJsonObject)),
+                    "save_n_refer"
+            );
+            if (jsonObject.optString("value", "").compareToIgnoreCase("true") == 0) {
+                buttonAction = jsonObject.getJSONObject("action").getString("behaviour");
+            }
+        } catch (JSONException e) {
+            Timber.e(e);
+        }
+        return buttonAction;
     }
 
     public void submitReferralEvent(String baseEntityId, JSONArray jsonArray, FormTag formTag) {

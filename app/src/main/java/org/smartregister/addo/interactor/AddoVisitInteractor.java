@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.addo.R;
 import org.smartregister.addo.application.AddoApplication;
+import org.smartregister.addo.dao.FamilyDao;
 import org.smartregister.addo.dao.VisitDao;
 import org.smartregister.addo.util.AddoUtils;
 import org.smartregister.addo.util.Constants;
@@ -191,7 +192,10 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
             String facilityValue = JsonFormUtils.getValue(dangerSignJsonObject, "chw_referral_hf");
             String facility =  facilityValue.substring(2, facilityValue.length() - 2);
 
-            // Create a referral task
+            if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID_2, facility, memberID, CoreConstants.JsonAssets.REFERRAL_CODE)) {
+                FamilyDao.archiveHFTasksForEntity(memberID);
+            }
+
             ReferralUtils.createReferralTask(memberID,
                     dangerSignJsonObject.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE),
                     dangerSignJsonString,

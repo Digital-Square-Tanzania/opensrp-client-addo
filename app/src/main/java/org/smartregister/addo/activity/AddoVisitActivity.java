@@ -128,5 +128,6 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
             mAdapter.notifyDataSetChanged();
         }
         displayProgressBar(false);
+        redrawVisitUI();
     }
 }

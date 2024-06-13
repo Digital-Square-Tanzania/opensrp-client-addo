@@ -168,8 +168,8 @@ public class AddoUtils extends Utils {
 
     public static String displayReferralFacilities(JSONObject jsonForm){
         try{
-            JSONArray fields = org.smartregister.addo.util.JsonFormUtils.fields(jsonForm);
-            JSONObject hf_facilities = org.smartregister.addo.util.JsonFormUtils.getFieldJSONObject(fields, "chw_referral_hf");
+            JSONArray fields = JsonFormUtils.fields(jsonForm);
+            JSONObject hf_facilities = JsonFormUtils.getFieldJSONObject(fields, "chw_referral_hf");
             JSONArray facilityArrayOption = hf_facilities.getJSONArray("options");
             JSONArray facilityArrayOptionExclusive = hf_facilities.getJSONArray("exclusive");
 

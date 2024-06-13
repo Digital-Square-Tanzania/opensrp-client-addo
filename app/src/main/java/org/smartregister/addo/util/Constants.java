@@ -4,6 +4,10 @@ public class Constants {
 
     public static String EC_CLIENT_FIELDS = "ec_client_fields.json";
 
+    public static final String REFERRAL_BUSINESS_STATUS = "PENDING";
+
+    public static final String REFERRAL_TYPE = "addo_to_facility_referral";
+
     public static class CONFIGURATION {
         public static final String FAMILY_REGISTER = "family_register";
         public static final String FAMILY_MEMBER_REGISTER = "family_member_register";

@@ -1,8 +1,11 @@
 package org.smartregister.addo.interactor;
 
+import static org.smartregister.addo.util.AddoUtils.displayReferralFacilities;
+
 import android.content.Context;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.addo.R;
@@ -254,10 +257,26 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         private String signs_present;
         private Context context;
         private LinkedHashMap<String, BaseAncHomeVisitAction> actionList;
+        private String jsonPayload;
 
         public AddoDangerSignsHelper(Context context, LinkedHashMap<String, BaseAncHomeVisitAction> actionList) {
             this.context = context;
             this.actionList = actionList;
+        }
+
+        @Override
+        public String getPreProcessed() {
+            try{
+                return displayReferralFacilities(new JSONObject(this.jsonPayload));
+            }catch (JSONException e){
+                Timber.e(e);
+            }
+            return null;
+        }
+
+        @Override
+        public void onJsonFormLoaded(String jsonString, Context context, Map<String, List<VisitDetail>> details) {
+            this.jsonPayload = jsonString;
         }
 
         @Override

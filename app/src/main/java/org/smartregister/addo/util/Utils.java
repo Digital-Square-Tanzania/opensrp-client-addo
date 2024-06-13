@@ -369,6 +369,21 @@ public class Utils extends org.smartregister.family.util.Utils {
         return null;
     }
 
+    public static List<String> getWardFacilitiesIds() {
+        List<String> wardFacilityIds = new ArrayList<>();
+        try {
+            List<JSONObject> facilities = Utils.getWardFacilities();
+            for (JSONObject facility : facilities) {
+                JSONObject node = facility.getJSONObject("node");
+                String locationId = node.getString("locationId");
+                wardFacilityIds.add(locationId);
+            }
+        } catch (JSONException e) {
+            Timber.e(e);
+        }
+        return wardFacilityIds;
+    }
+
     private static List<JSONObject> getChildrenLocation(JSONObject node, String tag) throws JSONException {
 
         List<JSONObject> childLocations = new ArrayList<>();

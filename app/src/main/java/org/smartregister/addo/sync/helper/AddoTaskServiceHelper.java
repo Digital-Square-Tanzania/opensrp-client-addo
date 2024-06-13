@@ -33,6 +33,7 @@ public class AddoTaskServiceHelper extends TaskServiceHelper {
         String userLocationId = Utils.context().allSharedPreferences().fetchUserLocalityId(providerId);
         List<String> locationIds = LocationHelper.getInstance().locationsFromHierarchy(true, null);
         locationIds.add(userLocationId);
+        locationIds.addAll(Utils.getWardFacilitiesIds());
         return locationIds;
     }
 
@@ -40,6 +41,7 @@ public class AddoTaskServiceHelper extends TaskServiceHelper {
     protected Set<String> getPlanDefinitionIds() {
         Set<String> res = new HashSet<>();
         res.add(CoreConstants.ADDO_LINKAGE_PLAN_ID);
+        res.add(CoreConstants.REFERRAL_PLAN_ID_2);
         return res;
     }
 }

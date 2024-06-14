@@ -250,6 +250,11 @@ public class AddoUtils extends Utils {
 
             // Add meds dispensed
             JSONObject medications_selected = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(medicationJsonObject), "medications_selected");
+
+            JSONObject medicationDispensed = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(medicationJsonObject), "medicine_dispensed");
+            String medicationDispensedValue = medicationDispensed.getString(JsonFormUtils.VALUE);
+            referralFormArray.put(createReferralFormField("service_before_referral", getDispensedMedicineName(medicationDispensedValue)));
+
             referralFormArray.put(medications_selected);
 
             return  referralFormArray;
@@ -264,7 +269,7 @@ public class AddoUtils extends Utils {
             JSONObject referralTypeJsonObject = new JSONObject();
             referralTypeJsonObject.put("key", key);
             referralTypeJsonObject.put("text", "name");
-            referralTypeJsonObject.put("type", key);
+            referralTypeJsonObject.put("type", key.equals("service_before_referral") ? "text" : key);
             referralTypeJsonObject.put("value", value);
             referralTypeJsonObject.put("openmrs_entity", "concept");
             referralTypeJsonObject.put("openmrs_entity_id", key);
@@ -316,5 +321,23 @@ public class AddoUtils extends Utils {
                 Timber.e(e);
             }
         }
+    }
+
+    private static String getDispensedMedicineName(String medicationDispensedValue) throws JSONException {
+        JSONArray jsonArrayMedicineDispensed = new JSONArray(medicationDispensedValue);
+
+        StringBuilder medListString = new StringBuilder();
+
+        for (int i = 0; i < jsonArrayMedicineDispensed.length(); i++) {
+            JSONObject selectedMedObject = jsonArrayMedicineDispensed.getJSONObject(i);
+            String medicineName = selectedMedObject.getString("text");
+            if (medListString.length() > 0) {
+                medListString.append(", ");
+            }
+            medListString.append(medicineName);
+        }
+
+        return medListString.toString();
+
     }
 }

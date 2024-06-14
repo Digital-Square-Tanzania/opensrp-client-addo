@@ -13,6 +13,7 @@ import org.smartregister.addo.application.AddoApplication;
 import org.smartregister.addo.dao.FamilyDao;
 import org.smartregister.addo.dao.VisitDao;
 import org.smartregister.addo.util.AddoUtils;
+import org.smartregister.addo.util.AddoVisitUtils;
 import org.smartregister.addo.util.Constants;
 import org.smartregister.addo.util.Constants.FamilyMemberType;
 import org.smartregister.addo.util.CoreConstants;
@@ -21,8 +22,10 @@ import org.smartregister.addo.util.ReferralUtils;
 import org.smartregister.chw.anc.AncLibrary;
 import org.smartregister.chw.anc.contract.BaseAncHomeVisitContract;
 import org.smartregister.chw.anc.domain.MemberObject;
+import org.smartregister.chw.anc.domain.Visit;
 import org.smartregister.chw.anc.interactor.BaseAncHomeVisitInteractor;
 import org.smartregister.chw.anc.model.BaseAncHomeVisitAction;
+import org.smartregister.chw.anc.util.NCUtils;
 import org.smartregister.chw.anc.util.VisitUtils;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.clientandeventmodel.Obs;
@@ -250,5 +253,15 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
         formTag.locationId = LocationHelper.getInstance().getOpenMrsLocationId(villageTown);
         formTag.formSubmissionId = UUID.randomUUID().toString();
         return formTag;
+    }
+
+    @Override
+    protected void processExternalVisits(Visit visit, Map<String, BaseAncHomeVisitAction> externalVisits, String memberID) throws Exception {
+        super.processExternalVisits(visit, externalVisits, memberID);
+
+        List<Visit> visits = new ArrayList<>(1);
+        visits.add(visit);
+
+        AddoVisitUtils.processVisits(visits, AncLibrary.getInstance().visitRepository(), AncLibrary.getInstance().visitDetailsRepository());
     }
 }

@@ -186,6 +186,10 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
             }
         }
 
+        JSONObject dangerSignsForm = new JSONObject(dangerSignJsonString);
+
+        ReferralUtils.closeLinkageAndOpenFollowUp(memberID, dangerSignsForm.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE), dangerSignJsonString, villageTown);
+
         if (!getButtonAction(dangerSignJsonString).isEmpty()){
             JSONObject dangerSignJsonObject = new JSONObject(dangerSignJsonString);
 

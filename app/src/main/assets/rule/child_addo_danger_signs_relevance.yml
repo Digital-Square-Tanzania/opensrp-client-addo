@@ -39,3 +39,19 @@ condition: "(step2_danger_signs_present_child.isEmpty() && step1_child_present.c
             (step2_danger_signs_present_child.contains('chk_other') && step2_other_illness_description.isEmpty())"
 actions:
   - "isRelevant = true"
+
+---
+name: step3_chw_referral_hf
+description: referral facility
+priority: 1
+condition: "step2_child_conditions.contains('oversleeping_umbilica_rashes_puseyes') || step2_child_conditions.contains('general_conditions_for_referral') || step2_child_conditions.contains('malaria') || step2_child_conditions.contains('severe_malaria') || step2_child_conditions.contains('pneumonia') || step2_child_conditions.contains('severe_pneumonia') || step2_child_conditions.contains('diarrhea_without_blood') || step2_child_conditions.contains('bloody_diarrhea') || step2_child_conditions.contains('chronic_diarrhea')"
+actions:
+  - "isRelevant = true"
+
+---
+name: step3_referral_appointment_date
+description: referral appointment date
+priority: 1
+condition: "step2_child_conditions.contains('oversleeping_umbilica_rashes_puseyes') || step2_child_conditions.contains('general_conditions_for_referral') || step2_child_conditions.contains('malaria') || step2_child_conditions.contains('severe_malaria') || step2_child_conditions.contains('pneumonia') || step2_child_conditions.contains('severe_pneumonia') || step2_child_conditions.contains('diarrhea_without_blood') || step2_child_conditions.contains('bloody_diarrhea') || step2_child_conditions.contains('chronic_diarrhea')"
+actions:
+  - "isRelevant = true"

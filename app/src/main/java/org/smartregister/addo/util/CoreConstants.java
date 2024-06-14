@@ -15,6 +15,7 @@ public class CoreConstants {
 
     public static final String ENTITY_ID = "entity_id";
     public static final String REFERRAL_PLAN_ID = "6270285b-5a3b-4647-b772-c0b3c52e2b72";
+    public static final String REFERRAL_PLAN_ID_2 = "5270285b-5a3b-4647-b772-c0b3c52e2b71";
     public static String EC_CLIENT_FIELDS = "ec_client_fields.json";
     public static String IGNORE = "ignore";
 
@@ -23,6 +24,8 @@ public class CoreConstants {
     public enum ServiceType {DUE, OVERDUE, UPCOMING}
 
     public enum FamilyServiceType {DUE, OVERDUE, NOTHING}
+
+    public static final String ADDO_LINKAGE_PLAN_ID = "6270285b-5a3b-4647-b772-c0b3c52e2b72";
 
 
     public interface DB_CONSTANTS {
@@ -641,6 +644,8 @@ public class CoreConstants {
         public static final String REFERRAL_CODE = "Referral";
         public static final String LINKAGE_CODE = "Linkage";
 
+        public static final String FOLLOW_UP_VISIT_CODE = "Linkage_Followup";
+
 
         public static class FAMILY_MEMBER {
             public static final String HIGHEST_EDUCATION_LEVEL = "highest_edu_level";
@@ -783,6 +788,8 @@ public class CoreConstants {
     public static final class BUSINESS_STATUS {
         public static final String REFERRED = "Referred";
         public static final String LINKED = "Linked";
+
+        public static final String TO_FOLLOW_UP = "To-Follow-Up";
         public static final String IN_PROGRESS = "In-Progress";
         public static final String COMPLETE = "Complete";
         public static final String EXPIRED = "Expired";

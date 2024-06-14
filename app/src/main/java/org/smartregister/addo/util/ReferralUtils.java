@@ -15,16 +15,19 @@ import org.smartregister.domain.Task;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
+import org.smartregister.repository.TaskRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import timber.log.Timber;
 
 public class ReferralUtils {
 
-    public static void createReferralTask(String baseEntityId, String focus, String jsonString, String villageTown) {
+    public static void createReferralTask(String baseEntityId, String focus, String jsonString, String villageTown, String facility, String formSubmissionId) {
         Task task = new Task();
         task.setIdentifier(UUID.randomUUID().toString());
 
@@ -32,11 +35,11 @@ public class ReferralUtils {
         AllSharedPreferences allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
         LocationHelper locationHelper = LocationHelper.getInstance();
 
-        task.setPlanIdentifier(CoreConstants.REFERRAL_PLAN_ID);
-        task.setGroupIdentifier(locationHelper.getOpenMrsLocationId(villageTown));
+        task.setPlanIdentifier(CoreConstants.REFERRAL_PLAN_ID_2);
+        task.setGroupIdentifier(facility);
         task.setStatus(Task.TaskStatus.READY);
         task.setBusinessStatus(CoreConstants.BUSINESS_STATUS.REFERRED);
-        task.setPriority(1);
+        task.setPriority(3);
         task.setCode(CoreConstants.JsonAssets.REFERRAL_CODE);
         task.setDescription(referralProblems);
         task.setFocus(focus);
@@ -49,10 +52,12 @@ public class ReferralUtils {
         task.setSyncStatus(BaseRepository.TYPE_Created);
         task.setRequester(allSharedPreferences.getANMPreferredName(allSharedPreferences.fetchRegisteredANM()));
         task.setLocation(locationHelper.getOpenMrsLocationId(villageTown));
+        task.setReasonReference(formSubmissionId);
         AddoApplication.getInstance().getTaskRepository().addOrUpdate(task);
     }
 
     private static String getReferralProblems(String jsonString) {
+        String[] dangerSignKeysArray = { Constants.DangerSignKeys.CHILD, Constants.DangerSignKeys.ANC, Constants.DangerSignKeys.PNC, Constants.DangerSignKeys.ADOLESCENT};
         String referralProblems = "";
         List<String> formValues = new ArrayList<>();
         try {
@@ -60,7 +65,8 @@ public class ReferralUtils {
             JSONArray fields = FormUtils.getMultiStepFormFields(problemJson);
             for (int i = 0; i < fields.length(); i++) {
                 JSONObject field = fields.getJSONObject(i);
-                if (field.optBoolean(CoreConstants.JsonAssets.IS_PROBLEM, true)) {
+                String key = field.getString("key");
+                if (Arrays.asList(dangerSignKeysArray).contains(key)) {
                     if (field.has(JsonFormConstants.TYPE) && JsonFormConstants.CHECK_BOX.equals(field.getString(JsonFormConstants.TYPE))) {
                         if (field.has(JsonFormConstants.OPTIONS_FIELD_NAME)) {
                             JSONArray options = field.getJSONArray(JsonFormConstants.OPTIONS_FIELD_NAME);
@@ -134,4 +140,75 @@ public class ReferralUtils {
 
         return !AddoApplication.getInstance().getTaskRepository().getTasksByEntityAndCode(planId, groupId, forEntity, code).isEmpty();
     }
+
+    public static void closeLinkageAndOpenFollowUp(String baseEntityId, String focus, String jsonString, String villageTown) {
+
+        if (StringUtils.isBlank(baseEntityId))
+            return;
+
+        List<String> updatedTaskIds = updateLinkageTasksFor(baseEntityId);
+
+        // If there is a task updated for this entity id then open a followup task
+        if (!updatedTaskIds.isEmpty()) {
+            for (String updatedTaskId : updatedTaskIds) {
+                createFollowUpTask(baseEntityId, focus, jsonString, villageTown, updatedTaskId);
+            }
+        }
+
+    }
+
+    private static List<String> updateLinkageTasksFor(String baseEntityId) {
+
+        TaskRepository taskRepository = AddoApplication.getInstance().getTaskRepository();
+        Set<Task> tasks = taskRepository.getTasksByEntityAndCode(
+                CoreConstants.ADDO_LINKAGE_PLAN_ID,
+                Utils.getAddoLocationId(),
+                baseEntityId,
+                CoreConstants.JsonAssets.LINKAGE_CODE);
+
+        List<String> updatedTaskIds = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getStatus() == Task.TaskStatus.READY) {
+                task.setStatus(Task.TaskStatus.COMPLETED);
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                task.setLastModified(new DateTime());
+                taskRepository.addOrUpdate(task);
+                updatedTaskIds.add(task.getIdentifier());
+            }
+
+        }
+
+        return updatedTaskIds;
+    }
+
+    private static void createFollowUpTask(String baseEntityId, String focus, String jsonString, String villageTown, String updatedTaskId) {
+
+        Task task = new Task();
+        task.setIdentifier(UUID.randomUUID().toString());
+
+        String followUpProblems = getReferralProblems(jsonString);
+        AllSharedPreferences allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
+        LocationHelper locationHelper = LocationHelper.getInstance();
+
+        task.setPlanIdentifier(CoreConstants.REFERRAL_PLAN_ID);
+        task.setGroupIdentifier(locationHelper.getOpenMrsLocationId(villageTown));
+        task.setStatus(Task.TaskStatus.READY);
+        task.setBusinessStatus(CoreConstants.BUSINESS_STATUS.TO_FOLLOW_UP);
+        task.setPriority(1);
+        task.setCode(CoreConstants.JsonAssets.FOLLOW_UP_VISIT_CODE);
+        task.setDescription(followUpProblems);
+        task.setFocus(focus);
+        task.setForEntity(baseEntityId);
+        DateTime now = new DateTime();
+        task.setExecutionStartDate(now);
+        task.setAuthoredOn(now);
+        task.setLastModified(now);
+        task.setOwner(allSharedPreferences.fetchRegisteredANM());
+        task.setSyncStatus(BaseRepository.TYPE_Created);
+        task.setRequester(allSharedPreferences.getANMPreferredName(allSharedPreferences.fetchRegisteredANM()));
+        task.setLocation(locationHelper.getOpenMrsLocationId(villageTown));
+        task.setReasonReference(updatedTaskId);
+        AddoApplication.getInstance().getTaskRepository().addOrUpdate(task);
+    }
+
 }

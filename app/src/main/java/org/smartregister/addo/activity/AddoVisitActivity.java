@@ -22,22 +22,26 @@ import org.smartregister.family.util.Constants;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
 import org.smartregister.util.LangUtils;
+import org.smartregister.addo.util.Constants.FamilyMemberType;
 
 import java.util.LinkedHashMap;
 
 public class AddoVisitActivity extends BaseAncHomeVisitActivity {
 
-    public static void startMe(Activity activity, MemberObject memberObject, boolean isEditMode){
+    protected FamilyMemberType clientType;
+    public static void startMe(Activity activity, MemberObject memberObject, boolean isEditMode, FamilyMemberType familyMemberType){
         Intent intent = new Intent(activity, AddoVisitActivity.class);
         intent.putExtra("MemberObject", memberObject);
         intent.putExtra(BASE_ENTITY_ID, memberObject.getBaseEntityId());
         intent.putExtra(EDIT_MODE, isEditMode);
+        intent.putExtra("family_member_type", familyMemberType.name());
         activity.startActivityForResult(intent, org.smartregister.chw.anc.util.Constants.REQUEST_CODE_HOME_VISIT);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         baseEntityID = this.getIntent().getStringExtra(BASE_ENTITY_ID);
+        clientType = FamilyMemberType.valueOf(this.getIntent().getStringExtra("family_member_type"));
         super.onCreate(savedInstanceState);
     }
 
@@ -46,7 +50,7 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
         presenter = new BaseAncHomeVisitPresenter(
                 memberObject,
                 this,
-                new AddoVisitInteractor()//Interactor instance here
+                new AddoVisitInteractor(clientType)//Interactor instance here
         );
     }
 
@@ -70,7 +74,7 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
         form.setActionBarBackground(R.color.family_actionbar);
         form.setWizard(false);
 
-        Intent intent = new Intent(this, Utils.metadata().familyMemberFormActivity);
+        Intent intent = new Intent(this, ReferralWizardFormActivity.class);
         intent.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonForm.toString());
         intent.putExtra(Constants.WizardFormActivity.EnableOnCloseDialog, false);
         intent.putExtra(JsonFormConstants.JSON_FORM_KEY.FORM, form);
@@ -108,7 +112,12 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
 
     @Override
     public void initializeActions(LinkedHashMap<String, BaseAncHomeVisitAction> map) {
-        super.initializeActions(map);
-        redrawVisitUI();
+        actionList.clear();
+        actionList.putAll(map);
+
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+        displayProgressBar(false);
     }
 }

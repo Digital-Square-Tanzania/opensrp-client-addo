@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Addo</string>
 
+    <string name="has_linkage">Has Linkage</string>
+
     <string name="login_title">Afyatek CHW App</string>
     <string name="nav_logo">Afyatek</string>
     <string name="logo">logo</string>

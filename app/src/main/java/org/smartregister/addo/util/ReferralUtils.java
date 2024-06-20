@@ -138,7 +138,17 @@ public class ReferralUtils {
 
     public static boolean hasReferralTask(String planId, String groupId, String forEntity, String code) {
 
-        return !AddoApplication.getInstance().getTaskRepository().getTasksByEntityAndCode(planId, groupId, forEntity, code).isEmpty();
+        return !AddoApplication.getInstance().getTaskRepository().getTasksByEntityAndCode(planId, groupId, forEntity, requesterName(), code).isEmpty();
+    }
+
+    public static boolean hasHFReferralTask(String planId, String forEntity, String code) {
+        List<String> wardFacilityIds = Utils.getWardFacilitiesIds();
+        for (String wardFacilityId : wardFacilityIds) {
+            if (!AddoApplication.getInstance().getTaskRepository().getTasksByEntityAndCode(planId, wardFacilityId, forEntity, requesterName(), code).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void closeLinkageAndOpenFollowUp(String baseEntityId, String focus, String jsonString, String villageTown) {
@@ -164,6 +174,7 @@ public class ReferralUtils {
                 CoreConstants.ADDO_LINKAGE_PLAN_ID,
                 Utils.getAddoLocationId(),
                 baseEntityId,
+                requesterName(),
                 CoreConstants.JsonAssets.LINKAGE_CODE);
 
         List<String> updatedTaskIds = new ArrayList<>();
@@ -209,6 +220,11 @@ public class ReferralUtils {
         task.setLocation(locationHelper.getOpenMrsLocationId(villageTown));
         task.setReasonReference(updatedTaskId);
         AddoApplication.getInstance().getTaskRepository().addOrUpdate(task);
+    }
+
+    private static String requesterName(){
+        AllSharedPreferences allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
+        return allSharedPreferences.getANMPreferredName(allSharedPreferences.fetchRegisteredANM());
     }
 
 }

@@ -28,6 +28,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.smartregister.CoreLibrary;
 import org.smartregister.addo.R;
 import org.smartregister.addo.adapter.NavigationAdapter;
 import org.smartregister.addo.application.AddoApplication;
@@ -37,6 +38,7 @@ import org.smartregister.addo.presenter.NavigationPresenter;
 import org.smartregister.addo.util.Constants;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.util.LangUtils;
 
 import java.lang.ref.WeakReference;
@@ -398,9 +400,11 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
     }
 
     public int getReferralCount() {
+        AllSharedPreferences allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
         Cursor c = null;
+        String requester = (allSharedPreferences.getANMPreferredName(allSharedPreferences.fetchRegisteredANM()));
         try {
-            String query = "select count(*) from task where status = 'READY' AND priority = 3";
+            String query = "select count(*) from task where status = 'READY' AND priority = 3 AND (code != 'referral' OR (code = 'referral' AND requester = '" + requester + "') OR code = 'Linkage')";
 
             c = AddoApplication.getInstance().getRepository().getReadableDatabase().query(query);
 
@@ -418,6 +422,6 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
 
     public void getReferrals(){
         TextView textView = rootView.findViewById(R.id.referral_count);
-        textView.setText("Referrals: " + getReferralCount());
+        textView.setText("Referrals/Linkages: " + getReferralCount());
     }
 }

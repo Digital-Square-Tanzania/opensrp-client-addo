@@ -138,13 +138,13 @@ public class ReferralUtils {
 
     public static boolean hasReferralTask(String planId, String groupId, String forEntity, String code) {
 
-        return !AddoApplication.getInstance().getTaskRepository().getTasksByEntityAndCode(planId, groupId, forEntity, requesterName(), code).isEmpty();
+        return !AddoApplication.getInstance().getTaskRepository().getTasksByEntityAndCode(planId, groupId, forEntity, code).isEmpty();
     }
 
     public static boolean hasHFReferralTask(String planId, String forEntity, String code) {
         List<String> wardFacilityIds = Utils.getWardFacilitiesIds();
         for (String wardFacilityId : wardFacilityIds) {
-            if (!AddoApplication.getInstance().getTaskRepository().getTasksByEntityAndCode(planId, wardFacilityId, forEntity, requesterName(), code).isEmpty()) {
+            if (!AddoApplication.getInstance().getTaskRepository().getTasksByEntityAndCodeAndRequester(planId, wardFacilityId, forEntity, requesterName(), code).isEmpty()) {
                 return true;
             }
         }
@@ -174,7 +174,6 @@ public class ReferralUtils {
                 CoreConstants.ADDO_LINKAGE_PLAN_ID,
                 Utils.getAddoLocationId(),
                 baseEntityId,
-                requesterName(),
                 CoreConstants.JsonAssets.LINKAGE_CODE);
 
         List<String> updatedTaskIds = new ArrayList<>();

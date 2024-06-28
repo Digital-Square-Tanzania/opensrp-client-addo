@@ -226,7 +226,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
 
-    implementation('org.smartregister:opensrp-client-core:1.8.31-DTREE-6-SNAPSHOT') {
+    implementation('org.smartregister:opensrp-client-core:1.8.31-DTREE-7-SNAPSHOT') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.guava', module: 'guava'

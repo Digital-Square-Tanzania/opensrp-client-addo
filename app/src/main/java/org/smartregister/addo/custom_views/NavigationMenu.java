@@ -404,7 +404,7 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
         Cursor c = null;
         String requester = (allSharedPreferences.getANMPreferredName(allSharedPreferences.fetchRegisteredANM()));
         try {
-            String query = "select count(*) from task where status = 'READY' AND priority = 3 AND (code != 'referral' OR (code = 'referral' AND requester = '" + requester + "') OR code = 'Linkage')";
+            String query = "select count(*) from task where status = 'READY' AND priority = 3 AND (code != 'Referral' OR (code = 'Referral' AND requester = '" + requester + "') OR code = 'Linkage')";
 
             c = AddoApplication.getInstance().getRepository().getReadableDatabase().query(query);
 

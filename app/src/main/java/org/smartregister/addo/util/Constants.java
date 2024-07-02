@@ -351,6 +351,7 @@ public class Constants {
         public static final String VILLAGE_TOWN = "village_town";
         public static final String FAMILY_NAME = "family_name";
         public static final String GO_TO_DUE_PAGE = "go_to_due_page";
+        public static final String VILLAGE_SELECTED = "village_selected";
     }
 
     public static class ProfileActivityResults {
@@ -383,4 +384,11 @@ public class Constants {
     }
 
     public enum FamilyMemberType {ANC, PNC, Other}
+
+    public static final class DangerSignKeys {
+        public static final String CHILD = "danger_signs_present_child";
+        public static final String ANC = "danger_signs_present";
+        public static final String PNC = "danger_signs_present_mama";
+        public static final String ADOLESCENT = "adolescent_condition_present";
+    }
 }

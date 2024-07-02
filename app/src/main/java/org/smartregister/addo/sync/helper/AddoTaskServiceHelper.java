@@ -1,6 +1,8 @@
 package org.smartregister.addo.sync.helper;
 
 import org.smartregister.CoreLibrary;
+import org.smartregister.addo.util.CoreConstants;
+import org.smartregister.addo.util.Utils;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.sync.helper.TaskServiceHelper;
@@ -26,13 +28,18 @@ public class AddoTaskServiceHelper extends TaskServiceHelper {
 
     @Override
     protected List<String> getLocationIds() {
-        return LocationHelper.getInstance().locationsFromHierarchy(true, null);
+        // Added ward location to the list of locations
+        String providerId = Utils.context().allSharedPreferences().fetchRegisteredANM();
+        String userLocationId = Utils.context().allSharedPreferences().fetchUserLocalityId(providerId);
+        List<String> locationIds = LocationHelper.getInstance().locationsFromHierarchy(true, null);
+        locationIds.add(userLocationId);
+        return locationIds;
     }
 
     @Override
     protected Set<String> getPlanDefinitionIds() {
         Set<String> res = new HashSet<>();
-        res.add("5270285b-5a3b-4647-b772-c0b3c52e2b71");
+        res.add(CoreConstants.ADDO_LINKAGE_PLAN_ID);
         return res;
     }
 }

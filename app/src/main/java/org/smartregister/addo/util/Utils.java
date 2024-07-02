@@ -28,6 +28,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Period;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.CoreLibrary;
 import org.smartregister.addo.BuildConfig;
 import org.smartregister.addo.R;
@@ -42,8 +45,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import timber.log.Timber;
 
@@ -344,6 +349,57 @@ public class Utils extends org.smartregister.family.util.Utils {
 
     public static String getTranslatedGender(String gender) {
         return Gender.FEMALE.toString().equalsIgnoreCase(gender) ? context().getStringResource(R.string.female) : context().getStringResource(R.string.male);
+    }
+
+    public static String getAddoLocationId() {
+        return context().allSharedPreferences().fetchUserLocalityId(context().allSharedPreferences().fetchRegisteredANM());
+    }
+
+    public static List<JSONObject> getWardFacilities() {
+
+        try {
+            JSONObject structure = new JSONObject(context().anmLocationController().get());
+            JSONObject locationsHierarchy = structure.getJSONObject("locationsHierarchy");
+            JSONObject locationsHierarchyMap = locationsHierarchy.getJSONObject("map");
+            return getChildrenLocation(locationsHierarchyMap, "Facility");
+        } catch (JSONException e) {
+            Timber.e(e);
+        }
+
+        return null;
+    }
+
+    private static List<JSONObject> getChildrenLocation(JSONObject node, String tag) throws JSONException {
+
+        List<JSONObject> childLocations = new ArrayList<>();
+
+        List<String> nodeKeys = toList(node.keys());
+
+        for(String nodeKey: nodeKeys) {
+            JSONObject childNode = node.getJSONObject(nodeKey);
+            JSONArray nodeTags = childNode.getJSONObject("node").getJSONArray("tags");
+            for(int i = 0; i < nodeTags.length(); i++) {
+                String tagName = nodeTags.getString(i);
+                if(tagName.equalsIgnoreCase(tag)) {
+                    childLocations.add(childNode);
+                }
+            }
+            if (childNode.has("children")) {
+                JSONObject children = childNode.getJSONObject("children");
+                childLocations.addAll(getChildrenLocation(children, tag));
+            }
+        }
+
+        return childLocations;
+
+    }
+
+    private static  <T>List<T> toList(Iterator<T> arr) {
+        List<T> list = new ArrayList<>();
+        while (arr.hasNext()) {
+            list.add(arr.next());
+        }
+        return list;
     }
 
 }

@@ -12,6 +12,9 @@ import android.widget.RelativeLayout;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jeasy.rules.api.Rules;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.smartregister.AllConstants;
 import org.smartregister.addo.R;
 import org.smartregister.addo.application.AddoApplication;
 import org.smartregister.addo.dao.AncDao;
@@ -19,15 +22,18 @@ import org.smartregister.addo.dao.PNCDao;
 import org.smartregister.addo.util.ChildDBConstants;
 import org.smartregister.addo.util.Constants;
 import org.smartregister.addo.util.CoreConstants;
+import org.smartregister.addo.util.ReferralUtils;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
+import org.smartregister.domain.Task;
 import org.smartregister.family.fragment.BaseFamilyProfileMemberFragment;
 import org.smartregister.family.provider.FamilyMemberRegisterProvider;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.helper.ImageRenderHelper;
 import org.smartregister.addo.util.Utils;
+import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.view.contract.SmartRegisterClient;
 import org.smartregister.view.customcontrols.FontVariant;
 
@@ -42,16 +48,20 @@ import timber.log.Timber;
 
 import static org.smartregister.family.util.Utils.getName;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 public class AddoMemberRegisterProvider extends FamilyMemberRegisterProvider {
     private Context context;
     private View.OnClickListener onClickListener;
     private ImageRenderHelper imageRenderHelper;
+    private String villageSelected;
 
-    public AddoMemberRegisterProvider(Context context, CommonRepository commonRepository, Set visibleColumns, View.OnClickListener onClickListener, View.OnClickListener paginationClickListener, String familyHead, String primaryCaregiver) {
+    public AddoMemberRegisterProvider(Context context, CommonRepository commonRepository, Set visibleColumns, View.OnClickListener onClickListener, View.OnClickListener paginationClickListener, String familyHead, String primaryCaregiver, String villageSelected) {
         super(context, commonRepository, visibleColumns, onClickListener, paginationClickListener, familyHead, primaryCaregiver);
         this.onClickListener = onClickListener;
         this.context = context;
         this.imageRenderHelper = new ImageRenderHelper(context);
+        this.villageSelected = villageSelected;
     }
 
     @Override
@@ -154,6 +164,8 @@ public class AddoMemberRegisterProvider extends FamilyMemberRegisterProvider {
             attachNextArrowOnclickListener(nextArrow, client);
         }
 
+        // indicate if client has a referral
+        setHasRefarral(pc, viewHolder);
     }
 
     private void attachPatientOnclickListener(View view, SmartRegisterClient client) {
@@ -294,6 +306,16 @@ public class AddoMemberRegisterProvider extends FamilyMemberRegisterProvider {
         protected void onPostExecute(Void param) {
             // Update status column
 
+        }
+    }
+
+    public void setHasRefarral(CommonPersonObjectClient pc, RegisterViewHolder viewHolder){
+        if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID, Utils.getAddoLocationId(),
+                pc.entityId(), CoreConstants.JsonAssets.LINKAGE_CODE)){
+            viewHolder.textViewHasReferral.setTextColor(context.getResources().getColor(R.color.alert_urgent_red));
+            viewHolder.textViewHasReferral.setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.textViewHasReferral.setVisibility(View.GONE);
         }
     }
 }

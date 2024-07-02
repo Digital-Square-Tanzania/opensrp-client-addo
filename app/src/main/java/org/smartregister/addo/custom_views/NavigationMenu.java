@@ -232,6 +232,7 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
         syncTimeTitle.setText(parentActivity.getResources().getString(R.string.nav_last));
         ivSync = rootView.findViewById(R.id.ivSyncIcon);
         pbSync = rootView.findViewById(R.id.pbSync);
+        getReferrals();
 
         View.OnClickListener syncClicker = new View.OnClickListener() {
             @Override
@@ -240,8 +241,7 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
                         (R.string.action_start_sync), Toast.LENGTH_SHORT).show();
                 mPresenter.sync(parentActivity);
 
-                TextView textView = rootView.findViewById(R.id.referral_count);
-                textView.setText("Referrals: " + getReferralCount());
+                getReferrals();
             }
         };
 
@@ -400,7 +400,7 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
     public int getReferralCount() {
         Cursor c = null;
         try {
-            String query = "select count(*) from task where status = 'READY' AND priority = 2";
+            String query = "select count(*) from task where status = 'READY' AND priority = 3";
 
             c = AddoApplication.getInstance().getRepository().getReadableDatabase().query(query);
 
@@ -414,5 +414,10 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
             }
         }
         return 0;
+    }
+
+    public void getReferrals(){
+        TextView textView = rootView.findViewById(R.id.referral_count);
+        textView.setText("Referrals: " + getReferralCount());
     }
 }

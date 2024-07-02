@@ -141,6 +141,17 @@ public class ReferralUtils {
         return !AddoApplication.getInstance().getTaskRepository().getTasksByEntityAndCode(planId, groupId, forEntity, code).isEmpty();
     }
 
+    public static boolean hasHFReferralTask(String planId, String forEntity, String code) {
+        List<String> wardFacilityIds = Utils.getWardFacilitiesIds();
+        for (String wardFacilityId : wardFacilityIds) {
+            if (!AddoApplication.getInstance().getTaskRepository().getTasksByEntityAndCodeAndRequester(planId, wardFacilityId, forEntity, requesterName(), code).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public static void closeLinkageAndOpenFollowUp(String baseEntityId, String villageTown) {
 
         if (StringUtils.isBlank(baseEntityId))
@@ -208,6 +219,11 @@ public class ReferralUtils {
         task.setLocation(locationHelper.getOpenMrsLocationId(villageTown));
         task.setReasonReference(updatedTaskId);
         AddoApplication.getInstance().getTaskRepository().addOrUpdate(task);
+    }
+
+    private static String requesterName(){
+        AllSharedPreferences allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
+        return allSharedPreferences.getANMPreferredName(allSharedPreferences.fetchRegisteredANM());
     }
 
 }

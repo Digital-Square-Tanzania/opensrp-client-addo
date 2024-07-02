@@ -312,8 +312,12 @@ public class AddoMemberRegisterProvider extends FamilyMemberRegisterProvider {
     public void setHasRefarral(CommonPersonObjectClient pc, RegisterViewHolder viewHolder){
         if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID, Utils.getAddoLocationId(),
                 pc.entityId(), CoreConstants.JsonAssets.LINKAGE_CODE)){
+            viewHolder.textViewHasReferral.setText(context.getString(R.string.has_linkage));
             viewHolder.textViewHasReferral.setTextColor(context.getResources().getColor(R.color.alert_urgent_red));
             viewHolder.textViewHasReferral.setVisibility(View.VISIBLE);
+        }else if (ReferralUtils.hasHFReferralTask(CoreConstants.REFERRAL_PLAN_ID_2, pc.entityId(), CoreConstants.JsonAssets.REFERRAL_CODE)){
+            viewHolder.textViewHasReferral.setVisibility(View.VISIBLE);
+            viewHolder.textViewHasReferral.setTextColor(context.getResources().getColor(R.color.alert_urgent_red));
         }else{
             viewHolder.textViewHasReferral.setVisibility(View.GONE);
         }

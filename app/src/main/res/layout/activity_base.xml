@@ -21,11 +21,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#fff"
+        android:background="#2c2c2c"
         android:fitsSystemWindows="true"
         app:itemBackground="@drawable/drawer_item_background"
-        app:itemIconTint="#8A1A51"
-        app:itemTextColor="#8A1A51"
+        app:itemIconTint="@android:color/white"
+        app:itemTextColor="@android:color/white"
         app:theme="@style/AppTheme.AppBarOverlay.NavigationDrawerStyle">
 
         <RelativeLayout
@@ -49,14 +49,15 @@
                     android:layout_alignParentTop="true"
                     android:contentDescription="Afya-Tek"
                     android:src="@drawable/ic_addo_image"
-                    android:visibility="gone"/>
+                    android:visibility="visible"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:orientation="horizontal"
                     android:gravity="center_horizontal|center_vertical"
-                    android:id="@+id/program_stakeholders">
+                    android:id="@+id/program_stakeholders"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="100dp"
@@ -257,7 +258,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:background="@color/white"
+                android:background="@color/colorDark"
                 android:paddingStart="15dp"
                 android:paddingLeft="15dp"
                 android:paddingTop="15dp"

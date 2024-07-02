@@ -462,7 +462,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                 AllSharedPreferences allSharedPreferences = org.smartregister.util.Utils.getAllSharedPreferences();
 
                 // complete any linkage first
-                ReferralUtils.closeLinkageAndOpenFollowUp(baseEntityId, form.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE), jsonString, villageTown);
+                ReferralUtils.closeLinkageAndOpenFollowUp(baseEntityId, villageTown);
 
                 // Check if it is ANC, PNC or Child Danger sing screening and handle medication based on the screening results
                 String encounterType = form.optString(JsonFormUtils.ENCOUNTER_TYPE);

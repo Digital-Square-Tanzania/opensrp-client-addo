@@ -186,6 +186,8 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
             }
         }
 
+        ReferralUtils.closeLinkageAndOpenFollowUp(memberID, villageTown);
+
         if (!getButtonAction(dangerSignJsonString).isEmpty()){
             JSONObject dangerSignJsonObject = new JSONObject(dangerSignJsonString);
 

@@ -315,6 +315,21 @@
           }
         },
         {
+          "column_name": "mother_entity_id",
+          "type": "Client",
+          "json_mapping": {
+            "field": "relationships.mother"
+          }
+        },
+        {
+          "column_name": "entry_point",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "entry_point"
+          }
+        },
+        {
           "column_name": "first_name",
           "type": "Client",
           "json_mapping": {
@@ -368,7 +383,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "161543AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "concept": "early_bf_1hr"
           }
         },
         {
@@ -376,7 +391,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "162558AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "concept": "disabilities"
           }
         },
         {
@@ -384,7 +399,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "160632AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "concept": "type_of_disability"
           }
         },
         {
@@ -392,7 +407,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "165406AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "concept": "birth_cert_available"
           }
         },
         {
@@ -400,7 +415,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "164147AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "concept": "rhc_card"
           }
         },
         {
@@ -408,7 +423,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "163301AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "concept": "nutrition_status"
           }
         },
         {
@@ -461,7 +476,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "162052AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "concept": "birth_regist_number"
           }
         },
         {

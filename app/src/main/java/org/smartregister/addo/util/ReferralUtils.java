@@ -141,23 +141,23 @@ public class ReferralUtils {
         return !AddoApplication.getInstance().getTaskRepository().getTasksByEntityAndCode(planId, groupId, forEntity, code).isEmpty();
     }
 
-    public static void closeLinkageAndOpenFollowUp(String baseEntityId, String focus, String jsonString, String villageTown) {
+    public static void closeLinkageAndOpenFollowUp(String baseEntityId, String villageTown) {
 
         if (StringUtils.isBlank(baseEntityId))
             return;
 
-        List<String> updatedTaskIds = updateLinkageTasksFor(baseEntityId);
+        List<Task> updatedTasks = updateLinkageTasksFor(baseEntityId);
 
         // If there is a task updated for this entity id then open a followup task
-        if (!updatedTaskIds.isEmpty()) {
-            for (String updatedTaskId : updatedTaskIds) {
-                createFollowUpTask(baseEntityId, focus, jsonString, villageTown, updatedTaskId);
+        if (!updatedTasks.isEmpty()) {
+            for (Task updatedTask : updatedTasks) {
+                createFollowUpTask(baseEntityId, updatedTask.getFocus(), updatedTask.getDescription(), villageTown, updatedTask.getIdentifier());
             }
         }
 
     }
 
-    private static List<String> updateLinkageTasksFor(String baseEntityId) {
+    private static List<Task> updateLinkageTasksFor(String baseEntityId) {
 
         TaskRepository taskRepository = AddoApplication.getInstance().getTaskRepository();
         Set<Task> tasks = taskRepository.getTasksByEntityAndCode(
@@ -166,27 +166,26 @@ public class ReferralUtils {
                 baseEntityId,
                 CoreConstants.JsonAssets.LINKAGE_CODE);
 
-        List<String> updatedTaskIds = new ArrayList<>();
+        List<Task> updatedTasks = new ArrayList<>();
         for (Task task : tasks) {
             if (task.getStatus() == Task.TaskStatus.READY) {
                 task.setStatus(Task.TaskStatus.COMPLETED);
                 task.setSyncStatus(BaseRepository.TYPE_Unsynced);
                 task.setLastModified(new DateTime());
                 taskRepository.addOrUpdate(task);
-                updatedTaskIds.add(task.getIdentifier());
+                updatedTasks.add(task);
             }
 
         }
 
-        return updatedTaskIds;
+        return updatedTasks;
     }
 
-    private static void createFollowUpTask(String baseEntityId, String focus, String jsonString, String villageTown, String updatedTaskId) {
+    private static void createFollowUpTask(String baseEntityId, String focus, String followUpProblems, String villageTown, String updatedTaskId) {
 
         Task task = new Task();
         task.setIdentifier(UUID.randomUUID().toString());
 
-        String followUpProblems = getReferralProblems(jsonString);
         AllSharedPreferences allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
         LocationHelper locationHelper = LocationHelper.getInstance();
 

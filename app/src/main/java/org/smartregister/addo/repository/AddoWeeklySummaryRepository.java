@@ -44,7 +44,7 @@ public class AddoWeeklySummaryRepository {
     private String queryReferralCounts() {
         Cursor cursor = null;
         try {
-            String query = "select * from task where priority = '2' and " +
+            String query = "select * from task where code = 'Linkage' and " +
                     "date(datetime(start/1000, 'unixepoch')) > datetime('now', 'start of day', '-6 days');";
             cursor = repository.getReadableDatabase().rawQuery(query, null);
             cursor.moveToFirst();
@@ -76,7 +76,7 @@ public class AddoWeeklySummaryRepository {
         Cursor cursor = null;
 
         try {
-            String query = "select * from task where priority = '2' and " +
+            String query = "select * from task where code = 'Linkage' and " +
                     "date(datetime(start/1000, 'unixepoch')) > datetime('now', 'start of day', '-6 days') and " +
                     "status IN ('" + Task.TaskStatus.COMPLETED + "', '" + Task.TaskStatus.IN_PROGRESS +"');";
             cursor = repository.getReadableDatabase().rawQuery(query, null);

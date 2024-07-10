@@ -114,7 +114,7 @@ public class AddoWeeklySummaryRepository {
                     "'Other Member ADDO Visit', " +
                     "'Adolescent ADDO Visit') and " +
                     "date(datetime(visit_date/1000, 'unixepoch')) > datetime('now', 'start of day','-6 days') and " +
-                    BASE_ENTITY_ID + " IN(select \"for\" from task where priority = '2' and " +
+                    BASE_ENTITY_ID + " IN(select \"for\" from task where code = 'Linkage' and " +
                     "date(datetime(start/1000, 'unixepoch')) > datetime('now', 'start of day', '-6 days') and " +
                     "status IN ('COMPLETED', 'IN_PROGRESS')) group by base_entity_id, visit_date;";
             cursor = repository.getReadableDatabase().rawQuery(query, null);

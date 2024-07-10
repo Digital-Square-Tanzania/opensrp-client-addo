@@ -448,76 +448,6 @@
             ]
           }
         }
-      },
-      {
-        "key": "danger_signs_captured",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
-        "openmrs_entity_id": "",
-        "type": "hidden",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "child_addo_danger_signs_calculation.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "child_conditions",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
-        "openmrs_entity_id": "",
-        "type": "hidden",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "child_addo_danger_signs_calculation.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "addo_actions",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
-        "openmrs_entity_id": "",
-        "type": "hidden",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "child_addo_danger_signs_calculation.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "addo_medication_to_give",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
-        "openmrs_entity_id": "",
-        "type": "hidden",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "child_addo_danger_signs_calculation.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "condition_urgency",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
-        "openmrs_entity_id": "",
-        "type": "hidden",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "child_addo_danger_signs_calculation.yml"
-            }
-          }
-        }
       }
     ]
   },
@@ -531,16 +461,9 @@
         "openmrs_entity": "concept",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "{{step3_danger_signs_present_toaster_text1}} {condition_urgency}:</b> <br />{danger_signs_captured} {addo_actions} <br /> {addo_medication_to_give}",
+        "text": "{{step3_danger_signs_present_toaster_new_text1}}",
         "text_color": "#000000",
         "toaster_type": "problem",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "child_addo_danger_signs_calculation.yml"
-            }
-          }
-        },
         "relevance": {
           "step2:danger_signs_present_child": {
             "ex-checkbox": [
@@ -602,39 +525,18 @@
         "spacer_height": "20dp"
       },
       {
-        "key": "asterisk_symbol",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "hidden",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "child_addo_danger_signs_calculation.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "required_field_err_toaster",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "{{step3_danger_sign_not_present_toaster}} {asterisk_symbol}",
+        "text": "{{step3_danger_sign_not_present_toaster}}",
         "text_color": "#000000",
         "toaster_type": "problem",
         "relevance": {
           "rules-engine": {
             "ex-rules": {
               "rules-file": "child_addo_danger_signs_relevance.yml"
-            }
-          }
-        },
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "child_addo_danger_signs_calculation.yml"
             }
           }
         }
@@ -661,10 +563,54 @@
           "err": "{{step3_hf_facilities_label_err}}"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "child_addo_danger_signs_relevance.yml"
-            }
+          "step2:danger_signs_present_child": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "chk_extreme_cold_or_hot",
+                  "chk_convulsions",
+                  "chk_chest_indrawing",
+                  "chk_difficult_breathing",
+                  "chk_fast_breathing",
+                  "chk_difficult_drinking",
+                  "chk_oversleeping",
+                  "chk_redness_around_umbilical",
+                  "chk_body_rashes",
+                  "chk_eye_discharge",
+                  "chk_severe_abdominal_pain",
+                  "chk_lethargy",
+                  "chk_grunting_voice",
+                  "chk_malnutrition",
+                  "chk_severe_vomit",
+                  "chk_not_getting_better",
+                  "chk_weak",
+                  "chk_watery_stool_3_times_a_day",
+                  "chk_watery_stool_for_14_days_more",
+                  "chk_bloody_stool",
+                  "chk_diarrhea",
+                  "chk_sunk_eyes",
+                  "chk_blue_lips",
+                  "chk_constipation",
+                  "chk_coughing",
+                  "chk_cold_flu",
+                  "chk_sore_throat",
+                  "chk_sneezing",
+                  "chk_headache",
+                  "chk_fever",
+                  "chk_body_chills",
+                  "chk_vomiting",
+                  "chk_lack_of_appetite",
+                  "chk_feels_thirsty",
+                  "chk_excessive_crying_discomfort",
+                  "chk_no_movement",
+                  "chk_jaundiced",
+                  "chk_mild_diarrhea_without_blood",
+                  "chk_minor_skin_infections",
+                  "chk_minor_wound_cuts",
+                  "chk_other"
+                ]
+              }
+            ]
           }
         }
       },
@@ -682,10 +628,54 @@
           "err": "{{step3_referral_appointment_date_hint_err}}"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "child_addo_danger_signs_relevance.yml"
-            }
+          "step2:danger_signs_present_child": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "chk_extreme_cold_or_hot",
+                  "chk_convulsions",
+                  "chk_chest_indrawing",
+                  "chk_difficult_breathing",
+                  "chk_fast_breathing",
+                  "chk_difficult_drinking",
+                  "chk_oversleeping",
+                  "chk_redness_around_umbilical",
+                  "chk_body_rashes",
+                  "chk_eye_discharge",
+                  "chk_severe_abdominal_pain",
+                  "chk_lethargy",
+                  "chk_grunting_voice",
+                  "chk_malnutrition",
+                  "chk_severe_vomit",
+                  "chk_not_getting_better",
+                  "chk_weak",
+                  "chk_watery_stool_3_times_a_day",
+                  "chk_watery_stool_for_14_days_more",
+                  "chk_bloody_stool",
+                  "chk_diarrhea",
+                  "chk_sunk_eyes",
+                  "chk_blue_lips",
+                  "chk_constipation",
+                  "chk_coughing",
+                  "chk_cold_flu",
+                  "chk_sore_throat",
+                  "chk_sneezing",
+                  "chk_headache",
+                  "chk_fever",
+                  "chk_body_chills",
+                  "chk_vomiting",
+                  "chk_lack_of_appetite",
+                  "chk_feels_thirsty",
+                  "chk_excessive_crying_discomfort",
+                  "chk_no_movement",
+                  "chk_jaundiced",
+                  "chk_mild_diarrhea_without_blood",
+                  "chk_minor_skin_infections",
+                  "chk_minor_wound_cuts",
+                  "chk_other"
+                ]
+              }
+            ]
           }
         }
       },
@@ -701,10 +691,54 @@
           "behaviour": "refer"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "child_addo_danger_signs_relevance.yml"
-            }
+          "step2:danger_signs_present_child": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "chk_extreme_cold_or_hot",
+                  "chk_convulsions",
+                  "chk_chest_indrawing",
+                  "chk_difficult_breathing",
+                  "chk_fast_breathing",
+                  "chk_difficult_drinking",
+                  "chk_oversleeping",
+                  "chk_redness_around_umbilical",
+                  "chk_body_rashes",
+                  "chk_eye_discharge",
+                  "chk_severe_abdominal_pain",
+                  "chk_lethargy",
+                  "chk_grunting_voice",
+                  "chk_malnutrition",
+                  "chk_severe_vomit",
+                  "chk_not_getting_better",
+                  "chk_weak",
+                  "chk_watery_stool_3_times_a_day",
+                  "chk_watery_stool_for_14_days_more",
+                  "chk_bloody_stool",
+                  "chk_diarrhea",
+                  "chk_sunk_eyes",
+                  "chk_blue_lips",
+                  "chk_constipation",
+                  "chk_coughing",
+                  "chk_cold_flu",
+                  "chk_sore_throat",
+                  "chk_sneezing",
+                  "chk_headache",
+                  "chk_fever",
+                  "chk_body_chills",
+                  "chk_vomiting",
+                  "chk_lack_of_appetite",
+                  "chk_feels_thirsty",
+                  "chk_excessive_crying_discomfort",
+                  "chk_no_movement",
+                  "chk_jaundiced",
+                  "chk_mild_diarrhea_without_blood",
+                  "chk_minor_skin_infections",
+                  "chk_minor_wound_cuts",
+                  "chk_other"
+                ]
+              }
+            ]
           }
         }
       },

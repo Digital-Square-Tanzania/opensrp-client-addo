@@ -11,6 +11,7 @@ import android.os.Bundle;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.addo.R;
 import org.smartregister.addo.interactor.AddoVisitInteractor;
@@ -24,6 +25,7 @@ import org.smartregister.family.util.Utils;
 import org.smartregister.util.LangUtils;
 import org.smartregister.addo.util.Constants.FamilyMemberType;
 
+import java.text.MessageFormat;
 import java.util.LinkedHashMap;
 
 import timber.log.Timber;
@@ -53,6 +55,23 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
     }
 
     @Override
+    public void redrawHeader(MemberObject memberObject) {
+        String visitType = "";
+
+        if (clientType.equals(FamilyMemberType.CHILD)) {
+            visitType = this.getString(R.string.child_visit);
+        } else if (clientType.equals(FamilyMemberType.ANC)) {
+            visitType = this.getString(R.string.anc_visit);
+        } else if (clientType.equals(FamilyMemberType.PNC)) {
+            visitType = this.getString(R.string.pnc_visit);
+        } else if (clientType.equals(FamilyMemberType.ADOLESCENT)) {
+            visitType = this.getString(R.string.adolescent_visit);
+        }
+
+        this.tvTitle.setText(MessageFormat.format("{0}, {1} · {2}", memberObject.getFullName(), memberObject.getAge(), visitType));
+    }
+
+    @Override
     protected void registerPresenter() {
         presenter = new BaseAncHomeVisitPresenter(
                 memberObject,
@@ -78,11 +97,19 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
     @Override
     public void startFormActivity(JSONObject jsonForm) {
         Form form = new Form();
+        try {
+            String formTitle = jsonForm.getString(JsonFormConstants.ENCOUNTER_TYPE);
+            form.setName(formTitle);
+        } catch (JSONException e) {
+            Timber.e(e);
+        }
         form.setActionBarBackground(R.color.family_actionbar);
-        form.setWizard(false);
+        form.setNavigationBackground(R.color.family_navigation);
+        form.setHomeAsUpIndicator(R.mipmap.ic_cross_white);
+        form.setWizard(true);
 
         Intent intent = new Intent(this, ReferralWizardFormActivity.class);
-        intent.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonForm.toString());
+        intent.putExtra(Constants.JSON_FORM_EXTRA.JSON, jsonForm.toString());
         intent.putExtra(Constants.WizardFormActivity.EnableOnCloseDialog, false);
         intent.putExtra(JsonFormConstants.JSON_FORM_KEY.FORM, form);
         intent.putExtra(Constants.INTENT_KEY.BASE_ENTITY_ID, baseEntityID);

@@ -16,6 +16,7 @@ import org.smartregister.util.Utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +27,7 @@ public class AddoUtils extends Utils {
 
 
     private static FormUtils formUtils;
-    public static String checkDSPresentProposedMedsAndDispense(JSONObject form, Constants.FamilyMemberType familyMemberType) {
+    public static String checkDSPresentProposedMedsAndDispense(JSONObject form, Constants.FamilyMemberType familyMemberType) throws JSONException{
         String updatedMedicationForm = null;
         try {
             // Check if the focused group client is present or not; if not skip to dispensing
@@ -36,16 +37,11 @@ public class AddoUtils extends Utils {
 
                 JSONObject step2 = form.getJSONObject(JsonFormUtils.STEP2);
                 JSONArray step2Fields = step2.getJSONArray(JsonFormUtils.FIELDS);
-                JSONArray dangerSignsSelected = getDangerSignsSelected(form, step2Fields);
-
+                JSONObject dangerSignsObject = getDangerSignsSelected(form, step2Fields);
+                JSONArray dangerSignsSelected = dangerSignsObject.getJSONArray(JsonFormUtils.VALUE);
                 // When there is danger signs and the none field is not selected open the dispense medication
                 if (dangerSignsSelected.length() > 0 && !dangerSignsSelected.getString(0).equalsIgnoreCase("chk_none")) {
-                    dangerSigns = JsonFormUtils.getFieldJSONObject(step2Fields, "danger_signs_captured").getString(JsonFormUtils.VALUE);
-                    if (form.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE).equalsIgnoreCase(CHILD_DANGER_SIGN_SCREENING_ENCOUNTER)) {
-                        suggestedMeds = JsonFormUtils.getFieldJSONObject(step2Fields, "addo_medication_to_give").getString(JsonFormUtils.VALUE);
-                    } else {
-                        suggestedMeds = AddoApplication.getInstance().getContext().getStringResource(R.string.default_dispense_message);
-                    }
+                    dangerSigns = getDangerSignsString(dangerSignsObject);
                     // Check if client has referral or to determine if they should be linked to another ADDO or not
                     JSONArray step3Fields = form.getJSONObject(JsonFormUtils.STEP3).getJSONArray(JsonFormUtils.FIELDS);
                     JSONObject referralButtonObject = JsonFormUtils.getFieldJSONObject(step3Fields, "save_n_refer");
@@ -56,7 +52,7 @@ public class AddoUtils extends Utils {
                         referralStatus = null;
                     }
 
-                    updatedMedicationForm = dispenseMedication(dangerSigns, suggestedMeds, referralStatus, familyMemberType);
+                    updatedMedicationForm = dispenseMedication(dangerSigns, AddoApplication.getInstance().getContext().getStringResource(R.string.default_dispense_message), referralStatus, familyMemberType);
                 } else if (dangerSignsSelected.getString(0).equalsIgnoreCase("chk_none")) {
                     updatedMedicationForm = dispenseMedication(null, AddoApplication.getInstance().getContext().getStringResource(R.string.default_dispense_message), null, familyMemberType);
                 }
@@ -69,6 +65,20 @@ public class AddoUtils extends Utils {
         }
 
         return updatedMedicationForm;
+
+    }
+
+    private static String getDangerSignsString(JSONObject dangerSignsObject) throws JSONException {
+
+        List<String> dangerSignsText = JsonQ.fromJson(dangerSignsObject.toString()).getStrings("options[(@.value==true)].text");
+
+        // We are putting html tags here so as to display it properly on the toaster message
+        // The message will be something like:
+        // This client has the following danger signs:
+        // • Albendazole Suspension/Tablets
+        // • Paracetamol tablets
+
+        return "<br /> \u25FB " + String.join("<br /> \u25FB ", dangerSignsText) + "<br />";
 
     }
 
@@ -92,31 +102,27 @@ public class AddoUtils extends Utils {
         return false;
     }
 
-    private static JSONArray getDangerSignsSelected(JSONObject form, JSONArray stepFields) {
-        JSONArray dangerSignsSelected = new JSONArray();
-        try {
+    private static JSONObject getDangerSignsSelected(JSONObject form, JSONArray stepFields) {
+        JSONObject dangerSignsObject = new JSONObject();
 
-            switch (form.optString(JsonFormUtils.ENCOUNTER_TYPE)) {
-                case CHILD_DANGER_SIGN_SCREENING_ENCOUNTER:
-                    dangerSignsSelected = JsonFormUtils.getFieldJSONObject(stepFields, "danger_signs_present_child").getJSONArray(JsonFormUtils.VALUE);
-                    break;
-                case ANC_DANGER_SIGN_SCREENING_ENCOUNTER:
-                    dangerSignsSelected = JsonFormUtils.getFieldJSONObject(stepFields, "danger_signs_present").getJSONArray(JsonFormUtils.VALUE);
-                    break;
-                case PNC_DANGER_SIGN_SCREENING_ENCOUNTER:
-                    dangerSignsSelected = JsonFormUtils.getFieldJSONObject(stepFields, "danger_signs_present_mama").getJSONArray(JsonFormUtils.VALUE);
-                    break;
-                case ADOLESCENT_SCREENING_ENCOUNTER:
-                    dangerSignsSelected = JsonFormUtils.getFieldJSONObject(stepFields, "adolescent_condition_present").getJSONArray(JsonFormUtils.VALUE);
-                    break;
-                default:
-                    return null;
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+        switch (form.optString(JsonFormUtils.ENCOUNTER_TYPE)) {
+            case CHILD_DANGER_SIGN_SCREENING_ENCOUNTER:
+                dangerSignsObject = JsonFormUtils.getFieldJSONObject(stepFields, "danger_signs_present_child");
+                break;
+            case ANC_DANGER_SIGN_SCREENING_ENCOUNTER:
+                dangerSignsObject = JsonFormUtils.getFieldJSONObject(stepFields, "danger_signs_present");
+                break;
+            case PNC_DANGER_SIGN_SCREENING_ENCOUNTER:
+                dangerSignsObject = JsonFormUtils.getFieldJSONObject(stepFields, "danger_signs_present_mama");
+                break;
+            case ADOLESCENT_SCREENING_ENCOUNTER:
+                dangerSignsObject = JsonFormUtils.getFieldJSONObject(stepFields, "adolescent_condition_present");
+                break;
+            default:
+                return null;
         }
-        return dangerSignsSelected;
+
+        return dangerSignsObject;
     }
 
     private static String dispenseMedication(String dangerSigns, String suggestedMeds, String referralStatus, Constants.FamilyMemberType familyMemberType) {

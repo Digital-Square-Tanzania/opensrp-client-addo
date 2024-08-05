@@ -125,5 +125,7 @@
     <string name="age_13y">Miaka: 13y</string>
     <string name="patient_name">Jina la Mteja</string>
     <string name="client_avatar">Client Avatar</string>
+    <string name="child_visit">Tembeleo la mtoto</string>
+    <string name="adolescent_visit">Tembeleo la kijana balehe</string>
 
 </resources>

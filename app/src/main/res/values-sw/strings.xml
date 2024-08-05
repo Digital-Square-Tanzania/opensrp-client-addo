@@ -12,7 +12,7 @@
 
     <!--ADDO Home Screen -->
     <string name="ask_client_village">Muulize mteja kama anatoka Kibaha. Kama anatokea Kibaha tafadhali chagua kijiji anachotekea kutoka kwenye orodha hapo chini. Kama hatoki Kibaha, usitumie mfumo huu kutoa huduma hii.</string>
-    <string name="add_select_village">Mteja anaishi wapi?</string>
+    <string name="add_select_village">Chagua kijiji anachoishi mteja?</string>
     <string name="addo_other_village">Kijiji kingine</string>
 
     <!-- Scanfinger print screen second screen after selecting the village-->
@@ -116,9 +116,9 @@
     <string name="pnc_hf_referral_text">Aliyejifungua - Rufaa kwenda kituoni</string>
 
     <string name="pnc_addo_linkage_text">Aliyejifungua - Ushauri kwenda DLDM</string>
-    <string name="total_referrals">Wateja wote waliounganishwa na ADDO katika kata</string>
-    <string name="referrals_closed">Wateja wote waliokamilisha muunganiko na ADDO katika kata</string>
-    <string name="total_visits">Wateja wote waliokamilisha muunganiko katika ADDO yako</string>
+    <string name="total_referrals">Miunganiko yote ya ADDO\n(kata)</string>
+    <string name="referrals_closed">Miunganiko yote Iliyokamilika\n(kata)</string>
+    <string name="total_visits">Miunganisho Iliyokamilishwa Hapa</string>
     <string name="weekly_summary_title_text">Taarifa za wiki</string>
     <string name="no_record_found">No Record Found</string>
     <string name="search_bar_hint">Andika jina la kwanza au la pili</string>

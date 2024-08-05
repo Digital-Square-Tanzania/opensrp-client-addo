@@ -101,7 +101,7 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
             String formTitle = jsonForm.getString(JsonFormConstants.ENCOUNTER_TYPE);
             form.setName(formTitle);
         } catch (JSONException e) {
-            throw new RuntimeException(e);
+            Timber.e(e);
         }
         form.setActionBarBackground(R.color.family_actionbar);
         form.setNavigationBackground(R.color.family_navigation);

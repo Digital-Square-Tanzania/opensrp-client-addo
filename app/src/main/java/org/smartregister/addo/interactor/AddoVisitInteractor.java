@@ -3,7 +3,6 @@ package org.smartregister.addo.interactor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,7 +17,6 @@ import org.smartregister.addo.util.Constants.FamilyMemberType;
 import org.smartregister.addo.util.CoreConstants;
 import org.smartregister.addo.util.JsonFormUtils;
 import org.smartregister.addo.util.ReferralUtils;
-import org.smartregister.chw.anc.AncLibrary;
 import org.smartregister.chw.anc.contract.BaseAncHomeVisitContract;
 import org.smartregister.chw.anc.domain.MemberObject;
 import org.smartregister.chw.anc.interactor.BaseAncHomeVisitInteractor;
@@ -33,10 +31,8 @@ import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.sync.helper.ECSyncHelper;
 import org.smartregister.util.DateTimeTypeConverter;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -175,23 +171,23 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
 
         FormTag formTag = formTag(org.smartregister.util.Utils.getAllSharedPreferences());
 
-        String dangerSignJsonString = "";
-        String medicationJsonString = "";
+        String dangerSignsFormJsonString = "";
+        String medicationsFormJsonString = "";
 
         for (Map.Entry<String, BaseAncHomeVisitAction> entry : map.entrySet()) {
             if (entry.getKey().equals(AddoApplication.getInstance().getContext().getStringResource(R.string.anc_home_visit_danger_signs))) {
-                dangerSignJsonString = entry.getValue().getJsonPayload();
+                dangerSignsFormJsonString = entry.getValue().getJsonPayload();
             } else if (entry.getKey().equals(AddoApplication.getInstance().getContext().getStringResource(R.string.evalueate_medication_dispensed))) {
-                medicationJsonString = entry.getValue().getJsonPayload();
+                medicationsFormJsonString = entry.getValue().getJsonPayload();
             }
         }
 
         ReferralUtils.closeLinkageAndOpenFollowUp(memberID, villageTown);
 
-        if (!getButtonAction(dangerSignJsonString).isEmpty()){
-            JSONObject dangerSignJsonObject = new JSONObject(dangerSignJsonString);
+        if (!getButtonAction(dangerSignsFormJsonString).isEmpty()){
+            JSONObject dangerSignsFormJsonObject = new JSONObject(dangerSignsFormJsonString);
 
-            String facilityValue = JsonFormUtils.getValue(dangerSignJsonObject, "chw_referral_hf");
+            String facilityValue = JsonFormUtils.getValue(dangerSignsFormJsonObject, "chw_referral_hf");
             String facility =  facilityValue.substring(2, facilityValue.length() - 2);
 
             if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID_2, facility, memberID, CoreConstants.JsonAssets.REFERRAL_CODE)) {
@@ -199,15 +195,15 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
             }
 
             ReferralUtils.createReferralTask(memberID,
-                    dangerSignJsonObject.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE),
-                    dangerSignJsonString,
+                    dangerSignsFormJsonObject.optString(org.smartregister.chw.anc.util.Constants.ENCOUNTER_TYPE),
+                    dangerSignsFormJsonString,
                     villageTown,
                     facility,
                     formTag.formSubmissionId);
 
             // Create referral event
             submitReferralEvent(memberID,
-                    AddoUtils.createReferralForm(dangerSignJsonObject, new JSONObject(medicationJsonString)),
+                    AddoUtils.createReferralForm(dangerSignsFormJsonObject, new JSONObject(medicationsFormJsonString)),
                     formTag);
         }
     }

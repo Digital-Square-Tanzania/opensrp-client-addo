@@ -27,11 +27,11 @@ import timber.log.Timber;
 
 public class ReferralUtils {
 
-    public static void createReferralTask(String baseEntityId, String focus, String jsonString, String villageTown, String facility, String formSubmissionId) {
+    public static void createReferralTask(String baseEntityId, String focus, String dangerSignsFormJsonString, String villageTown, String facility, String formSubmissionId) {
         Task task = new Task();
         task.setIdentifier(UUID.randomUUID().toString());
 
-        String referralProblems = getReferralProblems(jsonString);
+        String referralProblems = getReferralProblems(dangerSignsFormJsonString);
         AllSharedPreferences allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
         LocationHelper locationHelper = LocationHelper.getInstance();
 
@@ -56,12 +56,12 @@ public class ReferralUtils {
         AddoApplication.getInstance().getTaskRepository().addOrUpdate(task);
     }
 
-    private static String getReferralProblems(String jsonString) {
+    private static String getReferralProblems(String dangerSignsFormJsonString) {
         String[] dangerSignKeysArray = { Constants.DangerSignKeys.CHILD, Constants.DangerSignKeys.ANC, Constants.DangerSignKeys.PNC, Constants.DangerSignKeys.ADOLESCENT};
         String referralProblems = "";
         List<String> formValues = new ArrayList<>();
         try {
-            JSONObject problemJson = new JSONObject(jsonString);
+            JSONObject problemJson = new JSONObject(dangerSignsFormJsonString);
             JSONArray fields = FormUtils.getMultiStepFormFields(problemJson);
             for (int i = 0; i < fields.length(); i++) {
                 JSONObject field = fields.getJSONObject(i);

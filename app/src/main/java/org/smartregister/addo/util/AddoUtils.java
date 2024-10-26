@@ -16,7 +16,6 @@ import org.smartregister.util.Utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -205,28 +204,28 @@ public class AddoUtils extends Utils {
         return null;
     }
 
-    public static JSONArray createReferralForm(JSONObject dangerSignJsonObject, JSONObject medicationJsonObject){
+    public static JSONArray createReferralForm(JSONObject dangerSignsFormJsonObject, JSONObject medicationsFormJsonObject){
         try{
-            String encounterType = dangerSignJsonObject.optString(JsonFormUtils.ENCOUNTER_TYPE);
-            JSONArray referralFormArray = dangerSignJsonObject.getJSONObject("step3").getJSONArray("fields");
-            JSONArray fields = JsonFormUtils.fields(dangerSignJsonObject);
-            JSONObject dangerSignsJsonObject = new JSONObject();
+            String encounterType = dangerSignsFormJsonObject.optString(JsonFormUtils.ENCOUNTER_TYPE);
+            JSONArray referralFormArray = dangerSignsFormJsonObject.getJSONObject("step3").getJSONArray("fields");
+            JSONArray fields = JsonFormUtils.fields(dangerSignsFormJsonObject);
+            JSONObject dangerSignsFieldJsonObject = new JSONObject();
             String chwReferralService = "";
             switch(encounterType) {
                 case CHILD_DANGER_SIGN_SCREENING_ENCOUNTER:
-                    dangerSignsJsonObject = JsonFormUtils.getFieldJSONObject(fields,"danger_signs_present_child");
+                    dangerSignsFieldJsonObject = JsonFormUtils.getFieldJSONObject(fields,"danger_signs_present_child");
                     chwReferralService = CHILD_DANGER_SIGN_SCREENING_ENCOUNTER;
                     break;
                 case ANC_DANGER_SIGN_SCREENING_ENCOUNTER:
-                    dangerSignsJsonObject = JsonFormUtils.getFieldJSONObject(fields,"danger_signs_present");
+                    dangerSignsFieldJsonObject = JsonFormUtils.getFieldJSONObject(fields,"danger_signs_present");
                     chwReferralService = ANC_DANGER_SIGN_SCREENING_ENCOUNTER;
                     break;
                 case PNC_DANGER_SIGN_SCREENING_ENCOUNTER:
-                    dangerSignsJsonObject = JsonFormUtils.getFieldJSONObject(fields,"danger_signs_present_mama");
+                    dangerSignsFieldJsonObject = JsonFormUtils.getFieldJSONObject(fields,"danger_signs_present_mama");
                     chwReferralService = PNC_DANGER_SIGN_SCREENING_ENCOUNTER;
                     break;
                 case ADOLESCENT_SCREENING_ENCOUNTER:
-                    dangerSignsJsonObject = JsonFormUtils.getFieldJSONObject(fields,"adolescent_condition_present");
+                    dangerSignsFieldJsonObject = JsonFormUtils.getFieldJSONObject(fields,"adolescent_condition_present");
                     chwReferralService = ADOLESCENT_SCREENING_ENCOUNTER;
                     break;
                 default:
@@ -235,16 +234,16 @@ public class AddoUtils extends Utils {
             }
 
             // Combine the checkbox values
-            dangerSignsJsonObject.put(JsonFormUtils.COMBINE_CHECKBOX_OPTION_VALUES,true);
+            dangerSignsFieldJsonObject.put(JsonFormUtils.COMBINE_CHECKBOX_OPTION_VALUES,true);
 
             // Rename the key for danger sign JSONObject to match UCS
-            dangerSignsJsonObject.put("key","problem");
+            dangerSignsFieldJsonObject.put("key","problem");
 
             //Convert referral appointment date to timestamp
             convertDateToLong(fields, "referral_appointment_date");
 
             //Add other referral form fields
-            referralFormArray.put(dangerSignsJsonObject);
+            referralFormArray.put(dangerSignsFieldJsonObject);
             referralFormArray.put(createReferralFormField("referral_status", Constants.REFERRAL_BUSINESS_STATUS));
             referralFormArray.put(createReferralFormField("chw_referral_service", chwReferralService));
             referralFormArray.put(createReferralFormField("referral_date", Long.toString(Calendar.getInstance().getTimeInMillis())));
@@ -255,13 +254,14 @@ public class AddoUtils extends Utils {
             removeFieldsFromJSONArray(referralFormArray, "asterisk_symbol", "save_n_refer");
 
             // Add meds dispensed
-            JSONObject medications_selected = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(medicationJsonObject), "medications_selected");
+            JSONObject medicationsSelectedFieldJsonObject = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(medicationsFormJsonObject), "medications_selected");
 
-            JSONObject medicationDispensed = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(medicationJsonObject), "medicine_dispensed");
-            String medicationDispensedValue = medicationDispensed.getString(JsonFormUtils.VALUE);
-            referralFormArray.put(createReferralFormField("service_before_referral", getDispensedMedicineName(medicationDispensedValue)));
+            JSONObject medicationDispensedFieldJsonObject = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(medicationsFormJsonObject), "medicine_dispensed");
+            String medicationDispensedValue = medicationDispensedFieldJsonObject.optString(JsonFormUtils.VALUE, null);
+            referralFormArray.put(createReferralFormField("service_before_referral",
+                    medicationDispensedValue != null ? getDispensedMedicineName(medicationDispensedValue) : "None"));
 
-            referralFormArray.put(medications_selected);
+            referralFormArray.put(medicationsSelectedFieldJsonObject);
 
             return  referralFormArray;
         }catch (JSONException e){

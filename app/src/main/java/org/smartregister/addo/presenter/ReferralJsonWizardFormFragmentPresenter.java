@@ -3,6 +3,8 @@ package org.smartregister.addo.presenter;
 import android.content.Intent;
 import android.widget.LinearLayout;
 
+import androidx.fragment.app.Fragment;
+
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interactors.JsonFormInteractor;
@@ -13,10 +15,12 @@ import org.smartregister.addo.R;
 import org.smartregister.addo.fragment.ReferralJsonWizardFormFragment;
 
 public class ReferralJsonWizardFormFragmentPresenter extends JsonWizardFormFragmentPresenter {
+    private final Fragment fragment;
     private FormUtils formUtils = new FormUtils();
 
     public ReferralJsonWizardFormFragmentPresenter(JsonFormFragment formFragment, JsonFormInteractor jsonFormInteractor) {
         super(formFragment, jsonFormInteractor);
+        this.fragment = formFragment;
     }
 
     @Override
@@ -62,9 +66,13 @@ public class ReferralJsonWizardFormFragmentPresenter extends JsonWizardFormFragm
 
     protected boolean moveToNextWizardStep() {
         if (!"".equals(mStepDetails.optString(JsonFormConstants.NEXT))) {
-            ReferralJsonWizardFormFragment next = ReferralJsonWizardFormFragment.getFormFragment(mStepDetails.optString(JsonFormConstants.NEXT));
-            getView().hideKeyBoard();
-            getView().transactThis(next);
+            // Initialize fragment on main ui thread
+            fragment.requireActivity().runOnUiThread(() -> {
+                ReferralJsonWizardFormFragment next = ReferralJsonWizardFormFragment.getFormFragment(mStepDetails.optString(JsonFormConstants.NEXT));
+                getView().hideKeyBoard();
+                getView().transactThis(next);
+            });
+
         }
         return false;
     }

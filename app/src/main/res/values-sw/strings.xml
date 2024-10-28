@@ -127,5 +127,10 @@
     <string name="client_avatar">Client Avatar</string>
     <string name="child_visit">Tembeleo la mtoto</string>
     <string name="adolescent_visit">Tembeleo la kijana balehe</string>
-
+    <string name="has_linkage">Aende DLDM</string>
+    <string name="record_visit">Chukua Tembeleo</string>
+    <string name="evalueate_prescription_note"> Nakala ya Dawa </string>
+    <string name="evalueate_prescription">Maagizo ya Dawa kutoka Kituo cha Afya/Maabara ya Malaria</string>
+    <string name="evalueate_commodities">Toa Bidhaa</string>
+    <string name="evalueate_medication_dispensed">Dawa Zilizotolewa</string>
 </resources>

@@ -506,5 +506,6 @@
     <string name="evalueate_prescription_note"> Prescription Note </string>
     <string name="child_visit">Child Visit</string>
     <string name="adolescent_visit">Adolescent Visit</string>
+    <string name="has_referral">Has Referral</string>
 
 </resources>

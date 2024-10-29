@@ -175,9 +175,9 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
         String medicationsFormJsonString = "";
 
         for (Map.Entry<String, BaseAncHomeVisitAction> entry : map.entrySet()) {
-            if (entry.getKey().equals(AddoApplication.getInstance().getContext().getStringResource(R.string.anc_home_visit_danger_signs))) {
+            if (entry.getKey().equals("Danger signs") || entry.getKey().equals("Dalili za hatari")) {
                 dangerSignsFormJsonString = entry.getValue().getJsonPayload();
-            } else if (entry.getKey().equals(AddoApplication.getInstance().getContext().getStringResource(R.string.evalueate_medication_dispensed))) {
+            } else if (entry.getKey().equals("Medication Dispensed") || entry.getKey().equals("Dawa Zilizotolewa")) {
                 medicationsFormJsonString = entry.getValue().getJsonPayload();
             }
         }

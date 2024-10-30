@@ -107,9 +107,8 @@ public class AddoVillageClientsProvider implements RecyclerViewProvider<AddoVill
             viewHolder.textViewHasReferral.setVisibility(View.VISIBLE);
         }else if (ReferralUtils.hasHFReferralTask(CoreConstants.REFERRAL_PLAN_ID_2, pc.entityId(), CoreConstants.JsonAssets.REFERRAL_CODE)){
             viewHolder.textViewHasReferral.setVisibility(View.VISIBLE);
-            viewHolder.textViewHasReferral.setText(context.getString(R.string.has_referral));
+            viewHolder.textViewHasReferral.setText("");
             viewHolder.textViewHasReferral.setTextColor(context.getResources().getColor(R.color.alert_urgent_red));
-            viewHolder.textViewHasReferral.setVisibility(View.VISIBLE);
         }else{
             viewHolder.textViewHasReferral.setVisibility(View.GONE);
         }

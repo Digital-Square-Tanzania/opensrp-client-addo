@@ -7,6 +7,7 @@ import static org.smartregister.addo.util.AddoUtils.getDangerSignsFieldObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -171,7 +172,7 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
     }
 
     protected void submitVisit(boolean editMode, String memberID, Map<String, BaseAncHomeVisitAction> map, String parentEventType) throws Exception {
-         super.submitVisit(editMode, memberID, map, parentEventType);
+        super.submitVisit(editMode, memberID, map, parentEventType);
 
         FormTag formTag = formTag(org.smartregister.util.Utils.getAllSharedPreferences());
 
@@ -188,7 +189,7 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
 
         ReferralUtils.closeLinkageAndOpenFollowUp(memberID, villageTown);
 
-        if (!getButtonAction(dangerSignsFormJsonString).isEmpty()){
+        if (!getButtonAction(dangerSignsFormJsonString).isEmpty()) {
             JSONObject dangerSignsFormJsonObject = new JSONObject(dangerSignsFormJsonString);
 
 
@@ -199,7 +200,7 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
             ReferralObsValues problems = createObsValuesFromFields(dangerSignsFieldJsonObject);
 
             String facilityValue = JsonFormUtils.getValue(dangerSignsFormJsonObject, "chw_referral_hf");
-            String facility =  facilityValue.substring(2, facilityValue.length() - 2);
+            String facility = facilityValue.substring(2, facilityValue.length() - 2);
 
             if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID_2, facility, memberID, CoreConstants.JsonAssets.REFERRAL_CODE)) {
                 FamilyDao.archiveHFTasksForEntity(memberID);
@@ -213,16 +214,13 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
                     formTag.formSubmissionId);
 
             ReferralObsValues medicationsValues = new ReferralObsValues(new ArrayList<String>(), new ArrayList<String>());
-            if (medicationsFormJsonString!= null) {
+            if (StringUtils.isNotEmpty(medicationsFormJsonString)) {
 
-                if (!medicationsFormJsonString.isEmpty()) {
+                JSONObject medicationsFormJsonObject = new JSONObject(medicationsFormJsonString);
+                JSONArray medicationsFormFields = JsonFormUtils.fields(medicationsFormJsonObject);
+                JSONObject medicatoinsFieldJsonObject = JsonFormUtils.getFieldJSONObject(medicationsFormFields, "medicine_dispensed");
+                medicationsValues = createObsValuesFromFields(medicatoinsFieldJsonObject);
 
-                    JSONObject medicationsFormJsonObject = new JSONObject(medicationsFormJsonString);
-                    JSONArray medicationsFormFields = JsonFormUtils.fields(medicationsFormJsonObject);
-                    JSONObject medicatoinsFieldJsonObject = JsonFormUtils.getFieldJSONObject(medicationsFormFields, "medicine_dispensed");
-                    medicationsValues = createObsValuesFromFields(medicatoinsFieldJsonObject);
-
-                }
             }
 
             // Create referral event
@@ -249,17 +247,17 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
     }
 
     public void submitReferralEvent(String baseEntityId, JSONArray jsonArray, FormTag formTag, ReferralObsValues problems, ReferralObsValues servicesBeforeRef) {
-        try{
+        try {
             final ECSyncHelper syncHelper = AddoApplication.getInstance().getEcSyncHelper();
-            JSONObject metadata= new JSONObject();
-            Event event = org.smartregister.util.JsonFormUtils.createEvent(jsonArray, metadata, formTag, baseEntityId,"Referral Registration","ec_referral");
+            JSONObject metadata = new JSONObject();
+            Event event = org.smartregister.util.JsonFormUtils.createEvent(jsonArray, metadata, formTag, baseEntityId, "Referral Registration", "ec_referral");
             event.setEventId(UUID.randomUUID().toString());
             event.addObs(createObsFromValues(problems.getValues(), problems.getHumanReadableValues(), "problem"));
             event.addObs(createObsFromValues(servicesBeforeRef.getValues(), servicesBeforeRef.getHumanReadableValues(), "service_before_referral"));
             JSONObject eventJson = new JSONObject(gson.toJson(event));
             Timber.e("%S", eventJson);
             syncHelper.addEvent(baseEntityId, eventJson);
-        }catch (JSONException e){
+        } catch (JSONException e) {
             Timber.e(e);
         }
     }

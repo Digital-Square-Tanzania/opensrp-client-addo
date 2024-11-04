@@ -1,5 +1,9 @@
 package org.smartregister.addo.interactor;
 
+import static org.smartregister.addo.util.AddoUtils.convertToObjectList;
+import static org.smartregister.addo.util.AddoUtils.createObsValuesFromFields;
+import static org.smartregister.addo.util.AddoUtils.getDangerSignsFieldObject;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -7,10 +11,10 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.addo.R;
 import org.smartregister.addo.application.AddoApplication;
 import org.smartregister.addo.dao.FamilyDao;
 import org.smartregister.addo.dao.VisitDao;
+import org.smartregister.addo.model.ReferralObsValues;
 import org.smartregister.addo.util.AddoUtils;
 import org.smartregister.addo.util.Constants;
 import org.smartregister.addo.util.Constants.FamilyMemberType;
@@ -187,6 +191,13 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
         if (!getButtonAction(dangerSignsFormJsonString).isEmpty()){
             JSONObject dangerSignsFormJsonObject = new JSONObject(dangerSignsFormJsonString);
 
+
+            String encounterType = dangerSignsFormJsonObject.optString(JsonFormUtils.ENCOUNTER_TYPE);
+            JSONArray fields = JsonFormUtils.fields(dangerSignsFormJsonObject);
+            JSONObject dangerSignsFieldJsonObject = getDangerSignsFieldObject(fields, encounterType);
+
+            ReferralObsValues problems = createObsValuesFromFields(dangerSignsFieldJsonObject);
+
             String facilityValue = JsonFormUtils.getValue(dangerSignsFormJsonObject, "chw_referral_hf");
             String facility =  facilityValue.substring(2, facilityValue.length() - 2);
 
@@ -201,10 +212,20 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
                     facility,
                     formTag.formSubmissionId);
 
+            ReferralObsValues medicationsValues = new ReferralObsValues(new ArrayList<String>(), new ArrayList<String>());
+            if (medicationsFormJsonString!= null || !medicationsFormJsonString.isEmpty()) {
+
+                JSONObject medicationsFormJsonObject = new JSONObject(medicationsFormJsonString);
+                JSONArray medicationsFormFields = JsonFormUtils.fields(medicationsFormJsonObject);
+                JSONObject medicatoinsFieldJsonObject = JsonFormUtils.getFieldJSONObject(medicationsFormFields,"medicine_dispensed");
+                medicationsValues = createObsValuesFromFields(medicatoinsFieldJsonObject);
+
+            }
+
             // Create referral event
             submitReferralEvent(memberID,
                     AddoUtils.createReferralForm(dangerSignsFormJsonObject, new JSONObject(medicationsFormJsonString)),
-                    formTag);
+                    formTag, problems, medicationsValues);
         }
     }
 
@@ -224,12 +245,14 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
         return buttonAction;
     }
 
-    public void submitReferralEvent(String baseEntityId, JSONArray jsonArray, FormTag formTag) {
+    public void submitReferralEvent(String baseEntityId, JSONArray jsonArray, FormTag formTag, ReferralObsValues problems, ReferralObsValues servicesBeforeRef) {
         try{
             final ECSyncHelper syncHelper = AddoApplication.getInstance().getEcSyncHelper();
             JSONObject metadata= new JSONObject();
             Event event = org.smartregister.util.JsonFormUtils.createEvent(jsonArray, metadata, formTag, baseEntityId,"Referral Registration","ec_referral");
             event.setEventId(UUID.randomUUID().toString());
+            event.addObs(createObsFromValues(problems.getValues(), problems.getHumanReadableValues(), "problem"));
+            event.addObs(createObsFromValues(servicesBeforeRef.getValues(), servicesBeforeRef.getHumanReadableValues(), "service_before_referral"));
             JSONObject eventJson = new JSONObject(gson.toJson(event));
             Timber.e("%S", eventJson);
             syncHelper.addEvent(baseEntityId, eventJson);
@@ -248,5 +271,17 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
         formTag.locationId = LocationHelper.getInstance().getOpenMrsLocationId(villageTown);
         formTag.formSubmissionId = UUID.randomUUID().toString();
         return formTag;
+    }
+
+    private Obs createObsFromValues(List<String> values, List<String> humanReadableValues, String formSubmissionField) {
+
+        return new Obs(
+                "concept",
+                "text",
+                formSubmissionField,
+                "",
+                convertToObjectList(values),
+                convertToObjectList(humanReadableValues), null, formSubmissionField);
+
     }
 }

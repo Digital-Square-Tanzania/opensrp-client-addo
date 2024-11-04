@@ -68,6 +68,8 @@
         "openmrs_entity_id": "163748AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
         "type": "native_radio",
         "label": "{{step1_is_child_present_label}}",
+        "label_text_style": "bold",
+        "text_color": "#000000",
         "options": [
           {
             "key": "chk_child_present_yes",

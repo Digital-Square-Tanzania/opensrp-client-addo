@@ -213,13 +213,16 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
                     formTag.formSubmissionId);
 
             ReferralObsValues medicationsValues = new ReferralObsValues(new ArrayList<String>(), new ArrayList<String>());
-            if (medicationsFormJsonString!= null || !medicationsFormJsonString.isEmpty()) {
+            if (medicationsFormJsonString!= null) {
 
-                JSONObject medicationsFormJsonObject = new JSONObject(medicationsFormJsonString);
-                JSONArray medicationsFormFields = JsonFormUtils.fields(medicationsFormJsonObject);
-                JSONObject medicatoinsFieldJsonObject = JsonFormUtils.getFieldJSONObject(medicationsFormFields,"medicine_dispensed");
-                medicationsValues = createObsValuesFromFields(medicatoinsFieldJsonObject);
+                if (!medicationsFormJsonString.isEmpty()) {
 
+                    JSONObject medicationsFormJsonObject = new JSONObject(medicationsFormJsonString);
+                    JSONArray medicationsFormFields = JsonFormUtils.fields(medicationsFormJsonObject);
+                    JSONObject medicatoinsFieldJsonObject = JsonFormUtils.getFieldJSONObject(medicationsFormFields, "medicine_dispensed");
+                    medicationsValues = createObsValuesFromFields(medicatoinsFieldJsonObject);
+
+                }
             }
 
             // Create referral event

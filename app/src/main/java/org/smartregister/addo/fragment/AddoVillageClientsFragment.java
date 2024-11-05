@@ -27,6 +27,7 @@ import androidx.loader.content.Loader;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.addo.R;
+import org.smartregister.addo.adapter.AddoRecyclerViewPaginatedAdapter;
 import org.smartregister.addo.contract.AddoVillageClientsFragmentContract;
 import org.smartregister.addo.model.AddoVillageClientsFragmentModel;
 import org.smartregister.addo.presenter.AddoVillageClientsFragmentPresenter;
@@ -116,7 +117,7 @@ public class AddoVillageClientsFragment extends BaseRegisterFragment implements 
     @Override
     public void initializeAdapter(Set<org.smartregister.configurableviews.model.View> visibleColumns) {
         AddoVillageClientsProvider addoVillageClientsProvider = new AddoVillageClientsProvider(getActivity(), paginationViewHandler, registerActionHandler, visibleColumns, villageSelected);
-        clientAdapter = new RecyclerViewPaginatedAdapter(null, addoVillageClientsProvider, context().commonrepository(this.tablename));
+        clientAdapter = new AddoRecyclerViewPaginatedAdapter(null, addoVillageClientsProvider, context().commonrepository(this.tablename));
         clientAdapter.setCurrentlimit(20);
         clientsView.setAdapter(clientAdapter);
     }
@@ -124,6 +125,11 @@ public class AddoVillageClientsFragment extends BaseRegisterFragment implements 
     @Override
     public AddoVillageClientsFragmentContract.Presenter presenter() {
         return (AddoVillageClientsFragmentContract.Presenter) presenter;
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        clientAdapter.swapCursor((Cursor) null);
     }
 
     @Override

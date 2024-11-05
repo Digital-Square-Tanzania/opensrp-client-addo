@@ -474,7 +474,12 @@ public class JsonFormUtils extends org.smartregister.family.util.JsonFormUtils {
             return;
         }
 
-        Bitmap compressedImageFile = FamilyLibrary.getInstance().getCompressor().compressToBitmap(file);
+        Bitmap compressedImageFile = null;
+        try {
+            compressedImageFile = FamilyLibrary.getInstance().getCompressor().compressToBitmap(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         saveStaticImageToDisk(compressedImageFile, providerId, entityId);
 
     }

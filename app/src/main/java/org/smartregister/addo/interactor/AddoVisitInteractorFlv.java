@@ -1,6 +1,7 @@
 package org.smartregister.addo.interactor;
 
 import static org.smartregister.addo.util.AddoUtils.displayReferralFacilities;
+import static org.smartregister.family.util.JsonFormUtils.getFieldValue;
 
 import android.content.Context;
 
@@ -283,7 +284,15 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         public void onPayloadReceived(String s) {
             try {
                 JSONObject jsonObject = new JSONObject(s);
-                this.signs_present = org.smartregister.addo.util.JsonFormUtils.getCheckBoxValue(jsonObject, "child_addo_danger_signs");
+                if (clientType.equals(FamilyMemberType.CHILD)) {
+                    this.signs_present = getFieldValue(s, JsonFormUtils.STEP1, "child_present");
+                } else if (clientType.equals(FamilyMemberType.ANC)) {
+                    this.signs_present = getFieldValue(s, JsonFormUtils.STEP1, "pregnant_woman_present");
+                } else if (clientType.equals(FamilyMemberType.PNC)) {
+                    this.signs_present = getFieldValue(s, JsonFormUtils.STEP1, "mother_present");
+                } else if (clientType.equals(FamilyMemberType.ADOLESCENT)) {
+                    this.signs_present = getFieldValue(s, JsonFormUtils.STEP1, "adolescent_present");
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -321,6 +330,7 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         private String jsonPayload;
 
         FamilyMemberType clientType;
+        private String medicationGiven;
         public MedicationDispensedActionHelper(String dangerSignsForm, FamilyMemberType clientType) {
             this.dangerSignsForm = dangerSignsForm;
             this.clientType = clientType;
@@ -335,6 +345,7 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         public void onPayloadReceived(String jsonPayload) {
             try {
                 JSONObject jsonObject = new JSONObject(jsonPayload);
+                this.medicationGiven = org.smartregister.addo.util.JsonFormUtils.getValue(jsonObject, "medicine_dispensed");
             }catch (JSONException je){
                 Timber.e(je);
             }
@@ -359,7 +370,11 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
 
         @Override
         public BaseAncHomeVisitAction.Status evaluateStatusOnPayload() {
-            return BaseAncHomeVisitAction.Status.COMPLETED;
+            if (medicationGiven != null && !medicationGiven.isEmpty()) {
+                return BaseAncHomeVisitAction.Status.COMPLETED;
+            } else {
+                return BaseAncHomeVisitAction.Status.PENDING;
+            }
         }
     }
 

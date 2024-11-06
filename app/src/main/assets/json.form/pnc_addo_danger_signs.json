@@ -62,55 +62,27 @@
         "label_text_style": "bold"
       },
       {
-        "key": "chw_link",
+        "key": "spacer",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
-        "openmrs_entity_id": "1648AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        "type": "check_box",
-        "exclusive": [
-          "chw_link_yes"
-        ],
-        "label": "{{step1_chw_link_label}}",
-        "options": [
-          {
-            "key": "chw_link_yes",
-            "openmrs_entity_parent": "",
-            "openmrs_entity": "concept",
-            "openmrs_entity_id": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            "text": "{{step1_chw_link_yes}}",
-            "text_size": "18px",
-            "value": "false"
-          },
-          {
-            "key": "step1_chw_link_no",
-            "openmrs_entity_parent": "",
-            "openmrs_entity": "concept",
-            "openmrs_entity_id": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            "text": "{{step1_chw_link_no}}",
-            "text_size": "18px",
-            "value": "false"
-          }
-        ],
-        "v_required" : {
-          "value" : "true",
-          "err": "{{step1_chw_link_err}}"
-        }
+        "openmrs_entity": "",
+        "openmrs_entity_id": "spacer",
+        "type": "spacer",
+        "spacer_height": "20dp"
       },
       {
         "key": "mother_present",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
-        "openmrs_entity_id": "163748AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        "type": "check_box",
-        "exclusive": [
-          "chk_mother_present_yes"
-        ],
+        "openmrs_entity_id": "mother_present",
+        "type": "native_radio",
+        "label_text_style": "bold",
+        "text_color": "#000000",
         "label": "{{step1_pnc_woman_present}}",
         "options": [
           {
             "key": "chk_mother_present_yes",
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "openmrs_entity_id": "chk_mother_present_yes",
             "text": "{{step1_pnc_woman_present_yes}}",
             "text_size": "18px",
             "value": "false"
@@ -118,7 +90,7 @@
           {
             "key": "chk_mother_present_no",
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "openmrs_entity_id": "chk_mother_present_no",
             "text": "{{step1_pnc_woman_present_no}}",
             "text_size": "18px",
             "value": "false"
@@ -252,14 +224,10 @@
           "err": "{{step2_danger_sign_err}}"
         },
         "relevance": {
-          "step1:mother_present": {
-            "ex-checkbox": [
-              {
-                "or": [
-                  "chk_mother_present_yes"
-                ]
-              }
-            ]
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "pnc_addo_danger_signs_relevance.yml"
+            }
           }
         }
       },
@@ -678,14 +646,10 @@
         "text_color": "#000000",
         "toaster_type": "problem",
         "relevance": {
-          "step1:mother_present": {
-            "ex-checkbox": [
-              {
-                "or": [
-                  "chk_mother_present_no"
-                ]
-              }
-            ]
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "pnc_addo_danger_signs_relevance.yml"
+            }
           }
         }
       },

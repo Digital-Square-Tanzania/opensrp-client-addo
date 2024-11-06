@@ -62,49 +62,21 @@
         "label_text_style": "bold"
       },
       {
-        "key": "chw_link",
+        "key": "spacer",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
-        "openmrs_entity_id": "1648AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        "type": "check_box",
-        "exclusive": [
-          "chw_link_yes"
-        ],
-        "label": "{{step1_chw_link_label}}",
-        "options": [
-          {
-            "key": "chw_link_yes",
-            "openmrs_entity_parent": "",
-            "openmrs_entity": "concept",
-            "openmrs_entity_id": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            "text": "{{step1_chw_link_yes}}",
-            "text_size": "18px",
-            "value": "false"
-          },
-          {
-            "key": "step1_chw_link_no",
-            "openmrs_entity_parent": "",
-            "openmrs_entity": "concept",
-            "openmrs_entity_id": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            "text": "{{step1_chw_link_no}}",
-            "text_size": "18px",
-            "value": "false"
-          }
-        ],
-        "v_required" : {
-          "value" : "true",
-          "err": "{{step1_chw_link_err}}"
-        }
+        "openmrs_entity": "",
+        "openmrs_entity_id": "spacer",
+        "type": "spacer",
+        "spacer_height": "20dp"
       },
       {
         "key": "pregnant_woman_present",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "163748AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        "type": "check_box",
-        "exclusive": [
-          "chk_pregnant_woman_present_yes"
-        ],
+        "type": "native_radio",
+        "label_text_style": "bold",
+        "text_color": "#000000",
         "label": "{{step1_pregnant_woman_present_label}}",
         "options": [
           {
@@ -266,14 +238,10 @@
           "err": "{{step2_danger_signs_err}}"
         },
         "relevance": {
-          "step1:pregnant_woman_present": {
-            "ex-checkbox": [
-              {
-                "or": [
-                  "chk_pregnant_woman_present_yes"
-                ]
-              }
-            ]
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "anc_addo_danger_signs_relevance.yml"
+            }
           }
         }
       },
@@ -711,14 +679,10 @@
         "text_color": "#000000",
         "toaster_type": "problem",
         "relevance": {
-          "step1:pregnant_woman_present": {
-            "ex-checkbox": [
-              {
-                "or": [
-                  "chk_pregnant_woman_present_no"
-                ]
-              }
-            ]
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "anc_addo_danger_signs_relevance.yml"
+            }
           }
         }
       },

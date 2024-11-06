@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
@@ -83,6 +84,7 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
     @Override
     public void submittedAndClose() {
         super.submittedAndClose();
+        Toast.makeText(this, R.string.referral_submitted, Toast.LENGTH_LONG).show();
         /** HANDLE SUBMITTED AND CLOSED
          *  Runnable runnable = () ->  ChwScheduleTaskExecutor.getInstance().execute(memberObject.getBaseEntityId(), CoreConstants.EventType.ANC_HOME_VISIT, new Date());
          *         org.smartregister.chw.util.Utils.startAsyncTask(new RunnableTask(runnable), null);

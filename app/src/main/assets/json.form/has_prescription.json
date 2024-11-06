@@ -72,17 +72,16 @@
         "key": "client_prescription_note_available",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
-        "openmrs_entity_id": "163748AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        "type": "check_box",
-        "exclusive": [
-          "client_prescription_yes"
-        ],
+        "openmrs_entity_id": "client_prescription_note_available",
+        "type": "native_radio",
+        "label_text_style": "bold",
+        "text_color": "#000000",
         "label": "{{step1_client_prescription_label}}",
         "options": [
           {
             "key": "client_prescription_yes",
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "openmrs_entity_id": "client_prescription_yes",
             "text": "{{step1_client_prescription_yes}}",
             "text_size": "18px",
             "value": "false"
@@ -90,7 +89,7 @@
           {
             "key": "client_prescription_no",
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "openmrs_entity_id": "client_prescription_no",
             "text": "{{step1_client_prescription_no}}",
             "text_size": "18px",
             "value": "false"

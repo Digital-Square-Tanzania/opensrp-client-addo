@@ -66,11 +66,10 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "163748AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        "type": "check_box",
-        "exclusive": [
-          "chk_child_present_yes"
-        ],
+        "type": "native_radio",
         "label": "{{step1_is_child_present_label}}",
+        "label_text_style": "bold",
+        "text_color": "#000000",
         "options": [
           {
             "key": "chk_child_present_yes",
@@ -205,14 +204,10 @@
           "err": "{{step2_danger_signs_err}}"
         },
         "relevance": {
-          "step1:child_present": {
-            "ex-checkbox": [
-              {
-                "or": [
-                  "chk_child_present_yes"
-                ]
-              }
-            ]
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "child_addo_danger_signs_relevance.yml"
+            }
           }
         }
       },
@@ -443,14 +438,10 @@
         "text_color": "#CF0800",
         "toaster_type": "problem",
         "relevance": {
-          "step1:child_present": {
-            "ex-checkbox": [
-              {
-                "or": [
-                  "chk_child_present_no"
-                ]
-              }
-            ]
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "child_addo_danger_signs_relevance.yml"
+            }
           }
         }
       },

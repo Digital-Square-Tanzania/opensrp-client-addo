@@ -57,7 +57,7 @@
       {
         "key": "ds_start_message",
         "type": "label",
-        "text": "Screen and Dispense Medication",
+        "text": "{{step1_ds_start_message}}",
         "label_text_size": "18sp",
         "label_text_style": "bold"
       },
@@ -548,6 +548,7 @@
         "type": "date_picker",
         "hint": "{{step3_referral_appointment_date_hint}}",
         "min_date": "today",
+        "max_date": "today+1m",
         "v_required": {
           "value": "true",
           "err": "{{step3_referral_appointment_date_hint_err}}"

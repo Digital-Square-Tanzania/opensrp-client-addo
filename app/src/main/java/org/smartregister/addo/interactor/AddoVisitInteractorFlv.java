@@ -6,7 +6,6 @@ import static org.smartregister.family.util.JsonFormUtils.getFieldValue;
 import android.content.Context;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.addo.R;

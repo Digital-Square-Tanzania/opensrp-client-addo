@@ -507,5 +507,6 @@
     <string name="child_visit">Child Visit</string>
     <string name="adolescent_visit">Adolescent Visit</string>
     <string name="has_referral">Has Referral</string>
+    <string name="addo_visit">Addo Visit</string>
 
 </resources>

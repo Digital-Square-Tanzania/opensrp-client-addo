@@ -15,6 +15,7 @@ import com.vijay.jsonwizard.domain.Form;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.addo.R;
+import org.smartregister.addo.contract.ToastCallback;
 import org.smartregister.addo.interactor.AddoVisitInteractor;
 import org.smartregister.chw.anc.activity.BaseAncHomeVisitActivity;
 import org.smartregister.chw.anc.domain.MemberObject;
@@ -31,7 +32,7 @@ import java.util.LinkedHashMap;
 
 import timber.log.Timber;
 
-public class AddoVisitActivity extends BaseAncHomeVisitActivity {
+public class AddoVisitActivity extends BaseAncHomeVisitActivity implements ToastCallback {
 
     protected FamilyMemberType clientType;
 
@@ -45,6 +46,11 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
         intent.putExtra("family_member_type", familyMemberType.name());
         intent.putExtra("villageTown", villageTown);
         activity.startActivityForResult(intent, org.smartregister.chw.anc.util.Constants.REQUEST_CODE_HOME_VISIT);
+    }
+
+    @Override
+    public void showToastInInteractor(int resId) {
+        runOnUiThread(() -> { Toast.makeText(this, resId, Toast.LENGTH_LONG).show(); });
     }
 
     @Override
@@ -77,14 +83,13 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
         presenter = new BaseAncHomeVisitPresenter(
                 memberObject,
                 this,
-                new AddoVisitInteractor(clientType, villageTown)//Interactor instance here
+                new AddoVisitInteractor(clientType, villageTown, this)//Interactor instance here
         );
     }
 
     @Override
     public void submittedAndClose() {
         super.submittedAndClose();
-        Toast.makeText(this, R.string.referral_submitted, Toast.LENGTH_LONG).show();
         /** HANDLE SUBMITTED AND CLOSED
          *  Runnable runnable = () ->  ChwScheduleTaskExecutor.getInstance().execute(memberObject.getBaseEntityId(), CoreConstants.EventType.ANC_HOME_VISIT, new Date());
          *         org.smartregister.chw.util.Utils.startAsyncTask(new RunnableTask(runnable), null);
@@ -99,12 +104,8 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity {
     @Override
     public void startFormActivity(JSONObject jsonForm) {
         Form form = new Form();
-        try {
-            String formTitle = jsonForm.getString(JsonFormConstants.ENCOUNTER_TYPE);
-            form.setName(formTitle);
-        } catch (JSONException e) {
-            Timber.e(e);
-        }
+        String formTitle = getString(R.string.addo_visit);
+        form.setName(formTitle);
         form.setActionBarBackground(R.color.family_actionbar);
         form.setNavigationBackground(R.color.family_navigation);
         form.setHomeAsUpIndicator(R.mipmap.ic_cross_white);

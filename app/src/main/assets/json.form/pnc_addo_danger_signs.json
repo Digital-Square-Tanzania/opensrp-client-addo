@@ -519,6 +519,7 @@
         "type": "date_picker",
         "hint": "{{step3_referral_appointment_date_hint}}",
         "min_date": "today",
+        "max_date": "today+1m",
         "v_required": {
           "value": "true",
           "err": "{{step3_referral_appointment_date_hint_err}}"

@@ -12,7 +12,9 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.addo.R;
 import org.smartregister.addo.application.AddoApplication;
+import org.smartregister.addo.contract.ToastCallback;
 import org.smartregister.addo.dao.FamilyDao;
 import org.smartregister.addo.dao.VisitDao;
 import org.smartregister.addo.model.ReferralObsValues;
@@ -54,13 +56,15 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
     private final FamilyMemberType clientType;
 
     private final String villageTown;
+    private ToastCallback toastCallback;
 
     public static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
 
-    public AddoVisitInteractor(FamilyMemberType clientType, String villageTown) {
+    public AddoVisitInteractor(FamilyMemberType clientType, String villageTown, ToastCallback toastCallback) {
         this.clientType = clientType;
         this.villageTown = villageTown;
+        this.toastCallback = toastCallback;
 
     }
 
@@ -257,6 +261,7 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
             JSONObject eventJson = new JSONObject(gson.toJson(event));
             Timber.e("%S", eventJson);
             syncHelper.addEvent(baseEntityId, eventJson);
+            toastCallback.showToastInInteractor(R.string.referral_submitted);
         } catch (JSONException e) {
             Timber.e(e);
         }

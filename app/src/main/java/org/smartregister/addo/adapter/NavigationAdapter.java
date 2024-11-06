@@ -69,13 +69,13 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.My
         holder.getView().setTag(model.getMenuTitle());
 
         if (selectedView != null && selectedView.equals(model.getMenuTitle())) {
-            holder.tvCount.setTextColor(context.getResources().getColor(R.color.light_blue_900));
-            holder.tvName.setTextColor(context.getResources().getColor(R.color.light_blue_900));
-            holder.ivIcon.setColorFilter(context.getResources().getColor(R.color.light_blue_900));
+            holder.tvCount.setTextColor(context.getResources().getColor(R.color.primary));
+            holder.tvName.setTextColor(context.getResources().getColor(R.color.primary));
+            holder.ivIcon.setColorFilter(context.getResources().getColor(R.color.primary));
         } else {
-            holder.tvCount.setTextColor(context.getResources().getColor(R.color.dark_grey_text));
-            holder.tvName.setTextColor(context.getResources().getColor(R.color.dark_grey_text));
-            holder.ivIcon.setColorFilter(context.getResources().getColor(R.color.dark_grey_text));
+            holder.tvCount.setTextColor(context.getResources().getColor(R.color.white));
+            holder.tvName.setTextColor(context.getResources().getColor(R.color.white));
+            holder.ivIcon.setColorFilter(context.getResources().getColor(R.color.white));
         }
 
     }

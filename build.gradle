@@ -2,7 +2,7 @@
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
         mavenCentral()
         google()
         mavenLocal()
@@ -36,6 +36,7 @@ allprojects {
     repositories {
         google()
         mavenLocal()
+        maven { url "https://central.sonatype.com/" }
         mavenCentral()
         maven { url 'https://maven.google.com' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }

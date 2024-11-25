@@ -7,6 +7,7 @@ import static org.smartregister.addo.activity.FamilyFocusedMemberProfileActivity
 
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -254,15 +255,15 @@ public class AddoUtils extends Utils {
             removeFieldsFromJSONArray(referralFormArray, "asterisk_symbol", "save_n_refer");
 
             // Add meds dispensed
-            JSONObject medicationsSelectedFieldJsonObject = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(medicationsFormJsonObject), "medications_selected");
+            JSONObject medicationsSelectedFieldJsonObject = new JSONObject();
 
-            JSONObject medicationDispensedFieldJsonObject = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(medicationsFormJsonObject), "medicine_dispensed");
-            String medicationDispensedValue = medicationDispensedFieldJsonObject.optString(JsonFormUtils.VALUE, null);
+            if (medicationsFormJsonObject != null) {
+                medicationsSelectedFieldJsonObject = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(medicationsFormJsonObject), "medications_selected");
+                referralFormArray.put(medicationsSelectedFieldJsonObject);
+            }
 
-            //referralFormArray.put(createReferralFormField("service_before_referral",
+            // referralFormArray.put(createReferralFormField("service_before_referral",
              //       medicationDispensedValue != null ? getDispensedMedicineName(medicationDispensedValue) : "None"));
-
-            referralFormArray.put(medicationsSelectedFieldJsonObject);
 
             return  referralFormArray;
         }catch (JSONException e){

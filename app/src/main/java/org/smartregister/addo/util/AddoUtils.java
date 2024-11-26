@@ -320,7 +320,7 @@ public class AddoUtils extends Utils {
         // Get selected values and options
         JSONArray selectedValuesJsonArray = new JSONArray();
 
-        if ("multi_select_list".equals(fieldJsonObject.getString(JsonFormConstants.TYPE))) {
+        if ("multi_select_list".equals(fieldJsonObject.getString(JsonFormConstants.TYPE)) && !fieldJsonObject.optString(JsonFormConstants.VALUE).isEmpty()) {
             JSONArray selectedJsonArrayObject = new JSONArray(fieldJsonObject.optString(JsonFormConstants.VALUE));
             selectedValuesJsonArray = getMultiSelectJsonArrayKeys(selectedJsonArrayObject);
         } else if ("check_box".equals(fieldJsonObject.getString(JsonFormConstants.TYPE))) {

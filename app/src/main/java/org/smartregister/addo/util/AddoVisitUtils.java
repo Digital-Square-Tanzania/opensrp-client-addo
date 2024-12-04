@@ -1,5 +1,7 @@
 package org.smartregister.addo.util;
 
+import static org.smartregister.addo.util.Constants.HOME_VISIT_GROUP;
+
 import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
@@ -43,13 +45,13 @@ public class AddoVisitUtils extends VisitUtils {
                 if (StringUtils.isBlank(baseEvent.getFormSubmissionId()))
                     baseEvent.setFormSubmissionId(UUID.randomUUID().toString());
 
-                baseEvent.addDetails(org.smartregister.addo.util.Constants.HOME_VISIT_GROUP, visitGroupId);
+                baseEvent.addDetails(HOME_VISIT_GROUP, visitGroupId);
 
                 AllSharedPreferences allSharedPreferences = AncLibrary.getInstance().context().allSharedPreferences();
                 NCUtils.addEvent(allSharedPreferences, baseEvent);
 
                 // process details
-                processVisitDetails(visitGroupId, v, visitDetailsRepository, v.getVisitId(), v.getBaseEntityId(), baseEvent.getFormSubmissionId());
+                processVisitDetails(visitDetailsRepository, v.getVisitId());
 
                 visitRepository.completeProcessing(v.getVisitId());
             }
@@ -59,12 +61,11 @@ public class AddoVisitUtils extends VisitUtils {
         NCUtils.startClientProcessing();
     }
 
-    private static void processVisitDetails(String visitGroupId, Visit visit, VisitDetailsRepository visitDetailsRepository, String visitID, String baseEntityID, String formSubmissionId) throws Exception {
+    private static void processVisitDetails(VisitDetailsRepository visitDetailsRepository, String visitID) throws Exception {
         List<VisitDetail> visitDetailList = visitDetailsRepository.getVisits(visitID);
         for (VisitDetail visitDetail : visitDetailList) {
             if (!visitDetail.getProcessed()) {
                 if (Constants.HOME_VISIT_TASK.SERVICE.equalsIgnoreCase(visitDetail.getPreProcessedType())) {
-                    //saveVisitDetailsAsServiceRecord(visitGroupId, visitDetail, baseEntityID, visit.getDate());
                     visitDetailsRepository.completeProcessing(visitDetail.getVisitDetailsId());
                     continue;
                 }

@@ -15,7 +15,7 @@ public class AddoHomeViewModel extends ViewModel {
 
     private MutableLiveData<String> numRefferalsWeek;
     private MutableLiveData<String> numClosedRefferalsWeek;
-    private MutableLiveData<String> numAddoVisits;
+    private MutableLiveData<String> numLinkageClosedThisAddo;
 
     private final AddoWeeklySummaryRepository weeklySummaryRepository = new AddoWeeklySummaryRepository();
 
@@ -51,14 +51,14 @@ public class AddoHomeViewModel extends ViewModel {
         return numClosedRefferalsWeek;
     }
 
-    public LiveData<String> getNumAddoVisits() {
-        if (numAddoVisits == null) {
-            numAddoVisits  = new MutableLiveData<String>();
-            weeklySummaryRepository.getAddoWeeklyVisit(result -> numAddoVisits.setValue(result));
+    public LiveData<String> getNumLinkageClosedThisAddo() {
+        if (numLinkageClosedThisAddo == null) {
+            numLinkageClosedThisAddo = new MutableLiveData<String>();
+            weeklySummaryRepository.getnumLinkageClosedThisAddo(result -> numLinkageClosedThisAddo.setValue(result));
         } else {
-            weeklySummaryRepository.getAddoWeeklyVisit(result -> numAddoVisits.setValue(result));
+            weeklySummaryRepository.getnumLinkageClosedThisAddo(result -> numLinkageClosedThisAddo.setValue(result));
         }
-        return numAddoVisits;
+        return numLinkageClosedThisAddo;
     }
 
 }

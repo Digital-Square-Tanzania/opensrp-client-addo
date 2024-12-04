@@ -1,7 +1,5 @@
 package org.smartregister.addo.repository;
 
-import static org.smartregister.family.util.DBConstants.KEY.BASE_ENTITY_ID;
-
 import android.database.Cursor;
 
 import androidx.annotation.VisibleForTesting;
@@ -92,31 +90,25 @@ public class AddoWeeklySummaryRepository {
         return "0";
     }
 
-    public void getAddoWeeklyVisit(WeeklySummaryCallback weeklySummaryCallback) {
+    public void getnumLinkageClosedThisAddo(WeeklySummaryCallback weeklySummaryCallback) {
         Runnable runnable = () -> {
-            final String visitsCounts;
-            visitsCounts = queryVisitsAddo();
-            appExecutors.mainThread().execute(() -> weeklySummaryCallback.onComplete(visitsCounts));
+            final String addoClosedLinkageCounts;
+            addoClosedLinkageCounts = queryAddoLinkageClosure();
+            appExecutors.mainThread().execute(() -> weeklySummaryCallback.onComplete(addoClosedLinkageCounts));
         };
         appExecutors.diskIO().execute(runnable);
     }
 
-    private String queryVisitsAddo() {
+    private String queryAddoLinkageClosure() {
         String addoUser = CoreLibrary.getInstance().context().allSharedPreferences().fetchRegisteredANM();
         Cursor cursor = null;
 
         try {
-            String query = "select * from visits where visit_json like '%\"providerId\":\""+addoUser+"\"%' and " +
-                    "visit_type IN (" +
-                    "'Child ADDO Visit', " +
-                    "'ANC ADDO Visit', " +
-                    "'PNC ADDO Visit', " +
-                    "'Other Member ADDO Visit', " +
-                    "'Adolescent ADDO Visit') and " +
-                    "date(datetime(visit_date/1000, 'unixepoch')) > datetime('now', 'start of day','-6 days') and " +
-                    BASE_ENTITY_ID + " IN(select \"for\" from task where code = 'Linkage' and " +
+            // Closed at a specific addo will generate Linkage_Followup Task, so we can check all tasks that have a Linkage_Followup with a reason reference the
+            // of that task or count of linkage_followup task (because the only thing to create linkage follow up task is if the linKage is there in the first place)
+            String query = "select * from task where code = 'Linkage_Followup' and " +
                     "date(datetime(start/1000, 'unixepoch')) > datetime('now', 'start of day', '-6 days') and " +
-                    "status IN ('COMPLETED', 'IN_PROGRESS')) group by base_entity_id, visit_date;";
+                    "owner = \'" + addoUser + "\' ";
             cursor = repository.getReadableDatabase().rawQuery(query, null);
             cursor.moveToFirst();
             return Integer.toString(cursor.getCount());

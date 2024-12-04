@@ -19,6 +19,7 @@ import org.smartregister.addo.dao.FamilyDao;
 import org.smartregister.addo.dao.VisitDao;
 import org.smartregister.addo.model.ReferralObsValues;
 import org.smartregister.addo.util.AddoUtils;
+import org.smartregister.addo.util.AddoVisitUtils;
 import org.smartregister.addo.util.Constants;
 import org.smartregister.addo.util.Constants.FamilyMemberType;
 import org.smartregister.addo.util.CoreConstants;
@@ -95,7 +96,7 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
     @Override
     public void calculateActions(BaseAncHomeVisitContract.View view, MemberObject memberObject, BaseAncHomeVisitContract.InteractorCallBack callBack) {
         try {
-            VisitUtils.processVisits(memberObject.getBaseEntityId());
+            AddoVisitUtils.processVisits(memberObject.getBaseEntityId());
         } catch (Exception e) {
             Timber.e(e);
         }
@@ -186,7 +187,7 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
         for (Map.Entry<String, BaseAncHomeVisitAction> entry : map.entrySet()) {
             if (entry.getKey().equals("Danger signs") || entry.getKey().equals("Dalili za hatari")) {
                 dangerSignsFormJsonString = entry.getValue().getJsonPayload();
-            } else if (entry.getKey().equals("Medication Dispensed") || entry.getKey().equals("Dawa Zilizotolewa")) {
+            } else if (entry.getKey().equals("Medicine dispensation") || entry.getKey().equals("Utoaji wa dawa")) {
                 medicationsFormJsonString = entry.getValue().getJsonPayload();
             }
         }
@@ -225,11 +226,13 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
                 JSONObject medicatoinsFieldJsonObject = JsonFormUtils.getFieldJSONObject(medicationsFormFields, "medicine_dispensed");
                 medicationsValues = createObsValuesFromFields(medicatoinsFieldJsonObject);
 
+            } else {
+                medicationsValues = new ReferralObsValues(List.of("None"), List.of("None"));
             }
 
             // Create referral event
             submitReferralEvent(memberID,
-                    AddoUtils.createReferralForm(dangerSignsFormJsonObject, new JSONObject(medicationsFormJsonString)),
+                    AddoUtils.createReferralForm(dangerSignsFormJsonObject, StringUtils.isNotEmpty(medicationsFormJsonString) ? new JSONObject(medicationsFormJsonString) : null),
                     formTag, problems, medicationsValues);
         }
     }

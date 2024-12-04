@@ -50,7 +50,7 @@
             android:background="@color/grey"/>
 
         <TextView
-            android:id="@+id/num_visits"
+            android:id="@+id/linkage_closed_this_addo"
             style="@style/askTheClientIfTh"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
             android:background="@color/grey"/>
 
         <TextView
-            android:id="@+id/num_visits_nums"
+            android:id="@+id/num_linkage_closed_this_addo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"

@@ -36,7 +36,7 @@ public class AddoHomeActivity extends BaseFamilyRegisterActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         NavigationMenu.getInstance(this, null, null);
-        AddoApplication.getInstance().notifyAppContextChange();
+        //AddoApplication.getInstance().notifyAppContextChange();
 
         action = getIntent().getStringExtra(Constants.ACTIVITY_PAYLOAD.ACTION);
         if (action != null && action.equals(Constants.ACTION.START_REGISTRATION)) {

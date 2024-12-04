@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">Addo</string>
+    <string name="app_name">CPP</string>
 
     <string name="has_linkage">Has Linkage</string>
-    <string name="login_title">Ministry of Health\nAddo App</string>
+    <string name="login_title">Ministry of Health\nCPP App</string>
     <string name="nav_logo">Afyatek</string>
     <string name="logo">logo</string>
     <string name="username">Username</string>
@@ -501,7 +501,7 @@
     <string name="client_avatar">Client Avatar</string>
 
     <string name="evalueate_commodities">Give Commodities</string>
-    <string name="evalueate_medication_dispensed">Medication Dispensed</string>
+    <string name="evalueate_medication_dispensed">Medicine dispensation</string>
     <string name="evalueate_prescription">Prescription from HF or Malaria Lab Tests</string>
     <string name="evalueate_prescription_note"> Prescription Note </string>
     <string name="child_visit">Child Visit</string>

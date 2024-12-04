@@ -6,6 +6,8 @@ public class Constants {
 
     public static final String REFERRAL_BUSINESS_STATUS = "PENDING";
 
+    public static final String HOME_VISIT_GROUP = "home_visit_group";
+
     public static final String REFERRAL_TYPE = "addo_to_facility_referral";
 
     public static class CONFIGURATION {

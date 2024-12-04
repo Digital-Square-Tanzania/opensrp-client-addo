@@ -113,9 +113,10 @@ public class MonthlyReportRepository {
      * @return
      */
     public String getReferralsToFacilityThisMonth(){
-        String query = "select * from task where code = 'Referral' and " +
+        String query = "select _id, status, business_status, datetime(start/1000, 'unixepoch') as referral_date, owner, \"for\" " +
+                "from task where code = 'Referral' and " +
                 "owner = '"+anmUser+"' and " +
-                currentMonthLimit();
+                currentMonthLimit() + " and status IS NOT 'ARCHIVED' group by 4,5,6";
         return getQueryCount(query);
     }
 

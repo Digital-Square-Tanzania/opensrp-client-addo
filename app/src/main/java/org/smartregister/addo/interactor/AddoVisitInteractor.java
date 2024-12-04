@@ -19,6 +19,7 @@ import org.smartregister.addo.dao.FamilyDao;
 import org.smartregister.addo.dao.VisitDao;
 import org.smartregister.addo.model.ReferralObsValues;
 import org.smartregister.addo.util.AddoUtils;
+import org.smartregister.addo.util.AddoVisitUtils;
 import org.smartregister.addo.util.Constants;
 import org.smartregister.addo.util.Constants.FamilyMemberType;
 import org.smartregister.addo.util.CoreConstants;
@@ -95,7 +96,7 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
     @Override
     public void calculateActions(BaseAncHomeVisitContract.View view, MemberObject memberObject, BaseAncHomeVisitContract.InteractorCallBack callBack) {
         try {
-            VisitUtils.processVisits(memberObject.getBaseEntityId());
+            AddoVisitUtils.processVisits(memberObject.getBaseEntityId());
         } catch (Exception e) {
             Timber.e(e);
         }

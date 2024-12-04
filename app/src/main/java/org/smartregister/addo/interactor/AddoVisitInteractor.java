@@ -186,7 +186,7 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
         for (Map.Entry<String, BaseAncHomeVisitAction> entry : map.entrySet()) {
             if (entry.getKey().equals("Danger signs") || entry.getKey().equals("Dalili za hatari")) {
                 dangerSignsFormJsonString = entry.getValue().getJsonPayload();
-            } else if (entry.getKey().equals("Medication Dispensed") || entry.getKey().equals("Dawa Zilizotolewa")) {
+            } else if (entry.getKey().equals("Medicine dispensation") || entry.getKey().equals("Utoaji wa dawa")) {
                 medicationsFormJsonString = entry.getValue().getJsonPayload();
             }
         }
@@ -225,11 +225,13 @@ public class AddoVisitInteractor extends BaseAncHomeVisitInteractor {
                 JSONObject medicatoinsFieldJsonObject = JsonFormUtils.getFieldJSONObject(medicationsFormFields, "medicine_dispensed");
                 medicationsValues = createObsValuesFromFields(medicatoinsFieldJsonObject);
 
+            } else {
+                medicationsValues = new ReferralObsValues(List.of("None"), List.of("None"));
             }
 
             // Create referral event
             submitReferralEvent(memberID,
-                    AddoUtils.createReferralForm(dangerSignsFormJsonObject, new JSONObject(medicationsFormJsonString)),
+                    AddoUtils.createReferralForm(dangerSignsFormJsonObject, StringUtils.isNotEmpty(medicationsFormJsonString) ? new JSONObject(medicationsFormJsonString) : null),
                     formTag, problems, medicationsValues);
         }
     }

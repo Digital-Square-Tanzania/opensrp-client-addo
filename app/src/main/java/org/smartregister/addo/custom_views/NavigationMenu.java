@@ -160,11 +160,10 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
         pbSync = rootView.findViewById(R.id.pbSync);
 
         ImageView ivLogo = rootView.findViewById(R.id.ivLogo);
-        ivLogo.setContentDescription("Afya-tek");
-        ivLogo.setImageResource(R.drawable.ic_addo_image);
+        ivLogo.setContentDescription("CPP");
 
         TextView tvLogo = rootView.findViewById(R.id.tvLogo);
-        tvLogo.setText("Afyatek ADDO App");
+        tvLogo.setText("CPP Application");
 
         TextView tvRegisters = rootView.findViewById(R.id.tvRegisters);
         tvRegisters.setText(activity.getResources().getString(R.string.nav_registers));
@@ -234,7 +233,7 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
         syncTimeTitle.setText(parentActivity.getResources().getString(R.string.nav_last));
         ivSync = rootView.findViewById(R.id.ivSyncIcon);
         pbSync = rootView.findViewById(R.id.pbSync);
-        getReferrals();
+        getReferrals(parentActivity);
 
         View.OnClickListener syncClicker = new View.OnClickListener() {
             @Override
@@ -243,7 +242,7 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
                         (R.string.action_start_sync), Toast.LENGTH_SHORT).show();
                 mPresenter.sync(parentActivity);
 
-                getReferrals();
+                getReferrals(parentActivity);
             }
         };
 
@@ -420,8 +419,8 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
         return 0;
     }
 
-    public void getReferrals(){
+    public void getReferrals(Activity activity){
         TextView textView = rootView.findViewById(R.id.referral_count);
-        textView.setText("Referrals/Linkages: " + getReferralCount());
+        textView.setText( activity.getResources().getString(R.string.referrals_linkages)+": "+ getReferralCount());
     }
 }

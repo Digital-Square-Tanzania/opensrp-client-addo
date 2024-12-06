@@ -1095,7 +1095,7 @@
     ]
   },
   "step3": {
-    "title": "Dispense Confirmation",
+    "title": "{{step3_title}}",
     "fields": [
       {
         "key": "no_medication_dispensed_toaster",

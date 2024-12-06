@@ -5,17 +5,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import org.smartregister.addo.R;
-import org.smartregister.addo.application.AddoApplication;
 import org.smartregister.addo.custom_views.NavigationMenu;
 import org.smartregister.addo.fragment.AddoHomeFragment;
 import org.smartregister.addo.fragment.AddoVillageClientsFragment;
 import org.smartregister.addo.fragment.AdvancedSearchFragment;
-import org.smartregister.addo.fragment.ScanFingerPrintFragment;
 import org.smartregister.addo.listeners.AddoBottomNavigationListener;
 import org.smartregister.addo.util.Constants;
 import org.smartregister.family.activity.BaseFamilyRegisterActivity;
@@ -75,7 +70,6 @@ public class AddoHomeActivity extends BaseFamilyRegisterActivity {
                     .setSelectedView(Constants.DrawerMenu.ALL_FAMILIES);
         }
     }
-
 
     @Override
     protected void registerBottomNavigation() {

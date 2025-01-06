@@ -10,6 +10,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ import org.smartregister.view.contract.BaseLoginContract;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -95,9 +97,20 @@ public class LoginActivity extends BaseLoginActivity implements BaseLoginContrac
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        menu.add("Privacy Policy");
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getTitle().toString().equalsIgnoreCase("Settings")) {
             startActivity(new Intent(this, AddoSettingsActivity.class));
+            return true;
+        }
+        if (Objects.requireNonNull(item.getTitle()).toString().equalsIgnoreCase("Privacy Policy")) {
+            this.startActivity(new Intent(this, PrivacyPolicyActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

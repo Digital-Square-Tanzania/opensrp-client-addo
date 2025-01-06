@@ -47,23 +47,27 @@
         <activity
             android:name="org.smartregister.family.activity.FamilyWizardFormActivity"
             android:launchMode="singleTask"
+            android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/AddoTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".activity.AddoHomeActivity"
             android:label="Addo"
+            android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/AddoTheme.NoActionBar" />
         <activity
             android:name=".activity.FamilyProfileActivity"
             android:label="@string/title_family_detail"
+            android:exported="false"
             android:parentActivityName=".activity.AddoHomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AddoTheme.NoActionBar" />
         <activity
             android:name=".activity.FamilyOtherMemberProfileActivity"
             android:label="@string/title_family_detail"
+            android:exported="false"
             android:parentActivityName=".activity.AddoHomeActivity"
             android:theme="@style/AddoTheme.NoActionBar">
             <meta-data
@@ -73,6 +77,7 @@
         <activity
             android:name=".activity.FamilyFocusedMemberProfileActivity"
             android:label="@string/title_family_detail"
+            android:exported="false"
             android:parentActivityName=".activity.AddoHomeActivity"
             android:theme="@style/AddoTheme.NoActionBar">
             <meta-data
@@ -83,29 +88,36 @@
         <activity
             android:name=".activity.ReferralWizardFormActivity"
             android:launchMode="singleTask"
+            android:exported="false"
             android:theme="@style/FamilyTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
       
         <activity
             android:name="com.vijay.jsonwizard.activities.JsonFormActivity"
-            android:screenOrientation="portrait"
+            android:exported="false"
             android:theme="@style/AddoTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
         <activity
             android:name=".view.activity.AddoSettingsActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
       
         <activity
             android:name=".activity.MonthlyActivitiesRegisterActivity"
-            android:screenOrientation="portrait"
             android:label="@string/monthly_activity"
+            android:exported="false"
             android:theme="@style/AddoTheme.NoActionBar" />
 
         <activity android:name=".activity.AddoVisitActivity"
             android:label="Addo Visit"
+            android:exported="false"
             android:theme="@style/AddoTheme.NoActionBar"/>
+
+        <activity
+            android:name=".activity.PrivacyPolicyActivity"
+            android:exported="false"
+            android:theme="@style/AddoTheme.NoActionBar" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

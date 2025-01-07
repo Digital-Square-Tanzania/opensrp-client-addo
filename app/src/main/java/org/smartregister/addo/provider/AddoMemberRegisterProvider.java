@@ -54,14 +54,12 @@ public class AddoMemberRegisterProvider extends FamilyMemberRegisterProvider {
     private Context context;
     private View.OnClickListener onClickListener;
     private ImageRenderHelper imageRenderHelper;
-    private String villageSelected;
 
     public AddoMemberRegisterProvider(Context context, CommonRepository commonRepository, Set visibleColumns, View.OnClickListener onClickListener, View.OnClickListener paginationClickListener, String familyHead, String primaryCaregiver, String villageSelected) {
         super(context, commonRepository, visibleColumns, onClickListener, paginationClickListener, familyHead, primaryCaregiver);
         this.onClickListener = onClickListener;
         this.context = context;
         this.imageRenderHelper = new ImageRenderHelper(context);
-        this.villageSelected = villageSelected;
     }
 
     @Override

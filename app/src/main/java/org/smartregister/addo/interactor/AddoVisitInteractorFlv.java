@@ -131,11 +131,6 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         //if needed
     }
 
-    private FormUtils getFormUtils() throws Exception {
-        FormUtils formUtils = FormUtils.getInstance(Utils.context().applicationContext());;
-        return formUtils;
-    }
-
     private void refreshActionList() {
         new AppExecutors().mainThread().execute(() -> callback.preloadActions(actionList));
     }
@@ -317,7 +312,7 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
                 evaluateMedicationDispensed(context, actionList, jsonPayload);
                 refreshActionList();
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                Timber.e(e);
             }
             return super.postProcess(jsonPayload);
         }

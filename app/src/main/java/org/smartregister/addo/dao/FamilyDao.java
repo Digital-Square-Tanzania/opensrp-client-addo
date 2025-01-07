@@ -159,7 +159,7 @@ public class FamilyDao extends AbstractDao {
         if (StringUtils.isBlank(entityId))
             return;
         ContentValues contentValues = new ContentValues();
-        contentValues.put(STATUS, Task.TaskStatus.IN_PROGRESS.name());
+        contentValues.put(STATUS, Task.TaskStatus.COMPLETED.name());
         contentValues.put(SYNC_STATUS, BaseRepository.TYPE_Unsynced);
         contentValues.put("last_modified", DateUtil.getMillis(new DateTime()));
 

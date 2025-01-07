@@ -215,7 +215,17 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <include android:id="@+id/action_items_focused_member" layout="@layout/view_record_services_focused" />
+        <include android:id="@+id/action_items_focused_member"
+            layout="@layout/view_record_addo_visit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <include
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/action_items_focused_member"
+            android:visibility="gone"
+            layout="@layout/view_record_services_focused"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

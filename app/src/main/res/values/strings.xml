@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name">Addo</string>
+    <string name="app_name">CPP</string>
 
-    <string name="login_title">Afyatek CHW App</string>
+    <string name="has_linkage">Has Linkage</string>
+    <string name="login_title">Ministry of Health\nCPP App</string>
     <string name="nav_logo">Afyatek</string>
     <string name="logo">logo</string>
     <string name="username">Username</string>
@@ -418,7 +419,7 @@
     <string name="addo_user_no_villages">This user has not been assigned any village</string>
     <string name="addo_other_village">Other Village</string>
     <string name="ask_client_village">Ask the client if they are from Kibaha. If they are, please select the location from the list below. If they are not from Kibaha, do not use the system for this service.</string>
-    <string name="add_select_village">Where does the client live?</string>
+    <string name="add_select_village">Select the village the client lives?</string>
     <string name="addo_profile_other_screening">Screening and Medications dispensing</string>
     <string name="give_commodities_client_focus_profile">Give Commodities</string>
     <string name="focused_client_profile_dispense">Dispense/attend Prescription from HF OR Malaria Lab Tests</string>
@@ -487,9 +488,9 @@
     <string name="pnc_hf_referral_text">PNC - HF Referral</string>
 
     <string name="pnc_addo_linkage_text">PNC - ADDO Linkage</string>
-    <string name="referrals_closed">Total Linkages Closed within the ward</string>
-    <string name="total_referrals">Total Linkages within the ward</string>
-    <string name="total_visits">Total Linkages Closed at your ADDO</string>
+    <string name="referrals_closed">Total Linkages Closed\n(ward)</string>
+    <string name="total_referrals">Total Linkages\n(ward)</string>
+    <string name="total_visits">Linkages Closed\nThis ADDO</string>
     <string name="weekly_summary_title_text">Weekly summary</string>
     <string name="no_record_found">No Record Found</string>
     <string name="male">Male</string>
@@ -498,5 +499,16 @@
     <string name="age_13y">Age: 13y</string>
     <string name="patient_name">Patient Name</string>
     <string name="client_avatar">Client Avatar</string>
+
+    <string name="evalueate_commodities">Give Commodities</string>
+    <string name="evalueate_medication_dispensed">Medicine dispensation</string>
+    <string name="evalueate_prescription">Prescription from HF or Malaria Lab Tests</string>
+    <string name="evalueate_prescription_note"> Prescription Note </string>
+    <string name="child_visit">Child Visit</string>
+    <string name="adolescent_visit">Adolescent Visit</string>
+    <string name="has_referral">Has Referral</string>
+    <string name="addo_visit">Addo Visit</string>
+
+    <string name="referrals_linkages"> Referrals/Linkages </string>
 
 </resources>

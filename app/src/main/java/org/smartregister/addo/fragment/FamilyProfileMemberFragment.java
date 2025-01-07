@@ -1,9 +1,13 @@
 package org.smartregister.addo.fragment;
 
+import android.database.Cursor;
 import android.os.Bundle;
+
+import androidx.loader.content.Loader;
 
 import org.smartregister.addo.R;
 import org.smartregister.addo.activity.FamilyProfileActivity;
+import org.smartregister.addo.adapter.AddoRecyclerViewPaginatedAdapter;
 import org.smartregister.addo.model.FamilyProfileMemberModel;
 import org.smartregister.addo.provider.AddoMemberRegisterProvider;
 import org.smartregister.configurableviews.model.View;
@@ -42,8 +46,8 @@ public class FamilyProfileMemberFragment extends BaseFamilyProfileMemberFragment
 
     @Override
     public void initializeAdapter(Set<View> visibleColumns, String familyHead, String primaryCaregiver) {
-        AddoMemberRegisterProvider addoMemberRegisterProvider = new AddoMemberRegisterProvider(this.getActivity(), this.commonRepository(), visibleColumns, this.registerActionHandler, this.paginationViewHandler, familyHead, primaryCaregiver);
-        this.clientAdapter = new RecyclerViewPaginatedAdapter(null, addoMemberRegisterProvider, this.context().commonrepository(this.tablename));
+        AddoMemberRegisterProvider addoMemberRegisterProvider = new AddoMemberRegisterProvider(this.getActivity(), this.commonRepository(), visibleColumns, this.registerActionHandler, this.paginationViewHandler, familyHead, primaryCaregiver, getArguments().getString(org.smartregister.addo.util.Constants.INTENT_KEY.VILLAGE_SELECTED));
+        this.clientAdapter = new AddoRecyclerViewPaginatedAdapter(null, addoMemberRegisterProvider, this.context().commonrepository(this.tablename));
         this.clientAdapter.setCurrentlimit(20);
         this.clientsView.setAdapter(this.clientAdapter);
     }

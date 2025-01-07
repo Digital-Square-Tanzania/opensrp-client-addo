@@ -15,3 +15,7 @@
 .externalNativeBuild
 .cxx
 github.properties
+caches
+daemon
+native
+wrapper

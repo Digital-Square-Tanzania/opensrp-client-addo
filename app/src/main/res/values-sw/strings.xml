@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">DLDM</string>
+    <string name="app_name">Maduka ya dawa ya Jamii</string>
     <string name="nav_registers">Rejista</string>
     <string name="menu_addo_home">Mwanzo</string>
     <string name="menu_addo_report">Ripoti</string>
@@ -8,10 +8,11 @@
     <string name="log_out_as">Toka kwenye mfumo kama</string>
     <string name="nav_sync">Oanisha</string>
     <string name="nav_last">"Mwisho: </string>
+    <string name="login_title">Wizara ya Afya\nMfumo wa CPP</string>
 
     <!--ADDO Home Screen -->
     <string name="ask_client_village">Muulize mteja kama anatoka Kibaha. Kama anatokea Kibaha tafadhali chagua kijiji anachotekea kutoka kwenye orodha hapo chini. Kama hatoki Kibaha, usitumie mfumo huu kutoa huduma hii.</string>
-    <string name="add_select_village">Mteja anaishi wapi?</string>
+    <string name="add_select_village">Chagua kijiji anachoishi mteja?</string>
     <string name="addo_other_village">Kijiji kingine</string>
 
     <!-- Scanfinger print screen second screen after selecting the village-->
@@ -46,7 +47,7 @@
     <string name="focused_client_profile_dispense">Toa huduma kulingana na cheti cha daktari au matokeo ya kipimo cha malaria</string>
 
     <!-- Non focused client-->
-    <string name="addo_non_focus_profile_action_text">Chagua huduma zilizotolewa</string>
+    <string name="addo_non_focus_profile_action_text">Chagua huduma iliyotolewa</string>
     <string name="non_focused_service_provided">Rekodi huduma zilizotolewa</string>
     <string name="submitted_for_onsubmit">Imetumwa ...</string>
     <string name="not_submitted_for_onsubmit">Haijatumwa ...</string>
@@ -115,14 +116,28 @@
     <string name="pnc_hf_referral_text">Aliyejifungua - Rufaa kwenda kituoni</string>
 
     <string name="pnc_addo_linkage_text">Aliyejifungua - Ushauri kwenda DLDM</string>
-    <string name="total_referrals">Wateja wote waliounganishwa na ADDO katika kata</string>
-    <string name="referrals_closed">Wateja wote waliokamilisha muunganiko na ADDO katika kata</string>
-    <string name="total_visits">Wateja wote waliokamilisha muunganiko katika ADDO yako</string>
+    <string name="total_referrals">Miunganiko yote ya ADDO\n(kata)</string>
+    <string name="referrals_closed">Miunganiko yote Iliyokamilika\n(kata)</string>
+    <string name="total_visits">Miunganisho Iliyokamilishwa Hapa</string>
     <string name="weekly_summary_title_text">Taarifa za wiki</string>
     <string name="no_record_found">No Record Found</string>
     <string name="search_bar_hint">Andika jina la kwanza au la pili</string>
     <string name="age_13y">Miaka: 13y</string>
     <string name="patient_name">Jina la Mteja</string>
     <string name="client_avatar">Client Avatar</string>
+    <string name="child_visit">Tembeleo la mtoto</string>
+    <string name="adolescent_visit">Tembeleo la kijana balehe</string>
+    <string name="has_linkage">Aende DLDM</string>
+    <string name="record_visit">Rekodi Tembeleo</string>
+    <string name="evalueate_prescription_note"> Cheti cha dawa </string>
+    <string name="evalueate_prescription">Cheti cha dawa kutoka kituo cha afya au vipimo vya maabara kwa Malaria</string>
+    <string name="evalueate_commodities">Toa Bidhaa</string>
+    <string name="evalueate_medication_dispensed">Utoaji wa dawa</string>
+    <string name="anc_home_visit_danger_signs">Dalili za hatari</string>
+    <string name="has_referral">Ana Rufaa</string>
+    <string name="referral_submitted">Rufaa imetumwa kwenda kituoni</string>
+    <string name="addo_visit">Tembeleo DLDM</string>
+
+    <string name="referrals_linkages"> Rufaa/Miunganisho </string>
 
 </resources>

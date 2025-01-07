@@ -71,15 +71,15 @@
         ],
         "options": [
           {
-            "key": "chk_commodities",
-            "text": "{{commodities}}",
+            "key": "chk_medicine",
+            "text": "{{medicine}}",
             "value": false,
             "openmrs_entity": "concept",
             "openmrs_entity_id": ""
           },
           {
-            "key": "chk_medicine",
-            "text": "{{medicine}}",
+            "key": "chk_commodities",
+            "text": "{{commodities}}",
             "value": false,
             "openmrs_entity": "concept",
             "openmrs_entity_id": ""

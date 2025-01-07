@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,7 @@ import org.smartregister.addo.dao.AdolescentDao;
 import org.smartregister.addo.dao.AncDao;
 import org.smartregister.addo.dao.PNCDao;
 import org.smartregister.addo.event.PermissionEvent;
+import org.smartregister.addo.fragment.AddoVillageClientsFragment;
 import org.smartregister.addo.fragment.FamilyProfileActivityFragment;
 import org.smartregister.addo.fragment.FamilyProfileMemberFragment;
 import org.smartregister.addo.listeners.FloatingMenuListener;
@@ -57,6 +59,7 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
     private String familyHead;
     private String primaryCaregiver;
     private String familyName;
+    private String villageSelected;
 
     @Override
     protected void onCreation() {
@@ -85,6 +88,7 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
         familyHead = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_HEAD);
         primaryCaregiver = getIntent().getStringExtra(Constants.INTENT_KEY.PRIMARY_CAREGIVER);
         familyName = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_NAME);
+        villageSelected = getIntent().getStringExtra(org.smartregister.addo.util.Constants.INTENT_KEY.VILLAGE_SELECTED);
         presenter = new FamilyProfilePresenter(this, new FamilyProfileModel(familyName), familyBaseEntityId, familyHead, primaryCaregiver, familyName);
     }
 
@@ -142,11 +146,13 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
 
                 break;
             case android.R.id.home:
-                //onBackPressed();
-                Intent intent = NavUtils.getParentActivityIntent(this);
+                onBackPressed();
+                // I am not sure why this approach was chosen but the above seems to tbe working
+/*                Intent intent = NavUtils.getParentActivityIntent(this);
                 assert intent != null;
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                NavUtils.navigateUpTo(this, intent);
+                intent.putExtra("TARGET_FRAGMENT", AddoVillageClientsFragment.class.getCanonicalName());
+                NavUtils.navigateUpTo(this, intent);*/
                 return true;
             default:
                 super.onOptionsItemSelected(item);

@@ -28,6 +28,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.smartregister.CoreLibrary;
 import org.smartregister.addo.R;
 import org.smartregister.addo.adapter.NavigationAdapter;
 import org.smartregister.addo.application.AddoApplication;
@@ -37,6 +38,7 @@ import org.smartregister.addo.presenter.NavigationPresenter;
 import org.smartregister.addo.util.Constants;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.util.LangUtils;
 
 import java.lang.ref.WeakReference;
@@ -158,11 +160,10 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
         pbSync = rootView.findViewById(R.id.pbSync);
 
         ImageView ivLogo = rootView.findViewById(R.id.ivLogo);
-        ivLogo.setContentDescription("Afya-tek");
-        ivLogo.setImageResource(R.drawable.ic_addo_image);
+        ivLogo.setContentDescription("CPP");
 
         TextView tvLogo = rootView.findViewById(R.id.tvLogo);
-        tvLogo.setText("Afyatek ADDO App");
+        tvLogo.setText("CPP Application");
 
         TextView tvRegisters = rootView.findViewById(R.id.tvRegisters);
         tvRegisters.setText(activity.getResources().getString(R.string.nav_registers));
@@ -232,6 +233,7 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
         syncTimeTitle.setText(parentActivity.getResources().getString(R.string.nav_last));
         ivSync = rootView.findViewById(R.id.ivSyncIcon);
         pbSync = rootView.findViewById(R.id.pbSync);
+        getReferrals(parentActivity);
 
         View.OnClickListener syncClicker = new View.OnClickListener() {
             @Override
@@ -240,8 +242,7 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
                         (R.string.action_start_sync), Toast.LENGTH_SHORT).show();
                 mPresenter.sync(parentActivity);
 
-                TextView textView = rootView.findViewById(R.id.referral_count);
-                textView.setText("Referrals: " + getReferralCount());
+                getReferrals(parentActivity);
             }
         };
 
@@ -398,9 +399,11 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
     }
 
     public int getReferralCount() {
+        AllSharedPreferences allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
         Cursor c = null;
+        String requester = (allSharedPreferences.getANMPreferredName(allSharedPreferences.fetchRegisteredANM()));
         try {
-            String query = "select count(*) from task where status = 'READY' AND priority = 2";
+            String query = "select count(*) from task where status = 'READY' AND priority = 3 AND (code != 'Referral' OR (code = 'Referral' AND requester = '" + requester + "') OR code = 'Linkage')";
 
             c = AddoApplication.getInstance().getRepository().getReadableDatabase().query(query);
 
@@ -414,5 +417,10 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
             }
         }
         return 0;
+    }
+
+    public void getReferrals(Activity activity){
+        TextView textView = rootView.findViewById(R.id.referral_count);
+        textView.setText( activity.getResources().getString(R.string.referrals_linkages)+": "+ getReferralCount());
     }
 }

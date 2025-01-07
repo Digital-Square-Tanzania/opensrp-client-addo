@@ -2,9 +2,16 @@
 name: step3_required_field_err_toaster
 description: Danger signs not selected
 priority: 1
-condition: "(step2_danger_signs_present.isEmpty() && step1_pregnant_woman_present.contains('chk_pregnant_woman_present_yes')) ||
+condition: "(step2_danger_signs_present.isEmpty() && step1_pregnant_woman_present == 'chk_pregnant_woman_present_yes') ||
             (step2_minor_illnesses.isEmpty() && step2_danger_signs_present.contains('chk_none')) ||
             (step1_chw_link.isEmpty() || step1_pregnant_woman_present.isEmpty())"
+actions:
+  - "isRelevant = true"
+---
+name: step2_danger_signs_present
+description: Danger signs screening for a child who is present
+priority: 1
+condition: "step1_pregnant_woman_present == 'chk_pregnant_woman_present_yes'"
 actions:
   - "isRelevant = true"
 
@@ -13,5 +20,20 @@ name: step3_save
 description: Child has danger signs, requires immediate referral
 priority: 1
 condition: "step2_danger_signs_present.contains('chk_none') || step1_pregnant_woman_present.contains('chk_pregnant_woman_present_no')"
+actions:
+  - "isRelevant = true"
+
+---
+name: step3_hf_facilities
+description: Child has danger signs, requires immediate referral
+priority: 1
+condition: "step2_danger_signs_present.contains('chk_none') || step1_pregnant_woman_present.contains('chk_pregnant_woman_present_no')"
+actions:
+  - "isRelevant = true"
+---
+name: step3_pregnant_woman_not_present_toaster
+description: Pregnant woman not present toaster relevance
+priority: 1
+condition: "step1_pregnant_woman_present == 'chk_pregnant_woman_present_no'"
 actions:
   - "isRelevant = true"

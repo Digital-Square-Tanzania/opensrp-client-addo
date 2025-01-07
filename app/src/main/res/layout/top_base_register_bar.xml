@@ -3,7 +3,7 @@
     android:id="@+id/register_nav_bar_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#8A1A51"
+    android:background="@color/addo_primary"
     android:focusableInTouchMode="true">
 
     <RelativeLayout

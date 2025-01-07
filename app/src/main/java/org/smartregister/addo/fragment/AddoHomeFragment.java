@@ -44,7 +44,7 @@ public class AddoHomeFragment extends BaseRegisterFragment implements AddoHomeFr
     private EmptystateView emptystateView;
     private TextView numReferralsWeek;
     private TextView numClosedReferralWeek;
-    private TextView numOfVisitsAddo;
+    private TextView numLinkageClosedThisAddo;
 
     @Override
     public void setupViews(View view) {
@@ -72,9 +72,9 @@ public class AddoHomeFragment extends BaseRegisterFragment implements AddoHomeFr
         // Weekly Summary numbers
         numReferralsWeek = view.findViewById(R.id.tot_ref_num);
         numClosedReferralWeek = view.findViewById(R.id.ref_closure_num);
-        numOfVisitsAddo = view.findViewById(R.id.num_visits_nums);
+        numLinkageClosedThisAddo = view.findViewById(R.id.num_linkage_closed_this_addo);
 
-        model.getNumRefferalsWeek().observe(Objects.requireNonNull(getActivity()), s -> {
+        model.getNumRefferalsWeek().observe(requireActivity(), s -> {
             numReferralsWeek.setText(s);
         });
 
@@ -82,8 +82,8 @@ public class AddoHomeFragment extends BaseRegisterFragment implements AddoHomeFr
             numClosedReferralWeek.setText(s);
         });
 
-        model.getNumAddoVisits().observe(getActivity(), s -> {
-            numOfVisitsAddo.setText(s);
+        model.getNumLinkageClosedThisAddo().observe(getActivity(), s -> {
+            numLinkageClosedThisAddo.setText(s);
         });
 
         tvNoVillage = view.findViewById(R.id.empty_view);
@@ -118,9 +118,9 @@ public class AddoHomeFragment extends BaseRegisterFragment implements AddoHomeFr
             // if the selected item is other village then take the user to Advanced search otherwise fp scan
             if (!village.equalsIgnoreCase(String.valueOf(R.string.addo_other_village))) {
                 model.setSelectedVillage(village);
-                ((BaseRegisterActivity) Objects.requireNonNull(getActivity())).switchToFragment(2);
+                ((BaseRegisterActivity) requireActivity()).switchToFragment(2);
             } else {
-                ((BaseRegisterActivity) Objects.requireNonNull(getActivity())).switchToFragment(3);
+                ((BaseRegisterActivity) requireActivity()).switchToFragment(3);
             }
 
         });
@@ -215,8 +215,8 @@ public class AddoHomeFragment extends BaseRegisterFragment implements AddoHomeFr
                     numClosedReferralWeek.setText(s);
                 });
 
-                model.getNumAddoVisits().observe(getViewLifecycleOwner(), s -> {
-                    numOfVisitsAddo.setText(s);
+                model.getNumLinkageClosedThisAddo().observe(getViewLifecycleOwner(), s -> {
+                    numLinkageClosedThisAddo.setText(s);
                 });
             }
         }

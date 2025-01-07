@@ -74,7 +74,7 @@ public class AddoVillageClientsFragmentPresenter implements AddoVillageClientsFr
     public String getMainCondition() {
         return String.format("%s.%s is null AND %s.%s like '%%%s%%' ",
                 CoreConstants.TABLE_NAME.FAMILY_MEMBER, DBConstants.KEY.DOD,
-                CoreConstants.TABLE_NAME.FAMILY, DBConstants.KEY.VILLAGE_TOWN, selectedVillage
+                CoreConstants.TABLE_NAME.FAMILY, AddoDBConstants.NEAREST_HEALTH_FACILITY, selectedVillage
         );
     }
 

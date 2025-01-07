@@ -3,10 +3,15 @@ package org.smartregister.addo.interactor;
 import androidx.annotation.VisibleForTesting;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
+import org.joda.time.DateTime;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.addo.application.AddoApplication;
 import org.smartregister.addo.contract.FamilyFocusedMemberProfileContract;
 import org.smartregister.addo.dao.AdolescentDao;
 import org.smartregister.addo.dao.AncDao;
@@ -26,11 +31,15 @@ import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.tag.FormTag;
+import org.smartregister.family.FamilyLibrary;
 import org.smartregister.family.util.AppExecutors;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.sync.helper.ECSyncHelper;
+import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.FormUtils;
 
 import java.text.SimpleDateFormat;
@@ -39,6 +48,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import timber.log.Timber;
 
@@ -48,13 +58,19 @@ public class FamilyFocusedMemberProfileInteractor implements FamilyFocusedMember
     private String relationalId;
     private FormUtils formUtils;
 
+    private String village;
+
+    public static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
+
     @VisibleForTesting
     FamilyFocusedMemberProfileInteractor(AppExecutors appExecutors) {
         this.appExecutors = appExecutors;
     }
 
-    public FamilyFocusedMemberProfileInteractor() {
+    public FamilyFocusedMemberProfileInteractor(String village) {
         this(new AppExecutors());
+        this.village = village;
     }
 
 
@@ -103,6 +119,21 @@ public class FamilyFocusedMemberProfileInteractor implements FamilyFocusedMember
         appExecutors.diskIO().execute(runnable);
     }
 
+    @Override
+    public void submitReferralEvent(String baseEntityId, JSONArray jsonArray, FormTag formTag) {
+        try{
+            final ECSyncHelper syncHelper = AddoApplication.getInstance().getEcSyncHelper();
+            JSONObject metadata= new JSONObject();
+            Event event = org.smartregister.util.JsonFormUtils.createEvent(jsonArray, metadata, formTag, baseEntityId,"Referral Registration","ec_referral");
+            event.setEventId(UUID.randomUUID().toString());
+            JSONObject eventJson = new JSONObject(gson.toJson(event));
+            Timber.e("%S", eventJson);
+            syncHelper.addEvent(baseEntityId, eventJson);
+        }catch (JSONException e){
+            Timber.e(e);
+        }
+    }
+
     protected void submitVisit(final boolean editMode, final String memberID, final Map<String, String> dsForm, String parentEventType) throws Exception {
         // create a map of the different types
         String payloadType = null;
@@ -137,7 +168,7 @@ public class FamilyFocusedMemberProfileInteractor implements FamilyFocusedMember
         if (baseEvent != null) {
             baseEvent.setFormSubmissionId(JsonFormUtils.generateRandomUUIDString());
             JsonFormUtils.tagEvent(allSharedPreferences, baseEvent);
-            baseEvent.setLocationId(getClientLocationId(relationalId));
+            baseEvent.setLocationId(getClientLocationId(village));
 
             String visitID = (editMode) ?
                     visitRepository().getLatestVisit(memberID, getEncounterType(memberID)).getVisitId() :
@@ -218,15 +249,8 @@ public class FamilyFocusedMemberProfileInteractor implements FamilyFocusedMember
         }
     }
 
-    private String getClientLocationId(String baseEntityId) {
-        final CommonPersonObject familyObject = getCommonRepository(Utils.metadata().familyRegister.tableName).findByBaseEntityId(baseEntityId);
-        final CommonPersonObjectClient pClient = new CommonPersonObjectClient(familyObject.getCaseId(),
-                familyObject.getDetails(), "");
-        pClient.setColumnmaps(familyObject.getColumnmaps());
-
-        String villageTown = Utils.getValue(pClient.getColumnmaps(), DBConstants.KEY.VILLAGE_TOWN, false);
-
-        return LocationHelper.getInstance().getOpenMrsLocationId(villageTown);
+    private String getClientLocationId(String village) {
+        return LocationHelper.getInstance().getOpenMrsLocationId(village);
     }
 
     @Override

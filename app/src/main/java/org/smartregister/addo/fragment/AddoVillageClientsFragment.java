@@ -5,6 +5,7 @@ import static org.smartregister.addo.util.Constants.INTENT_KEY.FAMILY_HEAD;
 import static org.smartregister.addo.util.Constants.INTENT_KEY.FAMILY_NAME;
 import static org.smartregister.addo.util.Constants.INTENT_KEY.GO_TO_DUE_PAGE;
 import static org.smartregister.addo.util.Constants.INTENT_KEY.PRIMARY_CAREGIVER;
+import static org.smartregister.addo.util.Constants.INTENT_KEY.VILLAGE_SELECTED;
 import static org.smartregister.addo.util.Constants.INTENT_KEY.VILLAGE_TOWN;
 
 import android.content.Intent;
@@ -26,6 +27,7 @@ import androidx.loader.content.Loader;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.addo.R;
+import org.smartregister.addo.adapter.AddoRecyclerViewPaginatedAdapter;
 import org.smartregister.addo.contract.AddoVillageClientsFragmentContract;
 import org.smartregister.addo.model.AddoVillageClientsFragmentModel;
 import org.smartregister.addo.presenter.AddoVillageClientsFragmentPresenter;
@@ -114,8 +116,8 @@ public class AddoVillageClientsFragment extends BaseRegisterFragment implements 
 
     @Override
     public void initializeAdapter(Set<org.smartregister.configurableviews.model.View> visibleColumns) {
-        AddoVillageClientsProvider addoVillageClientsProvider = new AddoVillageClientsProvider(getActivity(), paginationViewHandler, registerActionHandler, visibleColumns);
-        clientAdapter = new RecyclerViewPaginatedAdapter(null, addoVillageClientsProvider, context().commonrepository(this.tablename));
+        AddoVillageClientsProvider addoVillageClientsProvider = new AddoVillageClientsProvider(getActivity(), paginationViewHandler, registerActionHandler, visibleColumns, villageSelected);
+        clientAdapter = new AddoRecyclerViewPaginatedAdapter(null, addoVillageClientsProvider, context().commonrepository(this.tablename));
         clientAdapter.setCurrentlimit(20);
         clientsView.setAdapter(clientAdapter);
     }
@@ -123,6 +125,11 @@ public class AddoVillageClientsFragment extends BaseRegisterFragment implements 
     @Override
     public AddoVillageClientsFragmentContract.Presenter presenter() {
         return (AddoVillageClientsFragmentContract.Presenter) presenter;
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        clientAdapter.swapCursor((Cursor) null);
     }
 
     @Override
@@ -187,6 +194,8 @@ public class AddoVillageClientsFragment extends BaseRegisterFragment implements 
                             org.smartregister.family.util.Utils.getValue(patient.getColumnmaps(), org.smartregister.family.util.DBConstants.KEY.VILLAGE_TOWN, false));//"village_town", false));
                     intent.putExtra(FAMILY_NAME,
                             org.smartregister.family.util.Utils.getValue(patient.getColumnmaps(), org.smartregister.family.util.DBConstants.KEY.FIRST_NAME, false));//"first_name", false));
+                    intent.putExtra(GO_TO_DUE_PAGE, false);
+                    intent.putExtra(VILLAGE_SELECTED, villageSelected);
                     intent.putExtra(GO_TO_DUE_PAGE, false);
                     Objects.requireNonNull(getContext()).startActivity(intent);
 

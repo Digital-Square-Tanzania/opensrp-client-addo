@@ -329,7 +329,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                 startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getAddoAttendPrescriptionsFromHf()), getString(R.string.attend_prescription_form_title), false);
                 break;
             case R.id.textview_record_addo_visit:
-                AddoVisitActivity.startMe(this, memberObject, false, getFamilyMemberType(), villageTown);
+                AddoVisitActivity.startMe(this, memberObject, false, getFamilyMemberType(), villageTown, Utils.getValue(commonPersonObject.getColumnmaps(), ChildDBConstants.KEY.GENDER, false));
                 break;
             default:
                 super.onClick(view);

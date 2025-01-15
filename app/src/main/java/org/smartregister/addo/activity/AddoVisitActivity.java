@@ -6,17 +6,26 @@ import static org.smartregister.chw.anc.util.Constants.ANC_MEMBER_OBJECTS.EDIT_M
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
 
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.AllConstants;
 import org.smartregister.addo.R;
+import org.smartregister.addo.application.AddoApplication;
 import org.smartregister.addo.contract.ToastCallback;
+import org.smartregister.addo.domain.DukaLaDawaPayload;
 import org.smartregister.addo.interactor.AddoVisitInteractor;
+import org.smartregister.chw.anc.AncLibrary;
 import org.smartregister.chw.anc.activity.BaseAncHomeVisitActivity;
 import org.smartregister.chw.anc.domain.MemberObject;
 import org.smartregister.chw.anc.model.BaseAncHomeVisitAction;
@@ -24,11 +33,13 @@ import org.smartregister.chw.anc.presenter.BaseAncHomeVisitPresenter;
 import org.smartregister.family.util.Constants;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
+import org.smartregister.util.FormUtils;
 import org.smartregister.util.LangUtils;
 import org.smartregister.addo.util.Constants.FamilyMemberType;
 
 import java.text.MessageFormat;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -38,13 +49,20 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity implements Toast
 
     private String villageTown;
 
-    public static void startMe(Activity activity, MemberObject memberObject, boolean isEditMode, FamilyMemberType familyMemberType, String villageTown){
+    private String prescriptionNote;
+
+    private String clientGender;
+
+    StringBuilder medicationsSelectedString = new StringBuilder();
+
+    public static void startMe(Activity activity, MemberObject memberObject, boolean isEditMode, FamilyMemberType familyMemberType, String villageTown, String gender){
         Intent intent = new Intent(activity, AddoVisitActivity.class);
         intent.putExtra("MemberObject", memberObject);
         intent.putExtra(BASE_ENTITY_ID, memberObject.getBaseEntityId());
         intent.putExtra(EDIT_MODE, isEditMode);
         intent.putExtra("family_member_type", familyMemberType.name());
         intent.putExtra("villageTown", villageTown);
+        intent.putExtra("gender", gender);
         activity.startActivityForResult(intent, org.smartregister.chw.anc.util.Constants.REQUEST_CODE_HOME_VISIT);
     }
 
@@ -58,6 +76,7 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity implements Toast
         baseEntityID = this.getIntent().getStringExtra(BASE_ENTITY_ID);
         clientType = FamilyMemberType.valueOf(this.getIntent().getStringExtra("family_member_type"));
         villageTown = this.getIntent().getStringExtra("villageTown");
+        clientGender = this.getIntent().getStringExtra("gender");
         super.onCreate(savedInstanceState);
     }
 
@@ -133,20 +152,51 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity implements Toast
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == org.smartregister.chw.anc.util.Constants.REQUEST_CODE_GET_JSON){
-            if (resultCode == RESULT_OK){
-                String json = data.getStringExtra(Constants.INTENT_KEY.JSON);
-                Timber.e("json%S", json);
-                /*
+        if (requestCode == org.smartregister.chw.anc.util.Constants.REQUEST_CODE_GET_JSON) {
+            BaseAncHomeVisitAction ancHomeVisitAction = actionList.get(current_action);
 
-                1. Save the forms filled in actions here
-                2. Return to base
+            if (resultCode == Activity.RESULT_OK) {
+                try {
+                    String jsonString = data.getStringExtra(org.smartregister.chw.anc.util.Constants.JSON_FORM_EXTRA.JSON);
 
-                 */
+                    if (jsonString != null && ancHomeVisitAction != null) {
+                        if (current_action.equals(AddoApplication.getInstance().getContext().getStringResource(R.string.evalueate_medication_dispensed))) {
+                            jsonString = createMedicationDispenseForm(new JSONObject(jsonString));
+                            if (jsonString == null) jsonString = ancHomeVisitAction.getJsonPayload();
+                        } else if (current_action.equals(AddoApplication.getInstance().getContext().getStringResource(R.string.evalueate_prescription_note))) {
+                            getPrescriptionNote(jsonString);
+                        }
+
+                        ancHomeVisitAction.setJsonPayload(jsonString);
+                    }
+                } catch (Exception e) {
+                    Timber.e(e);
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+
+                if (ancHomeVisitAction != null) {
+                    ancHomeVisitAction.evaluateStatus();
+                }
             }
         }
 
+        // update the adapter after every payload
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+            redrawVisitUI();
+        }
+    }
+
+    public void getPrescriptionNote(String jsonString){
+        try {
+            assert jsonString != null;
+            JSONArray prescriptionFormFields = JsonFormUtils.fields(new JSONObject(jsonString));
+            String prescriptionNoteValue = JsonFormUtils.getFieldValue(prescriptionFormFields, "client_prescription_note_available");
+            prescriptionNote = prescriptionNoteValue.contains("client_prescription_yes") ? "Yes" : "No";
+        } catch (JSONException e){
+            Timber.e(e);
+        }
     }
 
     @Override
@@ -159,5 +209,100 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity implements Toast
         }
         displayProgressBar(false);
         redrawVisitUI();
+    }
+
+    public void startForm(BaseAncHomeVisitAction ancHomeVisitAction) {
+        if (StringUtils.isNotBlank(ancHomeVisitAction.getJsonPayload())) {
+            try {
+                current_action = ancHomeVisitAction.getTitle();
+                if(current_action.equals(AddoApplication.getInstance().getContext().getStringResource(R.string.evalueate_medication_dispensed))){
+                    launchDukaLaDawaApp();
+                }else{
+                    JSONObject jsonObject = new JSONObject(ancHomeVisitAction.getJsonPayload());
+                    startFormActivity(jsonObject);
+                }
+            } catch (Exception e) {
+                Timber.e(e);
+                String locationId = AncLibrary.getInstance().context().allSharedPreferences().getPreference(AllConstants.CURRENT_LOCATION_ID);
+                presenter().startForm(ancHomeVisitAction.getFormName(), memberObject.getBaseEntityId(), locationId);
+            }
+        } else {
+            String locationId = AncLibrary.getInstance().context().allSharedPreferences().getPreference(AllConstants.CURRENT_LOCATION_ID);
+            presenter().startForm(ancHomeVisitAction.getFormName(), memberObject.getBaseEntityId(), locationId);
+        }
+
+    }
+
+    private void launchDukaLaDawaApp(){
+        Gson gson = new Gson();
+        MemberObject object = memberObject;
+
+        Locale currentLocale = AddoApplication.getCurrentLocale();
+        String language = currentLocale != null ? currentLocale.getLanguage() : Locale.getDefault().getLanguage();
+
+        DukaLaDawaPayload dukaLaDawaPayload = new DukaLaDawaPayload(object.getBaseEntityId(), object.getDob(), clientGender, prescriptionNote);
+        String payLoad = gson.toJson(dukaLaDawaPayload);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("addopharmacy://salesregister?data=" + Uri.encode(payLoad)));
+        startActivityForResult(intent, JsonFormUtils.REQUEST_CODE_GET_JSON);
+    }
+
+    private String createMedicationDispenseForm(JSONObject medicationJsonObject) {
+        try {
+            JSONObject medicationForm = FormUtils.getInstance(Utils.context().applicationContext()).getFormJson("duka_medicine_dispensed");
+            JSONArray formFields = org.smartregister.addo.util.JsonFormUtils.fields(medicationForm);
+
+            JSONObject medicineDispensedFormJsonObject = JsonFormUtils.getFieldJSONObject(formFields,"medicine_dispensed");
+
+            addOptionFields(medicationJsonObject, medicineDispensedFormJsonObject);
+
+            JSONObject medicationsSelectedFormJsonObject = JsonFormUtils.getFieldJSONObject(formFields,"medications_selected");
+            medicationsSelectedFormJsonObject.put("value", medicationsSelectedString.toString());
+
+            return medicationForm.toString();
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+        return null;
+    }
+
+    private void addOptionFields(JSONObject medicineDispensedJsonObjectValue, JSONObject medicineDispensedObject){
+        try{
+            JSONArray options = medicineDispensedObject.getJSONArray("options");
+            String jsonString = "{\n" +
+                    "    \"key\": \"\",\n" +
+                    "    \"text\": \"\",\n" +
+                    "    \"openmrs_entity\": \"\",\n" +
+                    "    \"openmrs_entity_id\": \"\",\n" +
+                    "    \"openmrs_entity_parent\": \"\",\n" +
+                    "    \"property\": {\n" +
+                    "      \"presumed-id\": \"err\",\n" +
+                    "      \"confirmed-id\": \"err\"\n" +
+                    "    }\n" +
+                    "}";
+            JSONArray jsonArray = medicineDispensedJsonObjectValue.getJSONArray("administered_medicines");
+            for(int i = 0; i < jsonArray.length(); i++){
+                JSONObject optionJsonObject = new JSONObject(jsonString);
+                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+
+                String nameOptionValue = jsonObject1.getString("name");
+                String idOptionValue = jsonObject1.getString("id");
+
+
+                // Create the string with <br /> between each medicine name
+                medicationsSelectedString.append("• ").append(nameOptionValue).append("<br />");
+
+                optionJsonObject.put("key", idOptionValue);
+                optionJsonObject.put("text", nameOptionValue);
+                optionJsonObject.put("openmrs_entity_id", idOptionValue);
+
+                options.put(optionJsonObject);
+            }
+
+            medicineDispensedObject.put("value", options.toString());
+        }catch (JSONException jsonException){
+            Timber.e(jsonException);
+        }
     }
 }

@@ -282,13 +282,15 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity implements Toast
                     "    }\n" +
                     "}";
             JSONArray jsonArray = medicineDispensedJsonObjectValue.getJSONArray("administered_medicines");
+
+            medicationsSelectedString = new StringBuilder();
+
             for(int i = 0; i < jsonArray.length(); i++){
                 JSONObject optionJsonObject = new JSONObject(jsonString);
                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
 
                 String nameOptionValue = jsonObject1.getString("name");
                 String idOptionValue = jsonObject1.getString("id");
-
 
                 // Create the string with <br /> between each medicine name
                 medicationsSelectedString.append("• ").append(nameOptionValue).append("<br />");

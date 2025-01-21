@@ -448,6 +448,8 @@
 
     <string name="monthly_activity">Monthly Activity</string>
 
+    <string name="my_shop">My shop</string>
+
     <!--  Monthly Activities Indicators  -->
     <string name="current_month"> Current Month Visits </string>
 

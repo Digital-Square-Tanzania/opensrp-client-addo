@@ -27,6 +27,7 @@ public class Constants {
         public static final String FAMILY_PLANNING = "Family Planning";
         public static final String MALARIA = "Malaria";
         public static final String MONTHLY_ACTIVITY = "Monthly Activity";
+        public static final String MY_SHOP = "My Shop";
     }
 
     public static final class PEER_TO_PEER {
@@ -137,6 +138,7 @@ public class Constants {
             private static final String ANC_ADDO_DANGER_SIGN = "anc_addo_danger_signs";
             private static final String ADDO_COMMODITIES = "addo_commodities";
             private static final String ADDO_PRESCRIPTIONS_FROM_LAB = "addo_attend_prescriptions_from_lab_results";
+            private static final String ADDO_PRESCRIPTIONS_FROM_LAB_V1 = "addo_attend_prescriptions_from_lab_results_v1";
             private static final String ADDO_PRESCRIPTION_NOTE = "has_prescription";
 
             private static final String HEALTH_FACILITY_VISIT = "anc_hv_health_facility_visit";
@@ -158,6 +160,10 @@ public class Constants {
 
             public static String getAddoPrescriptionsFromLab() {
                 return ADDO_PRESCRIPTIONS_FROM_LAB;
+            }
+
+            public static String getAddoPrescriptionsFromLab_V1() {
+                return ADDO_PRESCRIPTIONS_FROM_LAB_V1;
             }
 
             public static String getAddoPrescriptionNote() {

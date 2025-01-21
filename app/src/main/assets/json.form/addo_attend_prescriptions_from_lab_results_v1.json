@@ -1,0 +1,584 @@
+{
+  "validate_on_submit": true,
+  "show_errors_on_submit": true,
+  "skip_blank_steps": true,
+  "properties_file_name": "addo_attend_prescriptions_from_lab_results",
+  "count": "3",
+  "encounter_type": "ADDO Visit - Attend Prescriptions from Facility or Malaria Lab Results",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "{{step1_title}}",
+    "fields": [
+      {
+        "key": "select_facility_label",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "",
+        "type": "label",
+        "label_text_style": "bold",
+        "text_size": "22px",
+        "text": "{{step1_select_facility_label_text}}",
+        "text_color": "#000000",
+        "v_required": {
+          "value": true
+        }
+      },
+      {
+        "key": "select_facility",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "buttonText": "{{step1_select_facility_button_text}}",
+        "dialogTitle": "{{step1_select_facility_dialog_title}}",
+        "searchHint": "{{step1_select_facility_search_hint}}",
+        "maxSelectable": "1",
+        "maxSelectMessage": "{{step1_select_facility_maxselect_message}}",
+        "v_required": {
+          "value": true
+        },
+        "options": [
+          {
+            "key":"stand_alone_laboratory",
+            "text":"{{step1_stand_alone_laboratory}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"arafa_mwendapole_dispensary",
+            "text":"{{step1_arafa_mwendapole_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"boko_mnemela_dispensary",
+            "text":"{{step1_boko_mnemela_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"dama_africa_dispensary",
+            "text":"{{step1_dama_africa_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"disunyara_dispensary",
+            "text":"{{step1_disunyara_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"dutumi_dispensary",
+            "text":"{{step1_dutumi_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"galagaza_dispensary",
+            "text":"{{step1_galagaza_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"gumba_dispensary",
+            "text":"{{step1_gumba_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"gwata_dispensary",
+            "text":"{{step1_gwata_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"ics_mikocheni_charitable_dispensary",
+            "text":"{{step1_ics_mikocheni_charitable_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"jabal_hira_dispensary",
+            "text":"{{step1_jabal_hira_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"kikongo_dispensary",
+            "text":"{{step1_kikongo_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"kitomondo_dispensary",
+            "text":"{{step1_kitomondo_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"kongowe_dispensary",
+            "text":"{{step1_kongowe_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"kongowe_forest_dispensary",
+            "text":"{{step1_kongowe_forest_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"kwala_dispensary",
+            "text":"{{step1_kwala_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"lukenge_dispensary",
+            "text":"{{step1_lukenge_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"lupunga_dispensary",
+            "text":"{{step1_lupunga_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"magindu_dispensary",
+            "text":"{{step1_magindu_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"mbwawa_dispensary",
+            "text":"{{step1_mbwawa_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"medewell_health_center",
+            "text":"{{step1_medewell_health_center}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"mico_gumba_dispensary",
+            "text":"{{step1_mico_gumba_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"misugusugu_dispensary",
+            "text":"{{step1_misugusugu_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"miswe_dispensary",
+            "text":"{{step1_miswe_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"mkoani_health_center",
+            "text":"{{step1_mkoani_health_center}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"mlandizi_health_center",
+            "text":"{{step1_mlandizi_health_center}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"mperamumbi_dispensary",
+            "text":"{{step1_mperamumbi_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"mpangile_dispensary",
+            "text":"{{step1_mpangile_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"msua_dispensary",
+            "text":"{{step1_msua_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"mtakuja_dispensary",
+            "text":"{{step1_mtakuja_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"mwanabwito_dispensary",
+            "text":"{{step1_mwanabwito_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"mwendapole_dispensary",
+            "text":"{{step1_mwendapole_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"ngeta_dispensary",
+            "text":"{{step1_ngeta_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"ruvu_sec_dispensary",
+            "text":"{{step1_ruvu_sec_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"ruvu_station_dispensary",
+            "text":"{{step1_ruvu_station_dispensar}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"soga_dispensary",
+            "text":"{{step1_soga_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"st._getrude_dispensary",
+            "text":"{{step1_getrude_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"st._michael_health_center",
+            "text":"{{step1_michael_health_center}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"tumbi_regional_referral_hospital",
+            "text":"{{step1_tumbi_regional_referral_hospital}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"vikawe_dispensary",
+            "text":"{{step1_vikawe_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"vikuge_dispensary",
+            "text":"{{step1_vikuge_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"visiga_dispensary",
+            "text":"{{step1_visiga_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"visiga_seminary_dispensary",
+            "text":"{{step1_visiga_seminary_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"viziwaziwa_dispensary",
+            "text":"{{step1_viziwaziwa_dispensary}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"outside_kibaha_district",
+            "text":"{{step1_outside_kibaha_district}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          }
+        ],
+        "type": "multi_select_list"
+      }
+    ]
+  }
+}

@@ -75,6 +75,8 @@
 
     <string name="monthly_activity">Malengo ya mwezi</string>
 
+    <string name="my_shop">Duka Langu</string>
+
     <!--  Monthly Activities Indicators  -->
     <string name="current_month"> Matembeleo ya Mwezi huu </string>
     <string name="current_month_clients"> Wateja waliohudumiwa mwezi huu </string>

@@ -1,5 +1,7 @@
 package org.smartregister.addo.listeners;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
@@ -10,6 +12,7 @@ import org.smartregister.addo.activity.AddoHomeActivity;
 import org.smartregister.addo.activity.MonthlyActivitiesRegisterActivity;
 import org.smartregister.addo.adapter.NavigationAdapter;
 import org.smartregister.addo.util.Constants;
+import org.smartregister.family.util.JsonFormUtils;
 
 public class NavigationListener implements View.OnClickListener {
 
@@ -46,6 +49,9 @@ public class NavigationListener implements View.OnClickListener {
                     case Constants.DrawerMenu.MONTHLY_ACTIVITY:
                         startRegisterActivity(MonthlyActivitiesRegisterActivity.class);
                         break;
+                    case Constants.DrawerMenu.MY_SHOP:
+                        launcDukalaDawaApp();
+                        break;
                     default:
                         break;
                 }
@@ -62,5 +68,12 @@ public class NavigationListener implements View.OnClickListener {
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
         activity.finish();
+    }
+
+    private void launcDukalaDawaApp(){
+        Intent intent = new Intent();
+        intent.setClassName("com.addopharmacy", "com.addopharmacy.MainActivity");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(activity.getApplicationContext(), intent, null);
     }
 }

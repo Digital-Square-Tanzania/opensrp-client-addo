@@ -120,7 +120,7 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
 
         BaseAncHomeVisitAction prescription_from_hf = new BaseAncHomeVisitAction.Builder(context, context.getString(R.string.evalueate_prescription))
                 .withOptional(false)
-                .withFormName(Constants.JSON_FORM.ANC_HOME_VISIT.getAddoPrescriptionsFromLab())
+                .withFormName(Constants.JSON_FORM.ANC_HOME_VISIT.getAddoPrescriptionsFromLab_V1())
                 .withOptional(true)
                 .build();
         actionList.put(context.getString(R.string.evalueate_prescription), prescription_from_hf);
@@ -194,6 +194,7 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
                 if (hasPrescription){
                     actionList.clear();
                     evaluatePrescriptions(mContext, actionList);
+                    evaluateMedicationDispensed(mContext, actionList,null);
                 }else{
                     actionList.remove(mContext.getString(R.string.evalueate_prescription_note));
                     evaluateDangerSigns(mContext, actionList);

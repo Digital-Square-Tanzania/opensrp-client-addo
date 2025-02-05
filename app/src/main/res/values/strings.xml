@@ -513,4 +513,6 @@
 
     <string name="referrals_linkages"> Referrals/Linkages </string>
 
+    <string name="non_focused_client_medicine_dispense_text">Medicine/Commodity Dispensation</string>
+
 </resources>

@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="10dp"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:orientation="vertical">
 
         <org.smartregister.view.customcontrols.CustomFontTextView
             android:id="@+id/textview_ds_screening"
@@ -30,6 +31,20 @@
             android:text="@string/addo_non_focus_profile_action_text"
             android:textColor="@color/addo_primary"
             android:textStyle="bold" />
+
+        <org.smartregister.view.customcontrols.CustomFontTextView
+            android:id="@+id/non_focused_client_medicine_dispense"
+            style="@style/CustomFontTextViewStyle.ListView.Normal.MultipleLines"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:background="@drawable/addo_btn_selector_client_profile"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="@string/non_focused_client_medicine_dispense_text"
+            android:textAllCaps="false"
+            android:textColor="@color/addo_primary" />
+
     </LinearLayout>
 
 </LinearLayout>

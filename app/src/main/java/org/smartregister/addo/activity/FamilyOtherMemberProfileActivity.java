@@ -70,6 +70,8 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
     protected MemberObject memberObject;
     private FormUtils formUtils;
 
+    private TextView NonFocusedClienttextView;
+
 
     @Override
     protected void onCreation() {
@@ -90,6 +92,8 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
         this.appBarLayout = findViewById(R.id.toolbar_appbarlayout_addo_non_focused);
 
         this.imageRenderHelper = new ImageRenderHelper(this);
+
+        NonFocusedClienttextView = findViewById(R.id.non_focused_client_medicine_dispense);
 
         initializePresenter();
 
@@ -216,16 +220,31 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
         if (resultCode != RESULT_OK) return;
         if (requestCode == org.smartregister.addo.util.JsonFormUtils.REQUEST_CODE_GET_JSON) {
             try {
+
                 String jsonString = data.getStringExtra(Constants.JSON_FORM_EXTRA.JSON);
                 JSONObject form = new JSONObject(jsonString);
-
                 Map<String, String> formSubmission = new HashMap<>();
                 formSubmission.put(form.optString(CoreJsonFormUtils.ENCOUNTER_TYPE), jsonString);
                 submitForm(formSubmission);
 
+                checkMedicineOrCommoditySelected(form);
+
             } catch (JSONException e) {
                 Timber.e(e);
             }
+        }
+    }
+
+    private void checkMedicineOrCommoditySelected(JSONObject jsonObject){
+        try {
+            String otherServiceValue = org.smartregister.chw.anc.util.JsonFormUtils.getValue(jsonObject, "service_provided_other");
+            if(otherServiceValue.contains("chk_medicine") || otherServiceValue.contains("chk_commodities")){
+                NonFocusedClienttextView.setVisibility(View.VISIBLE);
+            } else {
+                NonFocusedClienttextView.setVisibility(View.GONE);
+            }
+        }catch (Exception e) {
+            Timber.e(e);
         }
     }
 

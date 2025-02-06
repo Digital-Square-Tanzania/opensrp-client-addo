@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import timber.log.Timber;
 
@@ -64,21 +65,23 @@ public class FamilyOtherMemberProfileInteractor implements FamilyOtherMemberProf
     public void submitVisit(boolean editMode, String memberID, Map<String, String> formForSubmission, FamilyOtherMemberProfileExtendedContract.InteractorCallBack callBack) {
         final Runnable runnable = () -> {
             boolean result = true;
+            Visit visit = new Visit();
             try {
-                submitVisit(editMode, memberID, formForSubmission, "");
+                visit = submitVisit(editMode, memberID, formForSubmission, "");
             } catch (Exception e) {
                 Timber.e(e);
                 result = false;
             }
 
             final boolean finalResult = result;
-            appExecutors.mainThread().execute(() -> callBack.onSubmitted(finalResult));
+            Visit finalVisit = visit;
+            appExecutors.mainThread().execute(() -> callBack.onSubmitted(finalResult, finalVisit));
         };
 
         appExecutors.diskIO().execute(runnable);
     }
 
-    protected void submitVisit(final boolean editMode, final String memberID, final Map<String, String> dsForm, String parentEventType) throws Exception {
+    protected Visit submitVisit(final boolean editMode, final String memberID, final Map<String, String> dsForm, String parentEventType) throws Exception {
         // create a map of the different types
         String payloadType = null;
         String payloadDetails = null;
@@ -91,7 +94,9 @@ public class FamilyOtherMemberProfileInteractor implements FamilyOtherMemberProf
             if (visit != null) {
                 saveVisitDetails(visit, payloadType, payloadDetails);
             }
+            return visit;
         }
+        return null;
     }
 
     protected @Nullable Visit saveVisit(boolean editMode, String memberID, String encounterType,
@@ -113,6 +118,7 @@ public class FamilyOtherMemberProfileInteractor implements FamilyOtherMemberProf
             baseEvent.setFormSubmissionId(JsonFormUtils.generateRandomUUIDString());
             JsonFormUtils.tagEvent(allSharedPreferences, baseEvent);
             baseEvent.setLocationId(getClientLocationId(relationalId));
+            baseEvent.setEventId(UUID.randomUUID().toString());
 
             String visitID = (editMode) ?
                     visitRepository().getLatestVisit(memberID, getEncounterType(memberID)).getVisitId() :

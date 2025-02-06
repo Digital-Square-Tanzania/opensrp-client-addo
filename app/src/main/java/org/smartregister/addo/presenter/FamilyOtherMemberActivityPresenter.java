@@ -12,6 +12,7 @@ import org.smartregister.addo.interactor.FamilyFocusedMemberProfileInteractor;
 import org.smartregister.addo.interactor.FamilyOtherMemberProfileInteractor;
 import org.smartregister.addo.interactor.FamilyProfileInteractor;
 import org.smartregister.addo.model.FamilyProfileModel;
+import org.smartregister.chw.anc.domain.Visit;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.contract.FamilyOtherMemberContract;
 import org.smartregister.family.contract.FamilyProfileContract;
@@ -90,7 +91,7 @@ public class FamilyOtherMemberActivityPresenter extends BaseFamilyOtherMemberPro
     }
 
     @Override
-    public void onSubmitted(boolean successful) {
+    public void onSubmitted(boolean successful, Visit visit) {
         if (successful) {
             viewReference.get().hideProgressDialog();
             Toast.makeText((Activity) this.getView(), R.string.submitted_for_onsubmit, Toast.LENGTH_SHORT).show();

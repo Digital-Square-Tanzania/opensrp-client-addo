@@ -3,6 +3,7 @@ package org.smartregister.addo.contract;
 
 import android.content.Context;
 
+import org.smartregister.chw.anc.domain.Visit;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.contract.FamilyOtherMemberContract;
 
@@ -35,6 +36,6 @@ public interface FamilyOtherMemberProfileExtendedContract {
 
     interface InteractorCallBack {
 
-        void onSubmitted(boolean successful);
+        void onSubmitted(boolean successful, Visit visit);
     }
 }

@@ -515,19 +515,16 @@ public class AddoUtils extends Utils {
         }
     }
 
-    public static String getPrescriptionNote(String jsonString){
+    public static String getPrescriptionNote(String jsonString) {
         try {
             assert jsonString != null;
-            String prescriptionNote = "";
             JSONArray prescriptionFormFields = org.smartregister.family.util.JsonFormUtils.fields(new JSONObject(jsonString));
             String prescriptionNoteValue = org.smartregister.family.util.JsonFormUtils.getFieldValue(prescriptionFormFields, "client_prescription_note_available");
-            if(prescriptionNoteValue != null){
-                prescriptionNote= prescriptionNoteValue.contains("client_prescription_yes") ? "Yes" : "No";
-            }
-            return prescriptionNote;
-        } catch (JSONException e){
+
+            return (prescriptionNoteValue != null && prescriptionNoteValue.contains("client_prescription_yes")) ? "Yes" : "No";
+        } catch (JSONException e) {
             Timber.e(e);
         }
-        return null;
+        return "No";
     }
 }

@@ -2,6 +2,6 @@
 name: step1_client_prescription_note_available
 description: Client prescription note available
 priority: 1
-condition: "step1_service_provided_other.contains('chk_medicine') || step1_service_provided_other.contains('chk_commodities')"
+condition: "step1_service_provided_other.contains('chk_medicine')"
 actions:
   - "isRelevant = true"

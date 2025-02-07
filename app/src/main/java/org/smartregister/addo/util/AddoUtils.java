@@ -5,6 +5,12 @@ import static org.smartregister.addo.activity.FamilyFocusedMemberProfileActivity
 import static org.smartregister.addo.activity.FamilyFocusedMemberProfileActivity.CHILD_DANGER_SIGN_SCREENING_ENCOUNTER;
 import static org.smartregister.addo.activity.FamilyFocusedMemberProfileActivity.PNC_DANGER_SIGN_SCREENING_ENCOUNTER;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+
+import com.google.gson.Gson;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +20,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.addo.R;
 import org.smartregister.addo.application.AddoApplication;
+import org.smartregister.addo.domain.DukaLaDawaPayload;
 import org.smartregister.addo.model.ReferralObsValues;
+import org.smartregister.chw.anc.domain.MemberObject;
 import org.smartregister.util.FormUtils;
 import org.smartregister.util.Utils;
 
@@ -24,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -31,6 +40,9 @@ public class AddoUtils extends Utils {
 
 
     private static FormUtils formUtils;
+
+    private static StringBuilder medicationsSelectedString = new StringBuilder();
+
     public static String checkDSPresentProposedMedsAndDispense(JSONObject form, Constants.FamilyMemberType familyMemberType) throws JSONException{
         String updatedMedicationForm = null;
         try {
@@ -294,7 +306,7 @@ public class AddoUtils extends Utils {
         return dangerSignsFieldJsonObject;
     }
 
-    private static JSONObject createReferralFormField(String key, Object value) {
+    public static JSONObject createReferralFormField(String key, Object value) {
         try {
             JSONObject referralTypeJsonObject = new JSONObject();
             referralTypeJsonObject.put("key", key);
@@ -427,5 +439,95 @@ public class AddoUtils extends Utils {
 
         return medListString.toString();
 
+    }
+
+    public static void launchDukaLaDawaApp(Activity activity, MemberObject memberObject, String gender, String prescriptionNote) {
+        Gson gson = new Gson();
+        Locale currentLocale = AddoApplication.getCurrentLocale();
+        String language = currentLocale != null ? currentLocale.getLanguage() : Locale.getDefault().getLanguage();
+
+        DukaLaDawaPayload dukaLaDawaPayload = new DukaLaDawaPayload(memberObject.getBaseEntityId(), memberObject.getDob(), gender, prescriptionNote);
+        String payLoad = gson.toJson(dukaLaDawaPayload);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("addopharmacy://salesregister?data=" + Uri.encode(payLoad)));
+
+        activity.startActivityForResult(intent, JsonFormUtils.REQUEST_CODE_GET_JSON);
+    }
+
+    public static String createMedicationDispenseForm(JSONObject medicationJsonObject) {
+        try {
+            JSONObject medicationForm = FormUtils.getInstance(org.smartregister.family.util.Utils.context().applicationContext()).getFormJson("duka_medicine_dispensed");
+            JSONArray formFields = JsonFormUtils.fields(medicationForm);
+
+            JSONObject medicineDispensedFormJsonObject = org.smartregister.family.util.JsonFormUtils.getFieldJSONObject(formFields,"medicine_dispensed");
+
+            addOptionFields(medicationJsonObject, medicineDispensedFormJsonObject);
+
+            JSONObject medicationsSelectedFormJsonObject = org.smartregister.family.util.JsonFormUtils.getFieldJSONObject(formFields,"medications_selected");
+            medicationsSelectedFormJsonObject.put("value", medicationsSelectedString.toString());
+
+            return medicationForm.toString();
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+        return null;
+    }
+
+    private static void addOptionFields(JSONObject medicineDispensedJsonObjectValue, JSONObject medicineDispensedObject){
+        try{
+            JSONArray options = medicineDispensedObject.getJSONArray("options");
+            String jsonString = "{\n" +
+                    "    \"key\": \"\",\n" +
+                    "    \"text\": \"\",\n" +
+                    "    \"openmrs_entity\": \"\",\n" +
+                    "    \"openmrs_entity_id\": \"\",\n" +
+                    "    \"openmrs_entity_parent\": \"\",\n" +
+                    "    \"property\": {\n" +
+                    "      \"presumed-id\": \"err\",\n" +
+                    "      \"confirmed-id\": \"err\"\n" +
+                    "    }\n" +
+                    "}";
+            JSONArray jsonArray = medicineDispensedJsonObjectValue.getJSONArray("administered_medicines");
+
+            medicationsSelectedString = new StringBuilder();
+
+            for(int i = 0; i < jsonArray.length(); i++){
+                JSONObject optionJsonObject = new JSONObject(jsonString);
+                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+
+                String nameOptionValue = jsonObject1.getString("name");
+                String idOptionValue = jsonObject1.getString("id");
+
+                // Create the string with <br /> between each medicine name
+                medicationsSelectedString.append("• ").append(nameOptionValue).append("<br />");
+
+                optionJsonObject.put("key", idOptionValue);
+                optionJsonObject.put("text", nameOptionValue);
+                optionJsonObject.put("openmrs_entity_id", idOptionValue);
+
+                options.put(optionJsonObject);
+            }
+
+            medicineDispensedObject.put("value", options.toString());
+        }catch (JSONException jsonException){
+            Timber.e(jsonException);
+        }
+    }
+
+    public static String getPrescriptionNote(String jsonString){
+        try {
+            assert jsonString != null;
+            String prescriptionNote = "";
+            JSONArray prescriptionFormFields = org.smartregister.family.util.JsonFormUtils.fields(new JSONObject(jsonString));
+            String prescriptionNoteValue = org.smartregister.family.util.JsonFormUtils.getFieldValue(prescriptionFormFields, "client_prescription_note_available");
+            if(prescriptionNoteValue != null){
+                prescriptionNote= prescriptionNoteValue.contains("client_prescription_yes") ? "Yes" : "No";
+            }
+            return prescriptionNote;
+        } catch (JSONException e){
+            Timber.e(e);
+        }
+        return null;
     }
 }

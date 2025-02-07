@@ -159,6 +159,7 @@ public class CoreConstants {
 
         // ADDO specific
         public static final String ADDO_RECORD_SERVICE_OTHER = "addo_record_service_provided_other";
+        public static final String ADDO_RECORD_SERVICE_OTHER_V1 = "addo_record_service_provided_other_v1";
         public static final String ANC_ADDO_DANGER_SIGNS = "anc_addo_danger_signs";
         public static final String PNC_ADDO_DANGER_SIGNS = "pnc_addo_danger_signs";
         public static final String CHILD_ADDO_DANGER_SIGNS = "child_addo_danger_signs";
@@ -196,6 +197,8 @@ public class CoreConstants {
         }
 
         public static String getAddoRecordServiceOther() { return ADDO_RECORD_SERVICE_OTHER; }
+
+        public static String getAddoRecordServiceOtherV1() { return ADDO_RECORD_SERVICE_OTHER_V1; }
 
         public static String getAncAddoDangerSigns() { return ANC_ADDO_DANGER_SIGNS; }
 

@@ -1,10 +1,16 @@
 package org.smartregister.addo.activity;
 
+import static org.smartregister.addo.util.AddoUtils.createMedicationDispenseForm;
+import static org.smartregister.addo.util.AddoUtils.createReferralFormField;
+import static org.smartregister.addo.util.AddoUtils.getPrescriptionNote;
+import static org.smartregister.addo.util.AddoUtils.launchDukaLaDawaApp;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Gravity;
@@ -21,18 +27,24 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.addo.R;
+import org.smartregister.addo.application.AddoApplication;
 import org.smartregister.addo.contract.FamilyOtherMemberProfileExtendedContract;
 import org.smartregister.addo.custom_views.FamilyMemberFloatingMenu;
+import org.smartregister.addo.domain.DukaLaDawaPayload;
+import org.smartregister.addo.domain.VisitSubmissionResult;
 import org.smartregister.addo.fragment.FamilyOtherMemberProfileFragment;
 import org.smartregister.addo.listeners.FloatingMenuListener;
 import org.smartregister.addo.listeners.OnClickFloatingMenu;
 import org.smartregister.addo.presenter.FamilyOtherMemberActivityPresenter;
+import org.smartregister.addo.util.ChildDBConstants;
 import org.smartregister.addo.util.CoreConstants;
 import org.smartregister.addo.util.CoreJsonFormUtils;
 import org.smartregister.chw.anc.domain.MemberObject;
@@ -50,6 +62,7 @@ import org.smartregister.util.FormUtils;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import timber.log.Timber;
@@ -72,7 +85,9 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
 
     private TextView NonFocusedClienttextView;
 
+    private String currentAction;
 
+    private String prescriptionNote;
     @Override
     protected void onCreation() {
         setContentView(R.layout.activity_family_other_member_profile_addo);
@@ -138,6 +153,8 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
         findViewById(R.id.viewpager).setVisibility(View.GONE);
 
         textViewDangersignScreening.setOnClickListener(this);
+
+        NonFocusedClienttextView.setOnClickListener(this);
 
     }
 
@@ -217,22 +234,55 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK) return;
-        if (requestCode == org.smartregister.addo.util.JsonFormUtils.REQUEST_CODE_GET_JSON) {
-            try {
-
-                String jsonString = data.getStringExtra(Constants.JSON_FORM_EXTRA.JSON);
-                JSONObject form = new JSONObject(jsonString);
-                Map<String, String> formSubmission = new HashMap<>();
-                formSubmission.put(form.optString(CoreJsonFormUtils.ENCOUNTER_TYPE), jsonString);
-                submitForm(formSubmission);
-
-                checkMedicineOrCommoditySelected(form);
-
-            } catch (JSONException e) {
-                Timber.e(e);
-            }
+        if (resultCode != RESULT_OK || requestCode != org.smartregister.addo.util.JsonFormUtils.REQUEST_CODE_GET_JSON) {
+            return;
         }
+        try {
+            String jsonString = data.getStringExtra(Constants.JSON_FORM_EXTRA.JSON);
+            if (jsonString == null) return;
+
+            if (isSelectServiceProvided()) {
+                handleSelectServiceProvided(jsonString);
+            } else if (isMedicineOrCommodityDispense()) {
+                handleMedicineOrCommodityDispense(jsonString);
+            }
+        } catch (JSONException e) {
+            Timber.e(e);
+        }
+    }
+
+    private boolean isSelectServiceProvided() {
+        return currentAction.equals(AddoApplication.getInstance().getContext()
+                .getStringResource(R.string.addo_non_focus_profile_action_text));
+    }
+
+    private boolean isMedicineOrCommodityDispense() {
+        return currentAction.equals(AddoApplication.getInstance().getContext()
+                .getStringResource(R.string.non_focused_client_medicine_dispense_text));
+    }
+
+    private void handleSelectServiceProvided(String jsonString) throws JSONException {
+        JSONObject form = new JSONObject(jsonString);
+        Map<String, String> formSubmission = new HashMap<>();
+        formSubmission.put(form.optString(CoreJsonFormUtils.ENCOUNTER_TYPE), jsonString);
+
+        submitForm(formSubmission);
+        checkMedicineOrCommoditySelected(form);
+        prescriptionNote = getPrescriptionNote(jsonString);
+    }
+
+    private void handleMedicineOrCommodityDispense(String jsonString) throws JSONException {
+        String medicationJsonString = createMedicationDispenseForm(new JSONObject(jsonString));
+        JSONObject form = new JSONObject(medicationJsonString);
+        JSONArray fields = org.smartregister.addo.util.JsonFormUtils.fields(form);
+
+        JSONObject eventIdJsonObject = createReferralFormField("parent_event_id", VisitSubmissionResult.getInstance().getEventId());
+        fields.put(eventIdJsonObject);
+
+        Map<String, String> formSubmission = new HashMap<>();
+        formSubmission.put(form.optString(CoreJsonFormUtils.ENCOUNTER_TYPE), form.toString());
+
+        submitForm(formSubmission);
     }
 
     private void checkMedicineOrCommoditySelected(JSONObject jsonObject){
@@ -288,13 +338,15 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
     public void onClick(View view) {
 
         switch (view.getId()) {
-            case R.id.family_has_row:
-
+            case R.id.non_focused_client_medicine_dispense:
+                currentAction = AddoApplication.getInstance().getContext().getStringResource(R.string.non_focused_client_medicine_dispense_text);
+                launchDukaLaDawaApp(this, memberObject, Utils.getValue(commonPersonObject.getColumnmaps(), ChildDBConstants.KEY.GENDER, false) , prescriptionNote);
                 break;
 
             case R.id.textview_ds_screening:
-
+                currentAction = AddoApplication.getInstance().getContext().getStringResource(R.string.addo_non_focus_profile_action_text);
                 startRecordServiceProvided();
+                break;
 
             default:
                 super.onClick(view);
@@ -303,7 +355,7 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
     }
 
     private void startRecordServiceProvided() {
-        startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getAddoRecordServiceOther()), getResources().getString(R.string.non_focused_service_provided));
+        startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getAddoRecordServiceOtherV1()), getResources().getString(R.string.non_focused_service_provided));
     }
 
 

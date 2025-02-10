@@ -251,6 +251,19 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
                 return BaseAncHomeVisitAction.Status.PENDING;
             }
         }
+
+        @Override
+        public String postProcess(String jsonPayload) {
+            try {
+                if(commoditiesDispensed.equals(context.getString(R.string.yes))){
+                    evaluateMedicationDispensed(context, actionList, null);
+                }
+                refreshActionList();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            return super.postProcess(jsonPayload);
+        }
     }
 
     class AddoDangerSignsHelper extends HomeVisitActionHelper {

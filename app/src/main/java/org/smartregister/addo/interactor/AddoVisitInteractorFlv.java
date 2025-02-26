@@ -199,7 +199,6 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
                     actionList.remove(mContext.getString(R.string.evalueate_prescription_note));
                     evaluateDangerSigns(mContext, actionList);
                     //evaluateMedicationDispensed(mContext, actionList);
-                    evaluateCommodities(mContext, actionList);
                 }
                 refreshActionList();
             }catch (Exception e){
@@ -250,19 +249,6 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
             }else {
                 return BaseAncHomeVisitAction.Status.PENDING;
             }
-        }
-
-        @Override
-        public String postProcess(String jsonPayload) {
-            try {
-                if(commoditiesDispensed.equals(context.getString(R.string.yes))){
-                    evaluateMedicationDispensed(context, actionList, null);
-                }
-                refreshActionList();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            return super.postProcess(jsonPayload);
         }
     }
 
@@ -328,7 +314,11 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         @Override
         public String postProcess(String jsonPayload) {
             try {
-                evaluateMedicationDispensed(context, actionList, jsonPayload);
+                BaseAncHomeVisitAction medicationDispensed =  actionList.get(context.getString(R.string.evalueate_medication_dispensed));
+                evaluateCommodities(context, actionList);
+                if(medicationDispensed == null){
+                    evaluateMedicationDispensed(context, actionList, jsonPayload);
+                }
                 refreshActionList();
             } catch (Exception e) {
                 throw new RuntimeException(e);

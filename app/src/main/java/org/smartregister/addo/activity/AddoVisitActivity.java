@@ -1,5 +1,7 @@
 package org.smartregister.addo.activity;
 
+import static org.smartregister.addo.util.AddoUtils.createMedicationDispenseForm;
+import static org.smartregister.addo.util.AddoUtils.launchDukaLaDawaApp;
 import static org.smartregister.chw.anc.util.Constants.ANC_MEMBER_OBJECTS.BASE_ENTITY_ID;
 import static org.smartregister.chw.anc.util.Constants.ANC_MEMBER_OBJECTS.EDIT_MODE;
 
@@ -216,7 +218,7 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity implements Toast
             try {
                 current_action = ancHomeVisitAction.getTitle();
                 if(current_action.equals(AddoApplication.getInstance().getContext().getStringResource(R.string.evalueate_medication_dispensed))){
-                    launchDukaLaDawaApp();
+                    launchDukaLaDawaApp(this, memberObject, clientGender, prescriptionNote);
                 }else{
                     JSONObject jsonObject = new JSONObject(ancHomeVisitAction.getJsonPayload());
                     startFormActivity(jsonObject);
@@ -230,81 +232,6 @@ public class AddoVisitActivity extends BaseAncHomeVisitActivity implements Toast
             String locationId = AncLibrary.getInstance().context().allSharedPreferences().getPreference(AllConstants.CURRENT_LOCATION_ID);
             presenter().startForm(ancHomeVisitAction.getFormName(), memberObject.getBaseEntityId(), locationId);
         }
-
     }
 
-    private void launchDukaLaDawaApp(){
-        Gson gson = new Gson();
-        MemberObject object = memberObject;
-
-        Locale currentLocale = AddoApplication.getCurrentLocale();
-        String language = currentLocale != null ? currentLocale.getLanguage() : Locale.getDefault().getLanguage();
-
-        DukaLaDawaPayload dukaLaDawaPayload = new DukaLaDawaPayload(object.getBaseEntityId(), object.getDob(), clientGender, prescriptionNote);
-        String payLoad = gson.toJson(dukaLaDawaPayload);
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("addopharmacy://salesregister?data=" + Uri.encode(payLoad)));
-        startActivityForResult(intent, JsonFormUtils.REQUEST_CODE_GET_JSON);
-    }
-
-    private String createMedicationDispenseForm(JSONObject medicationJsonObject) {
-        try {
-            JSONObject medicationForm = FormUtils.getInstance(Utils.context().applicationContext()).getFormJson("duka_medicine_dispensed");
-            JSONArray formFields = org.smartregister.addo.util.JsonFormUtils.fields(medicationForm);
-
-            JSONObject medicineDispensedFormJsonObject = JsonFormUtils.getFieldJSONObject(formFields,"medicine_dispensed");
-
-            addOptionFields(medicationJsonObject, medicineDispensedFormJsonObject);
-
-            JSONObject medicationsSelectedFormJsonObject = JsonFormUtils.getFieldJSONObject(formFields,"medications_selected");
-            medicationsSelectedFormJsonObject.put("value", medicationsSelectedString.toString());
-
-            return medicationForm.toString();
-        } catch (Exception e) {
-            Timber.e(e);
-        }
-        return null;
-    }
-
-    private void addOptionFields(JSONObject medicineDispensedJsonObjectValue, JSONObject medicineDispensedObject){
-        try{
-            JSONArray options = medicineDispensedObject.getJSONArray("options");
-            String jsonString = "{\n" +
-                    "    \"key\": \"\",\n" +
-                    "    \"text\": \"\",\n" +
-                    "    \"openmrs_entity\": \"\",\n" +
-                    "    \"openmrs_entity_id\": \"\",\n" +
-                    "    \"openmrs_entity_parent\": \"\",\n" +
-                    "    \"property\": {\n" +
-                    "      \"presumed-id\": \"err\",\n" +
-                    "      \"confirmed-id\": \"err\"\n" +
-                    "    }\n" +
-                    "}";
-            JSONArray jsonArray = medicineDispensedJsonObjectValue.getJSONArray("administered_medicines");
-
-            medicationsSelectedString = new StringBuilder();
-
-            for(int i = 0; i < jsonArray.length(); i++){
-                JSONObject optionJsonObject = new JSONObject(jsonString);
-                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-
-                String nameOptionValue = jsonObject1.getString("name");
-                String idOptionValue = jsonObject1.getString("id");
-
-                // Create the string with <br /> between each medicine name
-                medicationsSelectedString.append("• ").append(nameOptionValue).append("<br />");
-
-                optionJsonObject.put("key", idOptionValue);
-                optionJsonObject.put("text", nameOptionValue);
-                optionJsonObject.put("openmrs_entity_id", idOptionValue);
-
-                options.put(optionJsonObject);
-            }
-
-            medicineDispensedObject.put("value", options.toString());
-        }catch (JSONException jsonException){
-            Timber.e(jsonException);
-        }
-    }
 }

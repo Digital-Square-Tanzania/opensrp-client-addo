@@ -13,6 +13,8 @@ public class AddoHomeViewModel extends ViewModel {
 
     private final MutableLiveData<String> selectedVillage = new MutableLiveData<String>();
 
+    private final MutableLiveData<String> selectedVillageId = new MutableLiveData<String>();
+
     private MutableLiveData<String> numRefferalsWeek;
     private MutableLiveData<String> numClosedRefferalsWeek;
     private MutableLiveData<String> numLinkageClosedThisAddo;
@@ -25,8 +27,16 @@ public class AddoHomeViewModel extends ViewModel {
         selectedVillage.setValue(village);
     }
 
+    public void setSelectedVillageId(String villageId) {
+        selectedVillageId.setValue(villageId);
+    }
+
     public LiveData<String> getSelectedVillage() {
         return selectedVillage;
+    }
+
+    public LiveData<String> getSelectedVillageId() {
+        return selectedVillageId;
     }
 
     public LiveData<String> getNumRefferalsWeek() {

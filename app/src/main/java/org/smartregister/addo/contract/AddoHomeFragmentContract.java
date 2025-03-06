@@ -2,6 +2,7 @@ package org.smartregister.addo.contract;
 
 import org.smartregister.configurableviews.model.RegisterConfiguration;
 import org.smartregister.configurableviews.model.ViewConfiguration;
+import org.smartregister.domain.jsonmapping.Location;
 import org.smartregister.view.contract.BaseRegisterFragmentContract;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public interface AddoHomeFragmentContract {
 
         List<String> getLocations();
 
+        List<Location> getAddoVillageLocations();
+
         void processViewConfigurations();
 
     }
@@ -35,6 +38,8 @@ public interface AddoHomeFragmentContract {
         Set<org.smartregister.configurableviews.model.View> getRegisterActiveColumns(String viewConfigurationIdentifier);
 
         List<String> getAddoUserAllowedLocation();
+
+        List<Location> getAddoUserAllowedVillageLocation();
     }
 
     interface Interactor {

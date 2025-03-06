@@ -10,6 +10,7 @@ import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.model.RegisterConfiguration;
 import org.smartregister.configurableviews.model.View;
 import org.smartregister.configurableviews.model.ViewConfiguration;
+import org.smartregister.domain.db.Address;
 import org.smartregister.domain.jsonmapping.Location;
 import org.smartregister.domain.jsonmapping.util.LocationTree;
 import org.smartregister.domain.jsonmapping.util.TreeNode;
@@ -19,6 +20,7 @@ import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +58,11 @@ public class AddoHomeFragmentModel implements AddoHomeFragmentContract.Model {
         return getAddoLocations();
     }
 
+    @Override
+    public List<Location> getAddoUserAllowedVillageLocation() {
+        return getAddoVillageLocations();
+    }
+
     private ArrayList<String> getAddoLocations() {
 
         ArrayList<String> locations = new ArrayList<>();
@@ -74,6 +81,25 @@ public class AddoHomeFragmentModel implements AddoHomeFragmentContract.Model {
 
         return locations;
     }
+
+    private ArrayList<Location> getAddoVillageLocations() {
+
+        ArrayList<Location> locations = new ArrayList<>();
+
+        LinkedHashMap<String, TreeNode<String, Location>> locatioHierarchy = getTreeNodeWithUserAssignedLocationId();
+
+        if (!Utils.isEmptyMap(locatioHierarchy)) {
+            for (Map.Entry<String, TreeNode<String, Location>> entry : locatioHierarchy.entrySet()) {
+                List<Location> selectedLocations = getListOfTaggedSelectedLocationFromTheNode(entry.getValue());
+                if (!Utils.isEmptyCollection(selectedLocations)) {
+                    locations.addAll(selectedLocations);
+                }
+            }
+        }
+
+        return locations;
+    }
+
 
     private LinkedHashMap<String, TreeNode<String, Location>> getTreeNodeWithUserAssignedLocationId() {
 
@@ -137,6 +163,48 @@ public class AddoHomeFragmentModel implements AddoHomeFragmentContract.Model {
         }
 
         return locationList;
+
+    }
+
+    private ArrayList<Location> getListOfTaggedSelectedLocationFromTheNode(TreeNode<String, Location> rawLocationData) {
+
+        ArrayList<String> allowedLocationLevel = new ArrayList<>(Arrays.asList(BuildConfig.ALLOWED_LOCATION_LEVELS));
+        ArrayList<Location> selectedLocationList = new ArrayList<>();
+
+        try {
+            if (rawLocationData == null) {
+                return null;
+            }
+            Location node = rawLocationData.getNode();
+            if (node == null) {
+                return null;
+            }
+            Location location =new  Location(node.getLocationId(),node.getName(),new Address(),new Location());
+            Set<String> levels = node.getTags();
+
+            if (!Utils.isEmptyCollection(levels)) {
+                for (String level : levels) {
+                    if (allowedLocationLevel.contains(level)) {
+                        selectedLocationList.add(location);
+                    }
+                }
+            }
+
+            LinkedHashMap<String, TreeNode<String, Location>> childMap = childMap(rawLocationData);
+            if (!Utils.isEmptyMap(childMap)) {
+                for (Map.Entry<String, TreeNode<String, Location>> childEntry : childMap.entrySet()) {
+                    ArrayList<Location> selectedChildLocations = getListOfTaggedSelectedLocationFromTheNode(childEntry.getValue());
+                    if (!Utils.isEmptyCollection(selectedChildLocations)) {
+                        selectedLocationList.addAll(selectedChildLocations);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e(AddoHomeFragment.class.getCanonicalName(), Log.getStackTraceString(e));
+        }
+
+        return selectedLocationList;
 
     }
 

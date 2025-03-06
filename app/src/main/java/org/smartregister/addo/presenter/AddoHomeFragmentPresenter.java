@@ -4,8 +4,10 @@ import org.smartregister.addo.contract.AddoHomeFragmentContract;
 import org.smartregister.addo.model.AddoHomeFragmentModel;
 import org.smartregister.configurableviews.model.RegisterConfiguration;
 import org.smartregister.configurableviews.model.View;
+import org.smartregister.domain.jsonmapping.Location;
 
 import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -63,5 +65,10 @@ public class AddoHomeFragmentPresenter implements AddoHomeFragmentContract.Prese
     @Override
     public List<String> getLocations() {
         return model.getAddoUserAllowedLocation();
+    }
+
+    @Override
+    public List<Location> getAddoVillageLocations() {
+        return model.getAddoUserAllowedVillageLocation();
     }
 }

@@ -23,13 +23,10 @@ public class AddoVillageLocationsRecyclerViewProviderAdapter extends RecyclerVie
 
     private View.OnClickListener onClickListener;
 
-    private Context context;
-
     private AddoVillageLocationsRecyclerViewProviderAdapter.OnItemClickListener onItemClickListener;
 
     public AddoVillageLocationsRecyclerViewProviderAdapter(List<Location> addoLocation,  Activity activity) {
         this.addoLocation = addoLocation;
-        this.context = activity;
         this.onClickListener = new AddoLocationAdapterListener(activity);
     }
 

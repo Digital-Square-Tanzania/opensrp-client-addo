@@ -112,6 +112,16 @@ public class AddoVillageClientsFragment extends BaseRegisterFragment implements 
             }
         });
 
+        model.getSelectedVillageId().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                joinTable = "";
+                presenter().setSelectedVillageId(s);
+                mainCondition = getMainCondition();
+                presenter().initializeQueries(mainCondition);
+            }
+        });
+
     }
 
     @Override

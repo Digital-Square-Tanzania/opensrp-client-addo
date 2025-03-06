@@ -27,6 +27,8 @@ public class AddoVillageClientsFragmentPresenter implements AddoVillageClientsFr
     protected String viewConfigurationIdentifier;
     private String selectedVillage;
 
+    private String selectedVillageId;
+
     public AddoVillageClientsFragmentPresenter(AddoVillageClientsFragmentContract.View viewReference, AddoVillageClientsFragmentContract.Model model, String viewConfigurationIdentifier) {
         this.viewReference = new WeakReference<>(viewReference);
         this.model = model;
@@ -72,9 +74,9 @@ public class AddoVillageClientsFragmentPresenter implements AddoVillageClientsFr
 
     @Override
     public String getMainCondition() {
-        return String.format("%s.%s is null AND %s.%s like '%%%s%%' ",
+        return String.format("%s.%s is null AND json_extract(%s.%s, '$.locationId') like '%s'",
                 CoreConstants.TABLE_NAME.FAMILY_MEMBER, DBConstants.KEY.DOD,
-                CoreConstants.TABLE_NAME.FAMILY, AddoDBConstants.NEAREST_HEALTH_FACILITY, selectedVillage
+                CoreConstants.TABLE_NAME.EVENT, CoreConstants.TABLE_NAME.JSON, selectedVillageId
         );
     }
 
@@ -86,6 +88,11 @@ public class AddoVillageClientsFragmentPresenter implements AddoVillageClientsFr
     @Override
     public void setSelectedVillage(String selectedVillage) {
         this.selectedVillage = selectedVillage;
+    }
+
+    @Override
+    public void setSelectedVillageId(String selectedVillageId) {
+        this.selectedVillageId = selectedVillageId;
     }
 
     protected AddoVillageClientsFragmentContract.View getView() {

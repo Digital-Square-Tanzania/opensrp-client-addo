@@ -2,6 +2,7 @@ package org.smartregister.addo.model;
 
 import org.smartregister.CoreLibrary;
 import org.smartregister.addo.contract.AddoVillageClientsFragmentContract;
+import org.smartregister.addo.util.AddoDBConstants;
 import org.smartregister.addo.util.CoreConstants;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.model.RegisterConfiguration;
@@ -38,6 +39,7 @@ public class AddoVillageClientsFragmentModel implements AddoVillageClientsFragme
         SmartRegisterQueryBuilder countQueryBuilder = new SmartRegisterQueryBuilder();
         countQueryBuilder.SelectInitiateMainTableCounts(tableName);
         countQueryBuilder.customJoin("INNER JOIN " + CoreConstants.TABLE_NAME.FAMILY + " ON  " + CoreConstants.TABLE_NAME.FAMILY_MEMBER + "." + DBConstants.KEY.RELATIONAL_ID + " = " + CoreConstants.TABLE_NAME.FAMILY + "." + DBConstants.KEY.BASE_ENTITY_ID);
+        countQueryBuilder.customJoin("INNER JOIN " + CoreConstants.TABLE_NAME.EVENT + " ON  " + CoreConstants.TABLE_NAME.FAMILY + "." + DBConstants.KEY.BASE_ENTITY_ID + " = " + CoreConstants.TABLE_NAME.EVENT + "." + AddoDBConstants.EVENT_BASE_ENTITY_ID);
         return countQueryBuilder.mainCondition(mainCondition);
     }
 
@@ -46,6 +48,7 @@ public class AddoVillageClientsFragmentModel implements AddoVillageClientsFragme
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
         queryBUilder.SelectInitiateMainTable(tableName, mainColumns(tableName));
         queryBUilder.customJoin("INNER JOIN " + CoreConstants.TABLE_NAME.FAMILY + " ON  " + CoreConstants.TABLE_NAME.FAMILY_MEMBER + "." + DBConstants.KEY.RELATIONAL_ID + " = " + CoreConstants.TABLE_NAME.FAMILY + "." + DBConstants.KEY.BASE_ENTITY_ID);
+        queryBUilder.customJoin("INNER JOIN " + CoreConstants.TABLE_NAME.EVENT + " ON  " + CoreConstants.TABLE_NAME.FAMILY + "." + DBConstants.KEY.BASE_ENTITY_ID + " = " + CoreConstants.TABLE_NAME.EVENT + "." + AddoDBConstants.EVENT_BASE_ENTITY_ID);
         return queryBUilder.mainCondition(mainCondition);
     }
 

@@ -548,6 +548,8 @@ public class CoreConstants {
         public static final String CLOSE_REFERRAL = "ec_close_referral";
         public static final String SCHEDULE_SERVICE = "schedule_service";
         public static final String ADOLESCENT = "ec_adolescent";
+        public static final String EVENT = "event";
+        public static final String JSON = "json";
     }
 
     public static final class INTENT_KEY {

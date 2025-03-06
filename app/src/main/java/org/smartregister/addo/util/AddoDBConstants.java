@@ -17,5 +17,6 @@ public interface AddoDBConstants {
     String PHONE_NUMBER = "phone_number";
     String NEAREST_HEALTH_FACILITY = "nearest_facility";
     String IS_CLOSED = "is_closed";
+    String EVENT_BASE_ENTITY_ID = "baseEntityId";
 
 }

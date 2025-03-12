@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.smartregister.addo.R;
+import org.smartregister.addo.adapter.AddoVillageLocationsRecyclerViewProviderAdapter;
 import org.smartregister.addo.viewmodel.AddoHomeViewModel;
 import org.smartregister.addo.adapter.AddoLocationRecyclerViewProviderAdapter;
 import org.smartregister.addo.contract.AddoHomeFragmentContract;
@@ -23,6 +24,7 @@ import org.smartregister.addo.model.AddoHomeFragmentModel;
 import org.smartregister.addo.presenter.AddoHomeFragmentPresenter;
 import org.smartregister.addo.view.EmptystateView;
 import org.smartregister.domain.FetchStatus;
+import org.smartregister.domain.jsonmapping.Location;
 import org.smartregister.view.activity.BaseRegisterActivity;
 import org.smartregister.view.customcontrols.CustomFontTextView;
 import org.smartregister.view.fragment.BaseRegisterFragment;
@@ -45,6 +47,8 @@ public class AddoHomeFragment extends BaseRegisterFragment implements AddoHomeFr
     private TextView numReferralsWeek;
     private TextView numClosedReferralWeek;
     private TextView numLinkageClosedThisAddo;
+
+    private List<Location> selectedVillageLocations = new ArrayList<>();
 
     @Override
     public void setupViews(View view) {
@@ -102,6 +106,7 @@ public class AddoHomeFragment extends BaseRegisterFragment implements AddoHomeFr
         if (view != null) {
             if ( presenter().getLocations() != null ) {
                 this.villageLocations = presenter().getLocations();
+                this.selectedVillageLocations = presenter().getAddoVillageLocations();
             }
         }
 
@@ -109,15 +114,16 @@ public class AddoHomeFragment extends BaseRegisterFragment implements AddoHomeFr
             emptystateView.setVisibility(View.VISIBLE);
         }
 
-        AddoLocationRecyclerViewProviderAdapter mAdapter = new AddoLocationRecyclerViewProviderAdapter(villageLocations
+        AddoVillageLocationsRecyclerViewProviderAdapter mAdapter = new AddoVillageLocationsRecyclerViewProviderAdapter(selectedVillageLocations
                 , this.getActivity());
         if (view != null) {
             view.setAdapter(mAdapter);
         }
         mAdapter.setOnItemClickListener(village -> {
             // if the selected item is other village then take the user to Advanced search otherwise fp scan
-            if (!village.equalsIgnoreCase(String.valueOf(R.string.addo_other_village))) {
-                model.setSelectedVillage(village);
+            if (!village.getName().equalsIgnoreCase(String.valueOf(R.string.addo_other_village))) {
+                model.setSelectedVillage(village.getName());
+                model.setSelectedVillageId(village.getLocationId());
                 ((BaseRegisterActivity) requireActivity()).switchToFragment(2);
             } else {
                 ((BaseRegisterActivity) requireActivity()).switchToFragment(3);

@@ -48,7 +48,7 @@ android {
         buildConfigField "boolean", 'SUPPORT_QR', 'true'
         buildConfigField "int", "DATABASE_VERSION", '11'
 
-        buildConfigField "String", 'opensrp_url_staging', '"http://http://170.187.199.69:8082/opensrp/"'
+        buildConfigField "String", 'opensrp_url_staging', '"http://170.187.199.69:8082/opensrp/"'
         //buildConfigField "String", 'opensrp_url_production', '"https://opensrp-dev.d-tree.org/opensrp/"'
         //buildConfigField "String", 'opensrp_url_production', '"https://afyatek.smartregister.org/opensrp/"'
         buildConfigField "String", 'opensrp_url_production', '"https://ucs.moh.go.tz/opensrp/"'

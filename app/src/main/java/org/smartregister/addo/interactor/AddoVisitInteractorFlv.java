@@ -42,7 +42,7 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         actionList = new LinkedHashMap<>();
         context = view.getContext();
         callback = callBack;
-        this.clientType = clientType;
+        AddoVisitInteractorFlv.clientType = clientType;
 
         try {
             //add action here

@@ -6,10 +6,12 @@ import android.content.Intent;
 import androidx.annotation.Nullable;
 
 import org.smartregister.addo.sync.helper.AddoTaskServiceHelper;
+import org.smartregister.addo.util.FormSyncManager;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.util.NetworkUtils;
 import org.smartregister.util.SyncUtils;
+
 
 public class AddoSyncTaskIntentService extends IntentService {
     private static final String TAG = "AddoSyncTaskIntentService";
@@ -32,7 +34,6 @@ public class AddoSyncTaskIntentService extends IntentService {
 
         }
         sendSyncStatusBroadcastMessage(FetchStatus.fetchStarted);
-
         doSync();
     }
 
@@ -56,5 +57,7 @@ public class AddoSyncTaskIntentService extends IntentService {
 
         sendSyncStatusBroadcastMessage(FetchStatus.fetchStarted);
         taskServiceHelper.syncTasks();
+        new FormSyncManager(this.getApplicationContext()).fetchOnlineForms();
+
     }
 }

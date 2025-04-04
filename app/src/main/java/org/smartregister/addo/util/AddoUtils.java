@@ -43,7 +43,7 @@ public class AddoUtils extends Utils {
 
     public static String checkDSPresentProposedMedsAndDispense(String jsonForm, Constants.FamilyMemberType familyMemberType) {
         JsonQ form=JsonQ.fromJson(jsonForm);
-        if (!isClientPresent(form)) return jsonForm;
+        if (!isClientPresent(form)) return new FormSyncManager().getFormJson(getFormName(familyMemberType));
 
         String dangerSignFieldKey=lookupMap.get(form.str(JsonFormUtils.ENCOUNTER_TYPE)+"-key");
         JsonQ dangerSign=form.get("step2.fields[?(@.key='%s')]", dangerSignFieldKey);

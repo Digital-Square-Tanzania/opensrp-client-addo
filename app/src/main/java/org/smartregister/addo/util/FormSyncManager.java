@@ -14,7 +14,7 @@ public class FormSyncManager {
     private final File modifiedDates;
     private static long lastTimeFetched = 0;
     private static final long HALF_HOUR = TimeUnit.MINUTES.toMillis(30);
-    private final static String BASE_URL = "https://raw.githubusercontent.com/Digital-Square-Tanzania/opensrp-client-addo/refs/heads/online-forms/";
+    private final static String BASE_URL = "https://raw.githubusercontent.com/Digital-Square-Tanzania/opensrp-client-addo/refs/heads/online-forms/app/src/main/assets/";
 
     public FormSyncManager(){
         this(org.smartregister.family.util.Utils.context().applicationContext());

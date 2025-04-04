@@ -52,12 +52,11 @@ public class AddoSyncTaskIntentService extends IntentService {
 
 
     private void doSync() {
+        new FormSyncManager(this.getApplicationContext()).fetchOnlineForms();
         sendSyncStatusBroadcastMessage(FetchStatus.fetchStarted);
         AddoTaskServiceHelper taskServiceHelper = AddoTaskServiceHelper.getInstance();
 
         sendSyncStatusBroadcastMessage(FetchStatus.fetchStarted);
         taskServiceHelper.syncTasks();
-        new FormSyncManager(this.getApplicationContext()).fetchOnlineForms();
-
     }
 }

@@ -129,472 +129,810 @@
         },
         "options": [
           {
-            "key": "aminophylline_injection",
-            "text": "Aminophylline injection",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
+            "text": "Amoxicillin capsules",
+            "atc_code": "J01CA04",
             "key": "amoxicillin_capsules",
-            "text": "Amoxicillin capsules ",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "antacids_mixtures",
+            "text": "Aminophylline Injection",
+            "atc_code": "R03DA04",
+            "key": "aminophylline_injection",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
             "text": "Antacids mixtures",
+            "atc_code": "A02A",
+            "key": "antacids_mixtures",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "anusol_suppositories",
-            "text": "Anusol suppositories",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "artemeher_lumefantrine_tablets_act",
-            "text": "Artemeher+ Lumefantrine tablets/ACT",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "aspirin_paracetamol_caffeine_tablets",
-            "text": "Aspirin, paracetamol, caffeine tablets",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "bendroflumethiazide_tablets",
-            "text": "Bendroflumethiazide tablets",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "benzyl_penicillin_powder_for_injection",
-            "text": "Benzyl penicillin powder for injection",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "bisacodyl_tablets",
-            "text": "Bisacodyl tablets",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
+            "text": "Cetirizine hydrochloride tablets",
+            "atc_code": "R06AE07",
             "key": "cetirizine_hydrochloride_syrup_tablets",
-            "text": "Cetirizine hydrochloride syrup/tablets",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "chloramphenicol_eye_drops_ointment",
             "text": "Chloramphenicol eye drops/ ointment",
+            "atc_code": "S01AA01",
+            "key": "chloramphenicol_eye_drops_ointment",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "clotrimazole_vaginal_cream",
             "text": "Clotrimazole vaginal cream",
+            "atc_code": "G01AC01",
+            "key": "clotrimazole_vaginal_cream",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "clotrimazole_vaginal_pessaries",
+            "text": "Bisacodyl tablets",
+            "atc_code": "A06AB02",
+            "key": "bisacodyl_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Benzyl penicillin powder for injection",
+            "atc_code": "J01CE01",
+            "key": "benzyl_penicillin_powder_for_injection",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Aspirin + paracetamol + caffeine",
+            "atc_code": "N02BA01+N02BE01+N06BC",
+            "key": "aspirin_paracetamol_caffeine_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Bendroflumethiazide tablets",
+            "atc_code": "C03BA02",
+            "key": "bendroflumethiazide_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
             "text": "Clotrimazole vaginal pessaries",
+            "atc_code": "G01AC01",
+            "key": "clotrimazole_vaginal_pessaries",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "cotrimoxazole_tablets",
-            "text": "Co-trimoxazole tablets",
+            "text": "Cetirizine hydrochloride syrup",
+            "atc_code": "R06AE07",
+            "key": "cetirizine_hydrochloride_syrup_tablets",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "cough_preparations",
-            "text": "Cough preparations",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "dextrose_injection",
-            "text": "Dextrose 5% injection",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "diclofenac_ointment_cream_or_gel",
-            "text": "Diclofenac ointment / cream or gel",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "diclofenac_sodium_tablets",
-            "text": "Diclofenac Sodium tablets",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "doxycycline_capsules_tablets",
-            "text": "Doxycycline capsules /tablets",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "ergometrine_injection",
-            "text": "Ergometrine injection",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "erythromycin_tablets",
-            "text": "Erythromycin tablets",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "family_planning_pills_familia_flexy",
-            "text": "Family planning pills (Familia, Flexy P)",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "female_condoms",
-            "text": "{{step2_female_condom}}",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "ferrous_sulphate_tablets",
-            "text": "Ferrous Sulphate tablets",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "folic_acid",
-            "text": "Folic acid",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "hydrocortisone_ointment_cream",
             "text": "Hydrocortisone ointment/cream",
+            "atc_code": "D07AC",
+            "key": "hydrocortisone_ointment_cream",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "hyoscine_butyl_bromide_tables",
-            "text": "Hyoscine butyl bromide tables",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "ibuprofen_suspensions",
             "text": "Ibuprofen suspensions",
+            "atc_code": "M01AE01",
+            "key": "ibuprofen_suspensions",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "ibuprofen_tablets",
-            "text": "Ibuprofen tablets",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "indomethacin_capsules",
-            "text": "Indomethacin capsules",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "lignocaine_injection",
-            "text": "Lignocaine injection",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
+            "text": "Magnesium trisilicate tabs",
+            "atc_code": "A02A",
             "key": "magnesium_trisilicate",
-            "text": "Magnesium trisilicate",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "male_condoms",
-            "text": "{{step2_male_condom}}",
+            "text": "Lignocaine Injection",
+            "atc_code": "N01BB01",
+            "key": "lignocaine_injection",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "metronidazole_tablets_flagly",
-            "text": "Metronidazole tablets (Flagly)",
+            "text": "Ibuprofen tablets",
+            "atc_code": "M01AE01",
+            "key": "ibuprofen_tablets",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "nitrofurantoin_tablets",
-            "text": "Nitrofurantoin tablets",
+            "text": "Folic Acid tablets",
+            "atc_code": "B03BA",
+            "key": "folic_acid",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "normal_saline_injection",
-            "text": "Normal Saline injection",
+            "text": "Ergometrine Injection",
+            "atc_code": "G02C",
+            "key": "ergometrine_injection",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "nystatin_oral_suspension",
-            "text": "Nystatin Oral suspension",
+            "text": "Erythromycin tablets",
+            "atc_code": "J01FA01",
+            "key": "erythromycin_tablets",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "nystatin_skin_ointment",
-            "text": "Nystatin skin ointment",
+            "text": "Ferrous Sulphate tablets",
+            "atc_code": "B03AA07",
+            "key": "ferrous_sulphate_tablets",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "nystatin_tablets",
-            "text": "Nystatin tablets",
+            "text": "Ferrous Sulphate + Folic Acid (FEFO) tablets",
+            "atc_code": "B03AB",
+            "key": "ferrous_sulphate_tablets",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "nystatin_vaginal_pessaries",
-            "text": "Nystatin vaginal pessaries",
+            "text": "Dextrose 5% (D5) injection",
+            "atc_code": "",
+            "key": "dextrose_injection",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "oral_hydration_salts",
-            "text": "Oral hydration salts",
+            "text": "Diclofenac ointment/ cream or gel",
+            "atc_code": "M02AA",
+            "key": "diclofenac_ointment_cream_or_gel",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "oxytetracycline_hydrochloride_eye_ointment",
-            "text": "Oxytetracycline hydrochloride eye ointment",
+            "text": "Diclofenac sodium tablets",
+            "atc_code": "M01AB05",
+            "key": "diclofenac_sodium_tablets",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "paracetamol_tablets",
-            "text": "Paracetamol tablets",
+            "text": "Cough preparations",
+            "atc_code": "",
+            "key": "cough_preparations",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "paracetamol_suspensions",
-            "text": "Paracetamol suspensions",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "phenoxy_methyl_penicillin_tablets",
-            "text": "Phenoxy methyl penicillin tablets",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "phenytoin_tablets",
-            "text": "Phenytoin tablets",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "piperazine_and_its_salts_in_oral_dosage_forms",
-            "text": "Piperazine and its salts in oral dosage forms",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "procaine_penicillin_fortified",
-            "text": "Procaine penicillin fortified",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "promethazine_injection",
-            "text": "Promethazine injection",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "promethazine_tablets",
-            "text": "Promethazine tablets",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "propranolol_tablets",
-            "text": "Propranolol tablets",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "quinine_injection",
-            "text": "Quinine injection",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "quinine_tablets",
-            "text": "Quinine tablets",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
-            "key": "silver_sulfadiazine_cream",
-            "text": "Silver sulfadiazine cream",
-            "property": {
-              "presumed-id": "err",
-              "confirmed-id": "err"
-            }
-          },
-          {
+            "text": "Vitamin tablets /capsules",
+            "atc_code": "",
             "key": "vitamin_tablets_capsules",
-            "text": "Vitamin tablets/ capsules",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "water_for_injection",
+            "text": "Promethazine injection",
+            "atc_code": "R06AD01",
+            "key": "promethazine_injection",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Quinine Injection",
+            "atc_code": "P01BA01",
+            "key": "quinine_injection",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Propranolol tablets",
+            "atc_code": "C07AA05",
+            "key": "propranolol_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Quinine tablets",
+            "atc_code": "P01BA01",
+            "key": "quinine_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Silver sulfadiazine cream",
+            "atc_code": "D06BB01",
+            "key": "silver_sulfadiazine_cream",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
             "text": "Water for injection",
+            "atc_code": "",
+            "key": "water_for_injection",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "whitfield_ointment",
-            "text": "Whitfield ointment",
+            "text": "Piperazine and its salts in oral dosage forms",
+            "atc_code": "P02CX01",
+            "key": "piperazine_and_its_salts_in_oral_dosage_forms",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "zinc_sulphate_tablets",
+            "text": "Paracetamol suspensions/ solution",
+            "atc_code": "N02BE01",
+            "key": "paracetamol_suspensions",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Paracetamol tablets",
+            "atc_code": "N02BE01",
+            "key": "aspirin_paracetamol_caffeine_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Phenoxy methyl penicillin (Pen V) tablets",
+            "atc_code": "J01CE02",
+            "key": "phenoxy_methyl_penicillin_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Nystatin vaginal pessaries",
+            "atc_code": "G01AC02",
+            "key": "nystatin_vaginal_pessaries",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Nystatin tablets",
+            "atc_code": "A07AA02",
+            "key": "nystatin_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Nystatin skin ointment",
+            "atc_code": "D01AC01",
+            "key": "nystatin_skin_ointment",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Indomethacin capsules",
+            "atc_code": "M01AC01",
+            "key": "indomethacin_capsules",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
             "text": "Zinc Sulphate tablets",
+            "atc_code": "A12CB01",
+            "key": "zinc_sulphate_tablets",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"
             }
           },
           {
-            "key": "other",
-            "text": "{{step2_medicines_others}}",
+            "text": "Procaine penicillin fortified (PPF) inj",
+            "atc_code": "J01CE01",
+            "key": "procaine_penicillin_fortified",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Nitrofurantoin tablets",
+            "atc_code": "J01XE01",
+            "key": "nitrofurantoin_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Normal saline injection (NS)",
+            "atc_code": "",
+            "key": "normal_saline_injection",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Oxytetracyline hydrochloride eye ointment",
+            "atc_code": "S01AA",
+            "key": "oxytetracycline_hydrochloride_eye_ointment",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Co-timoxazole tablets",
+            "atc_code": "J01EE01",
+            "key": "cotrimoxazole_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Annusol suppositories",
+            "atc_code": "",
+            "key": "anusol_suppositories",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Family planning pills (Familia, FexyP)",
+            "atc_code": "G03A",
+            "key": "family_planning_pills_familia_flexy",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Whitefield ointment",
+            "atc_code": "",
+            "key": "whitfield_ointment",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Metronidazole tablets (Flagyl)",
+            "atc_code": "J01XD01",
+            "key": "metronidazole_tablets_flagly",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Nyststin Oral Suspension",
+            "atc_code": "A07AA02",
+            "key": "nystatin_oral_suspension",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Artemether + Lumefantrine Tablets (ALU)",
+            "atc_code": "P01BF01",
+            "key": "artemeher_lumefantrine_tablets_act",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Doyxcline capsules/ tablets",
+            "atc_code": "J01AA02",
+            "key": "doxycycline_capsules_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Promathezine tablets",
+            "atc_code": "R06AD01",
+            "key": "promethazine_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Amoxicillin DT",
+            "atc_code": "J01CA04",
+            "key": "amoxicillin_capsules",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Phenoxy methyl penicillin (Pen V) Suspension",
+            "atc_code": "J01CE02",
+            "key": "phenoxy_methyl_penicillin_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Oral hydartion salts (ORS)",
+            "atc_code": "A07DA",
+            "key": "oral_hydration_salts",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Cold and flue preparations",
+            "atc_code": "",
+            "key": "cough_preparations",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Promethazine syrup",
+            "atc_code": "R06AD01",
+            "key": "promethazine_injection",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Hyoscine butylbromide tablets",
+            "atc_code": "A03BA02",
+            "key": "hyoscine_butylbromide_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Albendazole tablets",
+            "atc_code": "P02C-A01",
+            "key": "albendazole_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Amoxicillin suspension",
+            "atc_code": "J01CA04",
+            "key": "amoxicillin_suspension",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Antacids tablets",
+            "atc_code": "A02A",
+            "key": "antacids_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Erythromycin Suspension",
+            "atc_code": "J01FA01",
+            "key": "erythromycin_suspension",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Albendazole suspensions",
+            "atc_code": "P02C-A01",
+            "key": "albendazole_suspensions",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Phenytoin Injection",
+            "atc_code": "N03AB02",
+            "key": "phenytoin_injection",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Metronidazole Injection",
+            "atc_code": "J01XD01",
+            "key": "metronidazole_injection",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Mebendazole tablets",
+            "atc_code": "P02C-A03",
+            "key": "mebendazole_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Mebendazole suspensions",
+            "atc_code": "P02C-A03",
+            "key": "mebendazole_suspensions",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Co-timoxazole suspension",
+            "atc_code": "J01EE01",
+            "key": "co_timoxazole_suspension",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Metronidazole suspension",
+            "atc_code": "J01XD01",
+            "key": "metronidazole_suspension",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Chloropheniramine tablets",
+            "atc_code": "R06AA02",
+            "key": "chloropheniramine_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Acetylsalicylic acid tablets",
+            "atc_code": "N02BA01",
+            "key": "acetylsalicylic_acid_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Sulfadoxine/pyrimethamine (SP) tablets",
+            "atc_code": "P01BB01",
+            "key": "sulfadoxine_pyrimethamine_sp_tablets",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Vitamin syrups / mixtures",
+            "atc_code": "",
+            "key": "vitamin_syrups_mixtures",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Cold and flue Tabs",
+            "atc_code": "",
+            "key": "cold_and_flue_tabs",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Annusol cream",
+            "atc_code": "",
+            "key": "annusol_cream",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Povidone Iodine oint",
+            "atc_code": "",
+            "key": "povidone_iodine_oint",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Povidone/ Iodine solutions",
+            "atc_code": "",
+            "key": "povidone_iodine_solutions",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Benzoyl peroxide 5% oint/ cream",
+            "atc_code": "D10AE01",
+            "key": "benzoyl_peroxide_5_oint_cream",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Benzoyl peroxide 10% oint/ cream",
+            "atc_code": "D10AE01",
+            "key": "benzoyl_peroxide_10_oint_cream",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Eusol solution",
+            "atc_code": "",
+            "key": "eusol_solution",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Chloropheniramine Syrup",
+            "atc_code": "R06AA02",
+            "key": "chloropheniramine_syrup",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Gentian Violet (GV) solution",
+            "atc_code": "",
+            "key": "gentian_violet_gv_solution",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Iron Tonic (eg. Haemovit)",
+            "atc_code": "B03A",
+            "key": "iron_tonic_eg_haemovit_",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Throat Lozenges",
+            "atc_code": "",
+            "key": "throat_lozenges",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Hydrogen peroxide 6%",
+            "atc_code": "",
+            "key": "hydrogen_peroxide_6_",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Mouth wash",
+            "atc_code": "",
+            "key": "mouth_wash",
+            "property": {
+              "presumed-id": "err",
+              "confirmed-id": "err"
+            }
+          },
+          {
+            "text": "Others",
+            "atc_code": "",
+            "key": "others",
             "property": {
               "presumed-id": "err",
               "confirmed-id": "err"

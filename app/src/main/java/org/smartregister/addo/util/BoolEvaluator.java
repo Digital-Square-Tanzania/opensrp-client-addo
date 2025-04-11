@@ -11,12 +11,14 @@ class BoolEvaluator {
     }
 
     private void handleOperator(StringBuilder output, Stack<String> operators, String token) {
-        while (!operators.isEmpty() && precedence(operators.peek()) >= precedence(token)) {
+        // Only pop if the top is not "(" and has higher or equal precedence.
+        while (!operators.isEmpty() &&
+                !operators.peek().equals("(") &&
+                precedence(operators.peek()) >= precedence(token)) {
             output.append(operators.pop()).append(' ');
         }
         operators.push(token);
     }
-
     // Convert infix expression to postfix (Reverse Polish Notation)
     private String toPostfix(String infix) {
         StringBuilder output = new StringBuilder();
@@ -131,19 +133,19 @@ class BoolEvaluator {
             case "/": return a / b;
             case ">": return a > b ? 1.0 : 0.0;
             case "<": return a < b ? 1.0 : 0.0;
-            case "==": return a == b ? 1.0 : 0.0;
+            case "=": case "==": return a == b ? 1.0 : 0.0;
             case "!=": return a != b ? 1.0 : 0.0;
             case ">=": return a >= b ? 1.0 : 0.0;
             case "<=": return a <= b ? 1.0 : 0.0;
-            case "&": return (a != 0 && b != 0) ? 1.0 : 0.0;
-            case "|": return (a != 0 || b != 0) ? 1.0 : 0.0;
+            case "&": case "&&": return (a != 0 && b != 0) ? 1.0 : 0.0;
+            case "|": case "||": return (a != 0 || b != 0) ? 1.0 : 0.0;
             default: throw new IllegalArgumentException("Unsupported operator: " + op);
         }
     }
 
     private double applyStringOperator(String op, String a, String b) {
         switch (op) {
-            case "==": return a.equals(b) ? 1.0 : 0.0;
+            case "=": case "==": return a.equals(b) ? 1.0 : 0.0;
             case "!=": return !a.equals(b) ? 1.0 : 0.0;
             case ">": return a.compareTo(b) > 0 ? 1.0 : 0.0;
             case "<": return a.compareTo(b) < 0 ? 1.0 : 0.0;

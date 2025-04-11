@@ -12,12 +12,17 @@ import com.google.gson.reflect.TypeToken;
 
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
@@ -45,10 +50,13 @@ public class JsonQ {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     private final Object root;
-
     private static final Pattern INTEGER = Pattern.compile("^\\d+$");
+
+    private static final SimpleHttpClient HTTP_CLIENT =new SimpleHttpClient();
     private static final Pattern REGULAR_PATH = Pattern.compile("\\w+(?:\\.\\w+)*");
-    private static final Pattern ARRAY = Pattern.compile("\\[(?:(\\??\\(.+\\))|(-?\\d+:?-?\\d*(?:,-?\\d+:?-?\\d*)*)|(\\*))]");
+    //    private static final Pattern ARRAY = Pattern.compile("\\[(?:(\\??\\(.+\\))|(-?\\d+:?-?\\d*(?:,-?\\d+:?-?\\d*)*)|(\\*))]");
+    private static final Pattern ARRAY = Pattern.compile("\\[(?:(\\??\\(.+\\))|(-?\\d*:?-?\\d*(?:,-?\\d*:?-?\\d*)*)|(\\*)|(([`\"'])(.+?)\\5))]");
+
     private static final Pattern GLOBED_PATH = Pattern.compile("(?=.*\\*)(?=.*\\w)[^.\\[\\]()?'\"]*");
     private static final Pattern WILDCARD = Pattern.compile("\\.{2,3}(?:" + REGULAR_PATH + ")?");
     private static final Pattern PATH_EXPRESSION = Pattern.compile(".*\\[?\\??\\(.*\\)");
@@ -86,11 +94,26 @@ public class JsonQ {
     }
 
     public static JsonQ fromIO(File jsonFile) {
+        if(!jsonFile.exists()) return new JsonQ("");
         return new JsonQ(val(stringFromIO(jsonFile)));
+    }
+
+    public static JsonQ fromURL(String url) {
+        return fromURL(url,null);
+    }
+    public static JsonQ fromURL(String urlString, Map<String, String> headers) {
+        return JsonQ.fromJson(HTTP_CLIENT.get(urlString, headers));
     }
 
     public static JsonQ fromPOJO(Object object) {
         return new JsonQ(jsonPrimitive(object) ? object : getObjectRoot(object));
+    }
+
+    public boolean toFile(File file) {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(this.toString());
+            return true;}
+        catch (IOException e) {return false;}
     }
 
     private static void log(Exception e) {
@@ -98,22 +121,22 @@ public class JsonQ {
     }
 
     private static String stringFromIO(Object input) {
-        try {
-            BufferedReader reader;
-            if (input instanceof File)
-                reader = new BufferedReader(new FileReader((File) input));
-            else if (input instanceof InputStream)
-                reader = new BufferedReader(new InputStreamReader((InputStream) input));
-            else return "";
+        if (!(input instanceof File || input instanceof InputStream)) {
+            return "";
+        }
+        try (BufferedReader reader = input instanceof File
+                ? new BufferedReader(new FileReader((File) input))
+                : new BufferedReader(new InputStreamReader((InputStream) input, StandardCharsets.UTF_8))) {
 
             StringBuilder sb = new StringBuilder();
-            for (String s = reader.readLine(); s != null; s = reader.readLine()) sb.append(s);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append(System.lineSeparator());
+            }
             return sb.toString();
-        } catch (IOException e) {
-            Timber.e(e);
-        }
-        return "";
+        } catch (IOException e) {Timber.e(e);return "";}
     }
+
 
     private static Object val(String jsonRoot) {
         Gson gson = new Gson();
@@ -143,11 +166,12 @@ public class JsonQ {
         return list;
     }
 
-    public <T> List<T> getList(String jsonPath, JFunction<Map<?, ?>, T> changer) {
-        List<T> list = new ArrayList<>();
+    @SuppressWarnings("unchecked")
+    public <S,T,R> List<R> getList(String jsonPath, JFunction<Map<S, T>, R> changer) {
+        List<R> list = new ArrayList<>();
         flatForEach(find(jsonPath), (key, obj) -> {
             if (obj instanceof Map<?, ?>)
-                list.add(changer.apply((Map<?, ?>) obj));
+                list.add(changer.apply((Map<S, T>) obj));
         });
         return list;
     }
@@ -160,14 +184,26 @@ public class JsonQ {
                 Map<String,Object>data=(Map<String,Object>)v;
                 Map<String,Object> selection=new HashMap<>();
                 for(String key:columns){
-                       data.get(key);
-                       selection.put(key,data.get("key"));
+                    data.get(key);
+                    selection.put(key,data.get("key"));
                 }
                 results.add(selection);
             }
         });
         return fromResults(results);
     }
+
+    public Integer asInt(String jsonPath) {
+        Object x=get(jsonPath).root;
+        return x instanceof Number? ((Number)x).intValue():null;
+    }
+
+    public int asInt() {return asInt(".");}
+
+    public List<Integer> integers(String path) {
+        return fromResults(getListImpl(path, a -> a instanceof Number ? ((Number) a).intValue() : null)).val();
+    }
+
     public List<Integer> intColumn(String columnName) {
         String path= String.format("[(@.%s~'\\d+')]",columnName);
         return fromResults(getListImpl(path, a -> a instanceof Integer ? a : null)).val();
@@ -229,9 +265,9 @@ public class JsonQ {
                 .replaceAll("=+","==");
 
         for(Object v :values){
-            if(!jsonPrimitive(v)) continue;
+            if( !jsonPrimitive(v) ) continue;
             String value = v instanceof String? String.format("'%s'",v): String.valueOf(v);
-            condition=condition.replaceFirst("\\?",escapeRGX(value));
+            condition=condition.replaceFirst("\\$",escapeRGX(value));
         }
 
         condition=String.format("(%s)",condition);
@@ -239,7 +275,7 @@ public class JsonQ {
         return fromResults(results);
     }
     private String escapeRGX(String input){
-       return input.replace("\\","\\\\");
+        return input.replace("\\","\\\\");
     }
 
     private JsonQ fromResults(List<Object> results){
@@ -263,7 +299,7 @@ public class JsonQ {
     /**
      * @noinspection unchecked
      */
-    public <T> T val() {return (T) root;}
+    public <T> T val() {return isEmpty ()?null:(T) root;}
 
     public boolean isEmpty() {
         return root == null || (root instanceof Map && ((Map<?, ?>) root).isEmpty()) ||
@@ -271,7 +307,7 @@ public class JsonQ {
                 (root instanceof String && ((String) root).isEmpty());
     }
 
-    public boolean hasStuff(){ return !isEmpty(); }
+    public boolean hasThings(){ return !isEmpty(); }
     public boolean notEmpty(){ return !isEmpty(); }
 
     @NonNull
@@ -281,13 +317,17 @@ public class JsonQ {
     }
 
     public <T> T first(String jsonPath, JFunction<Object, T> changer) {
-        List<?> res = find(jsonPath);
+        JsonQ res = get(jsonPath);
         if (!res.isEmpty()) {
-            return changer.apply(res.get(0));
+            return changer.apply(res.root);
         }
         return null;
     }
 
+    public void putNoNull(String jsonPath, Object value) {
+        if(value==null) return;
+        put(jsonPath, value);
+    }
     public void put(String jsonPath, Object value) {
         int x = jsonPath.lastIndexOf(".");
         String prop = jsonPath.substring(x < 0 ? 0 : x + 1);
@@ -404,7 +444,10 @@ public class JsonQ {
         } else if (parts.group(2) != null) {
             collectionForEach(object, (k, v) -> results.add(v));
             sliceList(results, parts.group(2));
+        } else if (parts.group(4) != null) {
+            results.add(valueAtKey(parts.group(6), object));
         }
+
     }
 
     private static <T> void sliceList(List<T> list, @Nullable String sliceNotation) {
@@ -531,7 +574,7 @@ public class JsonQ {
     private Object valueAtKey(String key, Object jsonThing) {
         return jsonThing instanceof Map<?, ?> ? ((Map<?, ?>) jsonThing).get(key)
                 : jsonThing instanceof List && INTEGER.matcher(key).matches() ? ((List<?>) jsonThing).get(Integer.parseInt(key))
-                : jsonThing;
+                : null;
     }
 
     public void forEach(Taker<JsonQ> taker) {
@@ -557,7 +600,6 @@ public class JsonQ {
             }
         } else if (input != null) consumer.take("", input);
     }
-
     public interface Taker<T> { void take(String key, T t);}
     public interface JFunction<S, T> { T apply(S s);}
 

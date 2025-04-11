@@ -42,7 +42,7 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
         actionList = new LinkedHashMap<>();
         context = view.getContext();
         callback = callBack;
-        this.clientType = clientType;
+        AddoVisitInteractorFlv.clientType = clientType;
 
         try {
             //add action here
@@ -352,14 +352,7 @@ public class AddoVisitInteractorFlv implements AddoVisitInteractor.Flavor {
 
         @Override
         public String getPreProcessed() {
-            try {
-                JSONObject dangerSignsFormObject = new JSONObject(dangerSignsForm);
-                return AddoUtils.checkDSPresentProposedMedsAndDispense(dangerSignsFormObject, clientType);
-            } catch (JSONException e) {
-                Timber.e(e);
-            }
-
-            return "";
+            return AddoUtils.checkDSPresentProposedMedsAndDispense(dangerSignsForm, clientType);
         }
 
         @Override

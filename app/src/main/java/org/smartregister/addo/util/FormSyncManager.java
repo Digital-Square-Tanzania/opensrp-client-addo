@@ -2,20 +2,10 @@ package org.smartregister.addo.util;
 
 import android.content.Context;
 
-import java.io.BufferedReader;
 import java.io.File;
 
 import timber.log.Timber;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class FormSyncManager {
@@ -24,7 +14,6 @@ public class FormSyncManager {
     private final File modifiedDates;
     private static long lastTimeFetched = 0;
     private static final long HALF_HOUR = TimeUnit.MINUTES.toMillis(30);
-    private static final List<String> ALLOWED_DOMAINS = Arrays.asList("raw.githubusercontent.com","ucs.nacp.go.tz");
 
     public FormSyncManager(){
         this(org.smartregister.family.util.Utils.context().applicationContext());

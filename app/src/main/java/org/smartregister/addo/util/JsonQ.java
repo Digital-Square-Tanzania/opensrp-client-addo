@@ -105,22 +105,6 @@ public class JsonQ {
         return JsonQ.fromJson(HTTP_CLIENT.get(urlString, headers));
     }
 
-    @NonNull
-    private static HttpURLConnection getHttpURLConnection(Map<String, String> headers, URL url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setConnectTimeout(10000);
-        connection.setReadTimeout(10000);
-
-        Map<String,String> requestHeaders= headers ==null?new HashMap<>(): headers;
-        requestHeaders.put("Accept", "application/json");
-        for (String key: requestHeaders.keySet()) {
-            connection.setRequestProperty(key, requestHeaders.get(key));
-        }
-        connection.connect();
-        return connection;
-    }
-
     public static JsonQ fromPOJO(Object object) {
         return new JsonQ(jsonPrimitive(object) ? object : getObjectRoot(object));
     }

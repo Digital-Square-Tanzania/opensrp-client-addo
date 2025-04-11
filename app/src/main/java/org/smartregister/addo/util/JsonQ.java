@@ -51,6 +51,8 @@ public class JsonQ {
 
     private final Object root;
     private static final Pattern INTEGER = Pattern.compile("^\\d+$");
+
+    private static final SimpleHttpClient HTTP_CLIENT =new SimpleHttpClient();
     private static final Pattern REGULAR_PATH = Pattern.compile("\\w+(?:\\.\\w+)*");
     //    private static final Pattern ARRAY = Pattern.compile("\\[(?:(\\??\\(.+\\))|(-?\\d+:?-?\\d*(?:,-?\\d+:?-?\\d*)*)|(\\*))]");
     private static final Pattern ARRAY = Pattern.compile("\\[(?:(\\??\\(.+\\))|(-?\\d*:?-?\\d*(?:,-?\\d*:?-?\\d*)*)|(\\*)|(([`\"'])(.+?)\\5))]");
@@ -96,26 +98,27 @@ public class JsonQ {
         return new JsonQ(val(stringFromIO(jsonFile)));
     }
 
-    public static JsonQ fromIO(URL url) {
-        return fromIO(url,null);
+    public static JsonQ fromURL(String url) {
+        return fromURL(url,null);
     }
-    public static JsonQ fromIO(URL url, Map<String, String> headers) {
-        try {
-            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setConnectTimeout(10000);
-            connection.setReadTimeout(10000);
+    public static JsonQ fromURL(String urlString, Map<String, String> headers) {
+        return JsonQ.fromJson(HTTP_CLIENT.get(urlString, headers));
+    }
 
-            Map<String,String> requestHeaders=headers==null?new HashMap<>():headers;
-            requestHeaders.put("Accept", "application/json");
-            for (String key: requestHeaders.keySet()) {
-                connection.setRequestProperty(key, headers.get(key));
-            }
-            connection.connect();
-            InputStream inputStream = connection.getInputStream();
-            return JsonQ.fromIO(inputStream);}
-        catch (IOException e) {Timber.e(e);}
-        return new JsonQ("");
+    @NonNull
+    private static HttpURLConnection getHttpURLConnection(Map<String, String> headers, URL url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setConnectTimeout(10000);
+        connection.setReadTimeout(10000);
+
+        Map<String,String> requestHeaders= headers ==null?new HashMap<>(): headers;
+        requestHeaders.put("Accept", "application/json");
+        for (String key: requestHeaders.keySet()) {
+            connection.setRequestProperty(key, requestHeaders.get(key));
+        }
+        connection.connect();
+        return connection;
     }
 
     public static JsonQ fromPOJO(Object object) {

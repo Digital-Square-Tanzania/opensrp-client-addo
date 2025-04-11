@@ -6,6 +6,8 @@ import java.io.File;
 
 import timber.log.Timber;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 public class FormSyncManager {
@@ -14,7 +16,6 @@ public class FormSyncManager {
     private final File modifiedDates;
     private static long lastTimeFetched = 0;
     private static final long HALF_HOUR = TimeUnit.MINUTES.toMillis(30);
-    private final static String BASE_URL = "https://raw.githubusercontent.com/Digital-Square-Tanzania/opensrp-client-addo/refs/heads/online-forms/app/src/main/assets/";
 
     public FormSyncManager(){
         this(org.smartregister.family.util.Utils.context().applicationContext());
@@ -35,10 +36,10 @@ public class FormSyncManager {
         return getForm(formName).toString();
     }
     public JsonQ getForm(String formName){
-        formName = formName + ".json";
-        File formFile = new File(formsDIR,formName);
+        String filename = formName + ".json";
+        File formFile = new File(formsDIR,filename);
 
-        return  formFile.isFile()? JsonQ.fromIO(formFile) : JsonQ.fromAsset(context,getFormsFolderName()+formName);
+        return  formFile.isFile()? JsonQ.fromIO(formFile) : JsonQ.fromAsset(context,getFormsFolderName()+filename);
     }
     private String getFormsFolderName(){
         String locale = context.getResources().getConfiguration().locale.getLanguage();
@@ -57,7 +58,7 @@ public class FormSyncManager {
         int[] updatedFileCount = {0};
 
         JsonQ diskMetaData = JsonQ.fromIO(modifiedDates);
-        JsonQ onlineMetadata = JsonQ.fromURL(BASE_URL + "json_forms_modified_date.json");
+        JsonQ onlineMetadata = JsonQ.fromIO(getURL("json_forms_modified_date.json"));
         onlineMetadata.where("form ~ $ ", dirNamePtn).forEach((k,v) ->{
             String form =v.str("form");
             String date = v.str("modifiedDate");
@@ -66,22 +67,29 @@ public class FormSyncManager {
             boolean outdated = diskMetaData.where("modifiedDate < $ and form=$ ", date, form).hasThings();
             boolean shouldUpdate = !file.exists() || outdated;
             if (shouldUpdate) {
-                String url = BASE_URL + form;
-                updatedFileCount[0] += JsonQ.fromURL(url).toFile(file) ? 1 : 0;
+                URL url = getURL(form);
+                updatedFileCount[0] += JsonQ.fromIO(url).toFile(file) ? 1 : 0;
             }
         });
 
         if(updatedFileCount[0]>0) onlineMetadata.toFile(modifiedDates);
         removeUnusedForms(diskMetaData,onlineMetadata);
     }
+
+    private URL getURL(String path){
+        String BASE_URL = "https://raw.githubusercontent.com/Digital-Square-Tanzania/opensrp-client-addo/refs/heads/online-forms/app/src/main/assets/";
+        try{return new URL(BASE_URL+path);}
+        catch (MalformedURLException e){
+            Timber.e(e);
+            return null;
+        }
+    }
     private void removeUnusedForms(JsonQ oldMeta, JsonQ newMeta){
          oldMeta.forEach((k,v)->{
              String form=v.str("form");
              File file=new File(formsDIR,"../"+form);
-             if(file.exists() && newMeta.where("form=$",form).isEmpty()){
-                if(!file.delete()){
+             if(file.exists() && newMeta.where("form=$",form).isEmpty() && !file.delete()){
                     Timber.w("Could not remove unused  form file %s", file.getName());
-                }
              }
          });
     }

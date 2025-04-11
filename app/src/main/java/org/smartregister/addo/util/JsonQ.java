@@ -50,7 +50,6 @@ public class JsonQ {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     private final Object root;
-
     private static final Pattern INTEGER = Pattern.compile("^\\d+$");
     private static final Pattern REGULAR_PATH = Pattern.compile("\\w+(?:\\.\\w+)*");
     //    private static final Pattern ARRAY = Pattern.compile("\\[(?:(\\??\\(.+\\))|(-?\\d+:?-?\\d*(?:,-?\\d+:?-?\\d*)*)|(\\*))]");
@@ -97,19 +96,19 @@ public class JsonQ {
         return new JsonQ(val(stringFromIO(jsonFile)));
     }
 
-    public static JsonQ fromURL(String urlString) {
-        return fromURL(urlString,null);
+    public static JsonQ fromIO(URL url) {
+        return fromIO(url,null);
     }
-    public static JsonQ fromURL(String urlString, Map<String, String> headers) {
+    public static JsonQ fromIO(URL url, Map<String, String> headers) {
         try {
-            HttpURLConnection connection = (HttpURLConnection)new URL(urlString).openConnection();
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(10000);
             connection.setReadTimeout(10000);
 
-            headers=headers==null?new HashMap<>():headers;
-            headers.put("Accept", "application/json");
-            for (String key: headers.keySet()) {
+            Map<String,String> requestHeaders=headers==null?new HashMap<>():headers;
+            requestHeaders.put("Accept", "application/json");
+            for (String key: requestHeaders.keySet()) {
                 connection.setRequestProperty(key, headers.get(key));
             }
             connection.connect();
@@ -118,7 +117,6 @@ public class JsonQ {
         catch (IOException e) {Timber.e(e);}
         return new JsonQ("");
     }
-
 
     public static JsonQ fromPOJO(Object object) {
         return new JsonQ(jsonPrimitive(object) ? object : getObjectRoot(object));

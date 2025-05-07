@@ -82,7 +82,7 @@
           {
             "key": "client_commodities_dispensed_yes",
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "openmrs_entity_id": "client_commodities_dispensed_yes",
             "text": "{{step1_client_commodities_dispensed_yes}}",
             "text_size": "18px",
             "value": "false"
@@ -90,7 +90,7 @@
           {
             "key": "client_commodities_dispensed_no",
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "openmrs_entity_id": "client_commodities_dispensed_no",
             "text": "{{step1_client_commodities_dispensed_no}}",
             "text_size": "18px",
             "value": "false"
@@ -100,6 +100,303 @@
           "value" : "true",
           "err": "{{step1_client_commodities_dispensed_err}}"
         }
+      },
+      {
+        "key": "what_commodities_dispensed",
+        "type": "label",
+        "text": "{{step1_what_commodities_dispensed}}",
+        "label_text_size": "14sp",
+        "label_text_style": "bold"
+      },
+      {
+        "key": "commodities_dispensed_to_client",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "buttonText": "{{step1_commodities_dispensed_to_client_button_text}}",
+        "dialogTitle": "{{step1_commodities_dispensed_to_client_dialog_title}}",
+        "searchHint": "{{step1_commodities_dispensed_to_client_search_hint}}",
+        "v_required": {
+          "value": true
+        },
+        "options": [
+          {
+            "key": "absorbent_gauze",
+            "text": "Absorbent gauze",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "absorbent_gauze",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "bandage",
+            "text": "Bandage",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "bandage",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "blood_giving_set",
+            "text": "Blood giving set",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "blood_giving_set",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "cannula",
+            "text": "Cannula",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "cannula",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "catheter",
+            "text": "Catheter",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "catheter",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "children_diapers",
+            "text": "Children Diapers",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "children_diapers",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "cotton_wool",
+            "text": "Cotton wool",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "cotton_wool",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "crepe_bandage",
+            "text": "Crepe bandage",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "crepe_bandage",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "examination_gloves",
+            "text": "Examination gloves",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "examination_gloves",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "female_condom",
+            "text": "Female Condom",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "female_condom",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "female_pads",
+            "text": "Female Pads (eg. Always, Softcare)",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "female_pads",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "iv_giving_set",
+            "text": "IV giving set",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "iv_giving_set",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "male_condom",
+            "text": "Male condom",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "male_condom",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "mrdt_kit",
+            "text": "mRDT kit",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "mrdt_kit",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "oral_fluid_hiv_self_test_kit",
+            "text": "Oral fluid HIV self test kit",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "oral_fluid_hiv_self_test_kit",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "plaster",
+            "text": "Plaster",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "plaster",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "scalp_vein",
+            "text": "Scalp Vein",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "scalp_vein",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "surgical_blade",
+            "text": "Surgical blade",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "surgical_blade",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "surgical_gloves",
+            "text": "Surgical gloves",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "surgical_gloves",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "surgical_sutures",
+            "text": "Surgical Sutures",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "surgical_sutures",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "syringes",
+            "text": "Syringes",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "syringes",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "umbilical_cord_clamp",
+            "text": "Umbilical cord clamp",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "umbilical_cord_clamp",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "upt",
+            "text": "UPT",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "upt",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key": "urine_bag",
+            "text": "Urine bag",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "urine_bag",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          },
+          {
+            "key":"other",
+            "text":"{{step1_commodities_dispensed_to_client_other}}",
+            "openmrs_entity_parent":"",
+            "openmrs_entity":"",
+            "openmrs_entity_id":"",
+            "property": {
+              "property1": "err",
+              "property2": "err"
+            }
+          }
+        ],
+        "type": "multi_select_list"
       }
     ]
   }

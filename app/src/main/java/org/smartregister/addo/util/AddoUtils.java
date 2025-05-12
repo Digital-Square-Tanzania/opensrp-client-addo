@@ -41,7 +41,7 @@ public class AddoUtils extends Utils {
 
     private static FormUtils formUtils;
 
-    private static StringBuilder medicationsSelectedString = new StringBuilder();
+    private static StringBuilder medicationsString = new StringBuilder();
 
     public static String checkDSPresentProposedMedsAndDispense(JSONObject form, Constants.FamilyMemberType familyMemberType) throws JSONException{
         String updatedMedicationForm = null;
@@ -462,10 +462,12 @@ public class AddoUtils extends Utils {
 
             JSONObject medicineDispensedFormJsonObject = org.smartregister.family.util.JsonFormUtils.getFieldJSONObject(formFields,"medicine_dispensed");
 
-            addOptionFields(medicationJsonObject, medicineDispensedFormJsonObject);
+            JSONObject commodityDispensedFormJsonObject = org.smartregister.family.util.JsonFormUtils.getFieldJSONObject(formFields,"commodity_dispensed");
+
+            addOptionFields(medicationJsonObject, medicineDispensedFormJsonObject, commodityDispensedFormJsonObject);
 
             JSONObject medicationsSelectedFormJsonObject = org.smartregister.family.util.JsonFormUtils.getFieldJSONObject(formFields,"medications_selected");
-            medicationsSelectedFormJsonObject.put("value", medicationsSelectedString.toString());
+            medicationsSelectedFormJsonObject.put("value", medicationsString.toString());
 
             return medicationForm.toString();
         } catch (Exception e) {
@@ -474,45 +476,62 @@ public class AddoUtils extends Utils {
         return null;
     }
 
-    private static void addOptionFields(JSONObject medicineDispensedJsonObjectValue, JSONObject medicineDispensedObject){
+    private static void addOptionFields(JSONObject medicineDispensedJsonObjectValue, JSONObject medicineDispensedObject, JSONObject commodityDispensedObject){
         try{
             JSONArray options = medicineDispensedObject.getJSONArray("options");
-            String jsonString = "{\n" +
-                    "    \"key\": \"\",\n" +
-                    "    \"text\": \"\",\n" +
-                    "    \"openmrs_entity\": \"\",\n" +
-                    "    \"openmrs_entity_id\": \"\",\n" +
-                    "    \"openmrs_entity_parent\": \"\",\n" +
-                    "    \"property\": {\n" +
-                    "      \"presumed-id\": \"err\",\n" +
-                    "      \"confirmed-id\": \"err\"\n" +
-                    "    }\n" +
-                    "}";
+            JSONArray commodityOptions = commodityDispensedObject.getJSONArray("options");
             JSONArray jsonArray = medicineDispensedJsonObjectValue.getJSONArray("administered_medicines");
 
-            medicationsSelectedString = new StringBuilder();
+            StringBuilder medicationsSelectedString = new StringBuilder();
 
             for(int i = 0; i < jsonArray.length(); i++){
-                JSONObject optionJsonObject = new JSONObject(jsonString);
+
                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
 
                 String nameOptionValue = jsonObject1.getString("name");
                 String idOptionValue = jsonObject1.getString("id");
+                String typeOptionValue = jsonObject1.getString("type");
+                String productTypeOptionValue = jsonObject1.getString("productType");
 
-                // Create the string with <br /> between each medicine name
-                medicationsSelectedString.append("• ").append(nameOptionValue).append("<br />");
+                boolean isCommodity = typeOptionValue.equals("SPECIAL") && !productTypeOptionValue.equals("medicine");
 
-                optionJsonObject.put("key", idOptionValue);
-                optionJsonObject.put("text", nameOptionValue);
-                optionJsonObject.put("openmrs_entity_id", idOptionValue);
+                JSONObject optionObject = createOptionTemplate();
+                optionObject.put("key", idOptionValue);
+                optionObject.put("text", nameOptionValue);
+                optionObject.put("openmrs_entity_id", idOptionValue);
 
-                options.put(optionJsonObject);
+                if (isCommodity) {
+                    commodityOptions.put(optionObject);
+                } else {
+                    options.put(optionObject);
+                    medicationsSelectedString.append("• ").append(nameOptionValue).append("<br />");
+                }
             }
 
             medicineDispensedObject.put("value", options.toString());
+            commodityDispensedObject.put("value", commodityOptions.toString());
+
+            medicationsString = medicationsSelectedString;
+
         }catch (JSONException jsonException){
             Timber.e(jsonException);
         }
+    }
+
+    private static JSONObject createOptionTemplate() throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("key", "");
+        obj.put("text", "");
+        obj.put("openmrs_entity", "");
+        obj.put("openmrs_entity_id", "");
+        obj.put("openmrs_entity_parent", "");
+
+        JSONObject property = new JSONObject();
+        property.put("presumed-id", "err");
+        property.put("confirmed-id", "err");
+        obj.put("property", property);
+
+        return obj;
     }
 
     public static String getPrescriptionNote(String jsonString) {

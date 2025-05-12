@@ -62,6 +62,14 @@
         "options": []
       },
       {
+        "key": "commodity_dispensed",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "commodity_dispensed",
+        "type": "multi_select_list",
+        "options": []
+      },
+      {
         "key": "medications_selected",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",

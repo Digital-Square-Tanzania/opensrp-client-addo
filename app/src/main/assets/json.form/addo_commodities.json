@@ -106,7 +106,14 @@
         "type": "label",
         "text": "{{step1_what_commodities_dispensed}}",
         "label_text_size": "14sp",
-        "label_text_style": "bold"
+        "label_text_style": "bold",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "addo_commodities_relevance.yml"
+            }
+          }
+        }
       },
       {
         "key": "commodities_dispensed_to_client",
@@ -188,9 +195,9 @@
           },
           {
             "key": "cotton_wool",
+            "openmrs_entity": "",
             "text": "Cotton wool",
             "openmrs_entity_parent": "",
-            "openmrs_entity": "",
             "openmrs_entity_id": "cotton_wool",
             "property": {
               "property1": "err",
@@ -396,7 +403,14 @@
             }
           }
         ],
-        "type": "multi_select_list"
+        "type": "multi_select_list",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "addo_commodities_relevance.yml"
+            }
+          }
+        }
       }
     ]
   }

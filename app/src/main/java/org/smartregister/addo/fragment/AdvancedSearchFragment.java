@@ -48,6 +48,10 @@ public class AdvancedSearchFragment extends BaseRegisterFragment implements Adva
     private boolean isLocal = false;
     private boolean listMode = false;
 
+    public AdvancedSearchFragment() {
+        // Required empty public constructor
+    }
+
     public AdvancedSearchFragment(boolean isLocal) {
         this.isLocal = isLocal;
     }

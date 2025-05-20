@@ -139,5 +139,7 @@
     <string name="addo_visit">Tembeleo DLDM</string>
 
     <string name="referrals_linkages"> Rufaa/Miunganisho </string>
+    <string name="medicine_dispensed"> Dawa:  </string>
+    <string name="visit_date">Tarehe: </string>
 
 </resources>

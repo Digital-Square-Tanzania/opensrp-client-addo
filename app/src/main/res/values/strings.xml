@@ -510,5 +510,7 @@
     <string name="addo_visit">Addo Visit</string>
 
     <string name="referrals_linkages"> Referrals/Linkages </string>
+    <string name="medicine_dispensed">Dispensed: </string>
+    <string name="visit_date"> Date: </string>
 
 </resources>

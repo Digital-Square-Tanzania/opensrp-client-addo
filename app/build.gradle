@@ -51,7 +51,7 @@ android {
         buildConfigField "String", 'opensrp_url_staging', '"http://170.187.199.69:8082/opensrp/"'
         //buildConfigField "String", 'opensrp_url_production', '"https://opensrp-dev.d-tree.org/opensrp/"'
         buildConfigField "String", 'opensrp_url_production', '"https://afyatek.smartregister.org/opensrp/"'
-        buildConfigField "String", 'opensrp_url_debug', '"http://170.187.199.69:8082/opensrp/"'
+        buildConfigField "String", 'opensrp_url_debug', '"https://ucs-opensrp-dev.d-tree.org/opensrp/"'
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [liberiaBuild: false, tanzaniaBuild: true]

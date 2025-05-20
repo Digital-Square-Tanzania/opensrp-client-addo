@@ -511,6 +511,6 @@
 
     <string name="referrals_linkages"> Referrals/Linkages </string>
     <string name="medicine_dispensed">Dispensed: </string>
-    <string name="visit_date"> Date: </string>
+    <string name="visit_date">Date:</string>
 
 </resources>

@@ -345,7 +345,10 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                 String eventType = "";
 
                 FamilyFocusedMemberProfileActivity ffmp = (FamilyFocusedMemberProfileActivity) getActivity();
-                assert ffmp != null;
+                if (ffmp == null) {
+                    Timber.w("getActivity() returned null, cannot determine client type.");
+                    return;
+                }
 
                 if (ffmp.isChildClient()){
                     eventType = "Child ADDO Visit";

@@ -213,8 +213,8 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
     @Override
     protected ViewPager setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new AddoVisitFragment(), "Visit Actions"); // Tab 1
-        adapter.addFragment(new HistoryFragment(), "Last Visits "); // Tab 2
+        adapter.addFragment(new AddoVisitFragment(), getString(R.string.tab_visit_actions)); // Tab 1
+        adapter.addFragment(new HistoryFragment(), getString(R.string.tab_last_visits)); // Tab 2
         viewPager.setAdapter(adapter);
         return viewPager;
     }
@@ -330,7 +330,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                 // Optionally, display a message to the user
                 if (visitList != null) {
                     visitList.clear();
-                    visitList.add(new Visit("Error", "Could not load visit history. Client ID missing."));
+                    visitList.add(new Visit(getString(R.string.history_error_title), getString(R.string.error_loading_history_client_id_missing)));
                     if (visitHistoryAdapter != null) {
                         visitHistoryAdapter.notifyDataSetChanged();
                     }
@@ -398,11 +398,11 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                                 }
                             }
                             if (medicineDispensed.length() == 0) {
-                                medicineDispensed.append("Medication Not Dispensed");
+                                medicineDispensed.append(getString(R.string.medication_not_dispensed));
                             }
                             detailsBuilder = medicineDispensed;
                         } else {
-                            detailsBuilder.append("No details available for this visit type: ").append(ancVisit.getVisitType());
+                            detailsBuilder.append(String.format(getString(R.string.no_details_for_visit_type), ancVisit.getVisitType()));
                         }
                         visitList.add(new Visit(visitDate, detailsBuilder.toString()));
                     }
@@ -412,12 +412,12 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
 
             } catch (Exception e) {
                 Timber.e(e, "Error loading visit history using VisitUtils");
-                visitList.add(new Visit("Error", "Failed to load visit history."));
+                visitList.add(new Visit(getString(R.string.history_error_title), getString(R.string.error_loading_history))); // Assuming you have a generic error string R.string.error_loading_history
             }
 
 
             if (visitList.isEmpty()) {
-                visitList.add(new Visit("No Visits", "No previous visits found."));
+                visitList.add(new Visit(getString(R.string.no_visits_title), getString(R.string.no_previous_visits_found)));
             }
 
             if (visitHistoryAdapter != null) {
@@ -427,24 +427,24 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
 
         // Helper method to format date (Example)
         private String formatDate(Date date) {
-            if (date == null) return "Date N/A";
+            if (date == null) return getString(R.string.date_not_available);
             SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault());
             return sdf.format(date);
         }
 
         // Helper method to extract details from an Event (Example - needs customization)
         private String extractDetailsFromEvent(Event event) {
-            if (event == null) return "Details N/A";
+            if (event == null) return getString(R.string.details_not_available);
             // Customize this based on how your visit details are stored in the Event object
             // e.g., from eventType, formSubmissionId, or specific observations (obs)
-            StringBuilder details = new StringBuilder("Visit Type: " + event.getEventType());
+            StringBuilder details = new StringBuilder(String.format(getString(R.string.label_visit_type), event.getEventType()));
             if (event.getObs() != null && !event.getObs().isEmpty()) {
-                details.append("\nObservations: ");
+                details.append(getString(R.string.label_observations));
                 // Iterate through obs and append relevant info
                 // This is highly dependent on your form structure
                 for (Obs obs : event.getObs()) {
                     if (obs.getFormSubmissionField() != null && obs.getHumanReadableValues() != null && !obs.getHumanReadableValues().isEmpty()) {
-                        details.append("\n - ").append(obs.getFormSubmissionField()).append(": ").append(obs.getHumanReadableValues().toString());
+                        details.append(getString(R.string.prefix_observation_item)).append(obs.getFormSubmissionField()).append(getString(R.string.separator_observation_item)).append(obs.getHumanReadableValues().toString());
                     }
                 }
             }
@@ -568,7 +568,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                 } else if (isAdolescentClient()) {
                     startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getAdolescentAddoScreening()), getResources().getString(R.string.danger_signs_title_adolescent), true);
                 } else {
-                    Toast.makeText(this, "You clicked a client that is not in the focused group screening", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.toast_client_not_in_focused_group), Toast.LENGTH_SHORT).show();
                 }
                 break;
 

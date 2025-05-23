@@ -512,5 +512,23 @@
     <string name="referrals_linkages"> Referrals/Linkages </string>
     <string name="medicine_dispensed">Dispensed: </string>
     <string name="visit_date"> Date: </string>
+    <string name="error_loading_history">Error loading visit history</string>
+
+    <!-- Strings for FamilyFocusedMemberProfileActivity -->
+    <string name="tab_visit_actions">Visit Actions</string>
+    <string name="tab_last_visits">Last Visits</string>
+    <string name="history_error_title">Error</string>
+    <string name="error_loading_history_client_id_missing">Failed to load visit history. Client ID is missing.</string>
+    <string name="medication_not_dispensed">Medication Not Dispensed</string>
+    <string name="no_details_for_visit_type">No details available for this visit type: %s</string>
+    <string name="no_visits_title">No Visits</string>
+    <string name="no_previous_visits_found">No previous visits found.</string>
+    <string name="date_not_available">Date Not Available</string>
+    <string name="details_not_available">Details Not Available</string>
+    <string name="label_visit_type">Visit Type: %s</string>
+    <string name="label_observations">\nObservations: </string>
+    <string name="prefix_observation_item">\n - </string>
+    <string name="separator_observation_item">: </string>
+    <string name="toast_client_not_in_focused_group">You have clicked a client that is not in a focused group.</string>
 
 </resources>

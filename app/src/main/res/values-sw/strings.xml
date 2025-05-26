@@ -159,5 +159,4 @@
     <string name="label_observations">\nUchunguzi: </string>
     <string name="prefix_observation_item">\n - </string>
     <string name="separator_observation_item">: </string>
-    <string name="toast_client_not_in_focused_group">Umebofya mteja ambaye hayuko kwenye kundi la uchunguzi.</string>
 </resources>

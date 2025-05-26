@@ -27,6 +27,8 @@ public interface AddoVillageClientsFragmentContract {
 
         void setSelectedVillage(String selectedVillage);
 
+        void setSelectedVillageId(String selectedVillageId);
+
     }
 
     interface Model {

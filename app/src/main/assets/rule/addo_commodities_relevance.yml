@@ -1,0 +1,14 @@
+---
+name: step1_what_commodities_dispensed
+description: What commodities dispensed
+priority: 1
+condition: "step1_client_commodities_dispensed.contains('client_commodities_dispensed_yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_commodities_dispensed_to_client
+description: Commodities dispensed to client
+priority: 1
+condition: "step1_client_commodities_dispensed.contains('client_commodities_dispensed_yes')"
+actions:
+  - "isRelevant = true"

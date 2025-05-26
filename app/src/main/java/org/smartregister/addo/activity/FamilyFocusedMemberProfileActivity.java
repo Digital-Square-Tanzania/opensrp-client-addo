@@ -5,17 +5,27 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -31,12 +41,16 @@ import org.smartregister.addo.dao.AdolescentDao;
 import org.smartregister.addo.dao.AncDao;
 import org.smartregister.addo.dao.FamilyDao;
 import org.smartregister.addo.dao.PNCDao;
+import org.smartregister.addo.dao.VisitDao;
 import org.smartregister.addo.presenter.FamilyFocusedMemberProfileActivityPresenter;
 import org.smartregister.addo.util.ChildDBConstants;
 import org.smartregister.addo.util.CoreConstants;
 import org.smartregister.addo.util.JsonFormUtils;
 import org.smartregister.addo.util.ReferralUtils;
 import org.smartregister.chw.anc.domain.MemberObject;
+import org.smartregister.chw.anc.util.VisitUtils;
+import org.smartregister.clientandeventmodel.Event;
+import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.tag.FormTag;
 import org.smartregister.family.FamilyLibrary;
@@ -57,6 +71,7 @@ import org.smartregister.addo.util.Constants.FamilyMemberType;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -175,7 +190,6 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
 
         CustomFontTextView recordAddoVisit = findViewById(R.id.textview_record_addo_visit);
         recordAddoVisit.setOnClickListener(this);
-
         checkIfVisitTasksDone();
     }
 
@@ -197,7 +211,247 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
 
     @Override
     protected ViewPager setupViewPager(ViewPager viewPager) {
-        return null;
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new AddoVisitFragment(), getString(R.string.tab_visit_actions)); // Tab 1
+        adapter.addFragment(new HistoryFragment(), getString(R.string.tab_last_visits)); // Tab 2
+        viewPager.setAdapter(adapter);
+        return viewPager;
+    }
+
+    public static class AddoVisitFragment extends Fragment {
+        @Override
+        public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.view_record_addo_visit, container, false);
+        }
+
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            //Get an instance of the recorAddoVisit button
+            CustomFontTextView recordAddoVisit = view.findViewById(R.id.textview_record_addo_visit);
+
+            //set onclick listener to the FocusedMemberProfileActivity
+            recordAddoVisit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FamilyFocusedMemberProfileActivity activity = (FamilyFocusedMemberProfileActivity) getActivity();
+                    if (activity != null) {
+                        activity.onClick(v);
+                    }
+                }
+            });
+        }
+    }
+
+    // Define a simple Visit data class
+    private static class Visit {
+        String visitDate;
+        String visitDetails;
+
+        public Visit(String visitDate, String visitDetails) {
+            this.visitDate = visitDate;
+            this.visitDetails = visitDetails;
+        }
+
+        public String getVisitDate() {
+            return visitDate;
+        }
+
+        public String getVisitDetails() {
+            return visitDetails;
+        }
+    }
+
+    // Custom Adapter for Visit History
+    private static class VisitHistoryAdapter extends ArrayAdapter<Visit> {
+        public VisitHistoryAdapter(Context context, List<Visit> visits) {
+            super(context, 0, visits);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            View listItemView = convertView;
+            if (listItemView == null) {
+                listItemView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_visit_history, parent, false);
+            }
+
+            Visit currentVisit = getItem(position);
+
+            TextView visitDateTextView = listItemView.findViewById(R.id.visit_date_textview);
+            TextView visitDetailsTextView = listItemView.findViewById(R.id.visit_details_textview);
+
+            if (currentVisit != null) {
+                visitDateTextView.setText(currentVisit.getVisitDate());
+                visitDetailsTextView.setText(currentVisit.getVisitDetails());
+            }
+
+            return listItemView;
+        }
+    }
+
+    public static class HistoryFragment extends Fragment {
+        private ListView historyListView;
+        private VisitHistoryAdapter visitHistoryAdapter;
+        private List<Visit> visitList;
+        private String baseEntityId; // To store the client's baseEntityId
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            // Get baseEntityId from the activity
+            if (getActivity() instanceof FamilyFocusedMemberProfileActivity) {
+                baseEntityId = ((FamilyFocusedMemberProfileActivity) getActivity()).baseEntityId;
+            }
+        }
+
+        @Override
+        public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.fragment_history, container, false);
+            historyListView = view.findViewById(R.id.history_list_view);
+            visitList = new ArrayList<>();
+            if (getContext() != null) {
+                visitHistoryAdapter = new VisitHistoryAdapter(getContext(), visitList);
+                historyListView.setAdapter(visitHistoryAdapter);
+            }
+            return view;
+        }
+
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            loadVisitHistory();
+        }
+
+        private void loadVisitHistory() {
+            if (baseEntityId == null || getContext() == null) {
+                Timber.w("BaseEntityId or Context is null, cannot load visit history.");
+                // Optionally, display a message to the user
+                if (visitList != null) {
+                    visitList.clear();
+                    visitList.add(new Visit(getString(R.string.history_error_title), getString(R.string.error_loading_history_client_id_missing)));
+                    if (visitHistoryAdapter != null) {
+                        visitHistoryAdapter.notifyDataSetChanged();
+                    }
+                }
+                return;
+            }
+
+            visitList.clear(); // Clear previous data
+
+            try {
+
+                String eventType = "";
+
+                FamilyFocusedMemberProfileActivity ffmp = (FamilyFocusedMemberProfileActivity) getActivity();
+                if (ffmp == null) {
+                    Timber.w("getActivity() returned null, cannot determine client type.");
+                    return;
+                }
+
+                if (ffmp.isChildClient()){
+                    eventType = "Child ADDO Visit";
+                }else if(ffmp.isAncClient()){
+                    eventType = "ANC ADDO Visit";
+                }else if(ffmp.isPncClient()){
+                    eventType = "PNC ADDO Visit";
+                }else if(ffmp.isAdolescentClient()){
+                    eventType = "Adolescent ADDO Visit";
+                }else {
+                    eventType = "Other Member ADDO Visit";
+                }
+
+                // Get the list of visits for the current client using the VisitUtils helper class method
+                List<org.smartregister.chw.anc.domain.Visit> ancVisits = VisitUtils.getVisits(baseEntityId,
+                        eventType
+                );
+
+                if (ancVisits != null && !ancVisits.isEmpty()) {
+                    for (org.smartregister.chw.anc.domain.Visit ancVisit : ancVisits) {
+                        String visitDate = formatDate(ancVisit.getDate());
+                        StringBuilder detailsBuilder = new StringBuilder();
+                        if (ancVisit.getVisitDetails() != null && !ancVisit.getVisitDetails().isEmpty()) {
+
+                            JSONObject visitJson = new JSONObject(ancVisit.getJson());
+                            JSONArray obs  = JsonFormUtils.getJSONArray(visitJson, "obs");
+
+                            /**
+                             *
+                             *  Below implementation is implemented
+                             *  Based on the structure of the json visit event in the src/main/assets/json.form/sample_anc_visit.json
+                             *  add implementation to capture the "formSubmissionField": "medicine_dispensed", value and add that to a
+                             *  comma separated string and use the final value as a visit detail. If the field is not present which will
+                             *  mean the medication were not dispenced set a default value in the visit detail as "Medication Not Dispensed"
+                             */
+                            StringBuilder medicineDispensed = new StringBuilder();
+                            for (int i = 0; i < obs.length(); i++) {
+                                JSONObject jsonObject = obs.getJSONObject(i);
+                                if (jsonObject.has("formSubmissionField") && jsonObject.getString("formSubmissionField").equalsIgnoreCase("medicine_dispensed")) {
+                                    JSONArray medicineArray = jsonObject.getJSONArray("humanReadableValues");
+                                    for (int j = 0; j < medicineArray.length(); j++) {
+                                        String medicine = medicineArray.getString(j);
+                                        if (j == medicineArray.length() - 1) {
+                                            medicineDispensed.append(" - ").append(medicine);
+                                            medicineDispensed.append("\n");
+                                        } else {
+                                            medicineDispensed.append(medicine).append(", ");
+                                        }
+                                    }
+                                }
+                            }
+                            if (medicineDispensed.length() == 0) {
+                                medicineDispensed.append(getString(R.string.medication_not_dispensed));
+                            }
+                            detailsBuilder = medicineDispensed;
+                        } else {
+                            detailsBuilder.append(String.format(getString(R.string.no_details_for_visit_type), ancVisit.getVisitType()));
+                        }
+                        visitList.add(new Visit(visitDate, detailsBuilder.toString()));
+                    }
+                } else {
+                    Timber.d("No visits found for baseEntityId: %s", baseEntityId);
+                }
+
+            } catch (Exception e) {
+                Timber.e(e, "Error loading visit history using VisitUtils");
+                visitList.add(new Visit(getString(R.string.history_error_title), getString(R.string.error_loading_history))); // Assuming you have a generic error string R.string.error_loading_history
+            }
+
+
+            if (visitList.isEmpty()) {
+                visitList.add(new Visit(getString(R.string.no_visits_title), getString(R.string.no_previous_visits_found)));
+            }
+
+            if (visitHistoryAdapter != null) {
+                visitHistoryAdapter.notifyDataSetChanged();
+            }
+        }
+
+        // Helper method to format date (Example)
+        private String formatDate(Date date) {
+            if (date == null) return getString(R.string.date_not_available);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault());
+            return sdf.format(date);
+        }
+
+        // Helper method to extract details from an Event (Example - needs customization)
+        private String extractDetailsFromEvent(Event event) {
+            if (event == null) return getString(R.string.details_not_available);
+            // Customize this based on how your visit details are stored in the Event object
+            // e.g., from eventType, formSubmissionId, or specific observations (obs)
+            StringBuilder details = new StringBuilder(String.format(getString(R.string.label_visit_type), event.getEventType()));
+            if (event.getObs() != null && !event.getObs().isEmpty()) {
+                details.append(getString(R.string.label_observations));
+                // Iterate through obs and append relevant info
+                // This is highly dependent on your form structure
+                for (Obs obs : event.getObs()) {
+                    if (obs.getFormSubmissionField() != null && obs.getHumanReadableValues() != null && !obs.getHumanReadableValues().isEmpty()) {
+                        details.append(getString(R.string.prefix_observation_item)).append(obs.getFormSubmissionField()).append(getString(R.string.separator_observation_item)).append(obs.getHumanReadableValues().toString());
+                    }
+                }
+            }
+            return details.toString();
+        }
     }
 
     @Override
@@ -316,7 +570,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                 } else if (isAdolescentClient()) {
                     startFormActivity(getFormUtils().getFormJson(CoreConstants.JSON_FORM.getAdolescentAddoScreening()), getResources().getString(R.string.danger_signs_title_adolescent), true);
                 } else {
-                    Toast.makeText(this, "You clicked a client that is not in the focused group screening", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.toast_client_not_in_focused_group), Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -355,20 +609,20 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean isChildClient() {
+    public boolean isChildClient() {
         String entityType = Utils.getValue(commonPersonObject.getColumnmaps(), ChildDBConstants.KEY.ENTITY_TYPE, false);
         return entityType.equals(org.smartregister.addo.util.Constants.TABLE_NAME.CHILD);
     }
 
-    private boolean isAncClient() {
+    public boolean isAncClient() {
         return AncDao.isANCMember(baseEntityId);
     }
 
-    private boolean isPncClient() {
+    public boolean isPncClient() {
         return PNCDao.isPNCMember(baseEntityId);
     }
 
-    private boolean isAdolescentClient() {
+    public boolean isAdolescentClient() {
         return AdolescentDao.isAdolescentMember(baseEntityId);
     }
 
@@ -836,3 +1090,5 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
     }
 
 }
+
+

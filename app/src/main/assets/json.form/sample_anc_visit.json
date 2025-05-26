@@ -1,0 +1,317 @@
+{
+  "baseEntityId": "4456b2e4-0bfc-426e-b6ac-c66d1ea57957",
+  "entityType": "ec_anc_register",
+  "eventDate": "2024-09-18T15:58:07.000+03:00",
+  "eventType": "ANC ADDO Visit",
+  "formSubmissionId": "a96b7713-e8d6-40c6-a5d8-4c17da9b7e12",
+  "locationId": "43e1f105-1e61-4271-865a-b86ac7cd0815",
+  "obs": [
+    {
+      "fieldCode": "1648AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "fieldDataType": "text",
+      "fieldType": "concept",
+      "formSubmissionField": "chw_link",
+      "humanReadableValues": [
+        "Yes"
+      ],
+      "parentCode": "1648AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "values": [
+        "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ]
+    },
+    {
+      "fieldCode": "163748AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "fieldDataType": "text",
+      "fieldType": "concept",
+      "formSubmissionField": "pregnant_woman_present",
+      "humanReadableValues": [
+        "Yes"
+      ],
+      "parentCode": "163748AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "values": [
+        "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ]
+    },
+    {
+      "fieldCode": "160939AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "fieldDataType": "text",
+      "fieldType": "concept",
+      "formSubmissionField": "danger_signs_present",
+      "humanReadableValues": [
+        "Blurred vision"
+      ],
+      "parentCode": "160939AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "values": [
+        "147104AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ]
+    },
+    {
+      "fieldCode": "160939AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "fieldDataType": "text",
+      "fieldType": "concept",
+      "formSubmissionField": "danger_signs_present",
+      "humanReadableValues": [
+        "Severe abdominal pain"
+      ],
+      "parentCode": "160939AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "values": [
+        "165271AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ]
+    },
+    {
+      "fieldCode": "160939AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "fieldDataType": "text",
+      "fieldType": "concept",
+      "formSubmissionField": "danger_signs_present",
+      "humanReadableValues": [
+        "Swelling of the hands, face, and\/or legs"
+      ],
+      "parentCode": "160939AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "values": [
+        "460AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ]
+    },
+    {
+      "fieldCode": "danger_signs_captured",
+      "fieldDataType": "text",
+      "fieldType": "formsubmissionField",
+      "formSubmissionField": "danger_signs_captured",
+      "humanReadableValues": [
+
+      ],
+      "parentCode": "",
+      "values": [
+        "• Blurred vision &lt;br \/&gt;• Severe abdominal pain &lt;br \/&gt;• Swelling of the hands, face, and\/or legs &lt;br&gt;"
+      ]
+    },
+    {
+      "fieldCode": "minor_illness_captured",
+      "fieldDataType": "text",
+      "fieldType": "formsubmissionField",
+      "formSubmissionField": "minor_illness_captured",
+      "humanReadableValues": [
+
+      ],
+      "parentCode": "",
+      "values": [
+        "0"
+      ]
+    },
+    {
+      "fieldCode": "asterisk_symbol",
+      "fieldDataType": "text",
+      "fieldType": "formsubmissionField",
+      "formSubmissionField": "asterisk_symbol",
+      "humanReadableValues": [
+
+      ],
+      "parentCode": "",
+      "values": [
+        "&lt;br \/&gt;&lt;br \/&gt;Note: Questions with asterisk are required (&lt;font color=red&gt;*&lt;\/font&gt;)"
+      ]
+    },
+    {
+      "fieldCode": "chw_referral_hf",
+      "fieldDataType": "text",
+      "fieldType": "concept",
+      "formSubmissionField": "chw_referral_hf",
+      "humanReadableValues": [
+        "Mlandizi-Mlandizi HF"
+      ],
+      "parentCode": "chw_referral_hf",
+      "values": [
+        "1b86b57b-b9bd-4ce2-bc7f-cc14babfe072"
+      ]
+    },
+    {
+      "fieldCode": "referral_appointment_date",
+      "fieldDataType": "date",
+      "fieldType": "concept",
+      "formSubmissionField": "referral_appointment_date",
+      "humanReadableValues": [
+
+      ],
+      "parentCode": "",
+      "values": [
+        "18-09-2024"
+      ]
+    },
+    {
+      "fieldCode": "165310AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "fieldDataType": "text",
+      "fieldType": "concept",
+      "formSubmissionField": "save_n_refer",
+      "humanReadableValues": [
+
+      ],
+      "parentCode": "",
+      "values": [
+        "true"
+      ]
+    },
+    {
+      "fieldCode": "163748AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "fieldDataType": "text",
+      "fieldType": "concept",
+      "formSubmissionField": "client_commodities_dispensed",
+      "humanReadableValues": [
+        "Yes"
+      ],
+      "parentCode": "163748AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "values": [
+        "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ]
+    },
+    {
+      "fieldCode": "danger_signs_captured",
+      "fieldDataType": "text",
+      "fieldType": "formsubmissionField",
+      "formSubmissionField": "danger_signs_captured",
+      "humanReadableValues": [
+
+      ],
+      "parentCode": "",
+      "values": [
+        "&lt;br \/&gt; ◻ Blurred vision&lt;br \/&gt; ◻ Severe abdominal pain&lt;br \/&gt; ◻ Swelling of the hands, face, and\/or legs&lt;br \/&gt;"
+      ]
+    },
+    {
+      "fieldCode": "referral_status",
+      "fieldDataType": "text",
+      "fieldType": "formsubmissionField",
+      "formSubmissionField": "referral_status",
+      "humanReadableValues": [
+
+      ],
+      "parentCode": "",
+      "values": [
+        "referred"
+      ]
+    },
+    {
+      "fieldCode": "addo_medication_to_give",
+      "fieldDataType": "text",
+      "fieldType": "formsubmissionField",
+      "formSubmissionField": "addo_medication_to_give",
+      "humanReadableValues": [
+
+      ],
+      "parentCode": "",
+      "values": [
+        "Manage as needed"
+      ]
+    },
+    {
+      "comments": "",
+      "fieldCode": "",
+      "fieldDataType": "text",
+      "fieldType": "",
+      "formSubmissionField": "medicine_dispensed",
+      "humanReadableValues": [
+        "Artemeher+ Lumefantrine tablets\/ACT"
+      ],
+      "parentCode": "",
+      "values": [
+        ""
+      ]
+    },
+    {
+      "comments": "",
+      "fieldCode": "",
+      "fieldDataType": "text",
+      "fieldType": "",
+      "formSubmissionField": "medicine_dispensed",
+      "humanReadableValues": [
+        "Clotrimazole vaginal cream"
+      ],
+      "parentCode": "",
+      "values": [
+        ""
+      ]
+    },
+    {
+      "fieldCode": "",
+      "fieldDataType": "text",
+      "fieldType": "concept",
+      "formSubmissionField": "medications_selected",
+      "humanReadableValues": [
+
+      ],
+      "parentCode": "",
+      "values": [
+        "• Artemeher+ Lumefantrine tablets\/ACT&lt;br \/&gt;• Clotrimazole vaginal cream&lt;br \/&gt;"
+      ]
+    },
+    {
+      "fieldCode": "asterisk_symbol",
+      "fieldDataType": "text",
+      "fieldType": "formsubmissionField",
+      "formSubmissionField": "asterisk_symbol",
+      "humanReadableValues": [
+
+      ],
+      "parentCode": "",
+      "values": [
+        "&lt;br \/&gt;&lt;br \/&gt;Note: Questions with asterisk are required (&lt;font color=red&gt;*&lt;\/font&gt;)"
+      ]
+    },
+    {
+      "fieldCode": "165310AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "fieldDataType": "text",
+      "fieldType": "concept",
+      "formSubmissionField": "save",
+      "humanReadableValues": [
+
+      ],
+      "parentCode": "",
+      "values": [
+        "true"
+      ]
+    },
+    {
+      "fieldCode": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "fieldDataType": "start",
+      "fieldType": "concept",
+      "formSubmissionField": "start",
+      "humanReadableValues": [
+
+      ],
+      "parentCode": "",
+      "values": [
+        "2024-09-18 12:51:35"
+      ]
+    },
+    {
+      "fieldCode": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "fieldDataType": "end",
+      "fieldType": "concept",
+      "formSubmissionField": "end",
+      "humanReadableValues": [
+
+      ],
+      "parentCode": "",
+      "values": [
+        "2024-09-18 12:54:11"
+      ]
+    },
+    {
+      "fieldCode": "addo_visit_encounter_date",
+      "fieldDataType": "text",
+      "fieldType": "concept",
+      "formSubmissionField": "addo_visit_encounter_date",
+      "humanReadableValues": [
+
+      ],
+      "parentCode": "",
+      "values": [
+        "18-09-2024"
+      ]
+    }
+  ],
+  "providerId": "mhandeaddo",
+  "version": 1726653487579,
+  "clientApplicationVersion": 25,
+  "clientDatabaseVersion": 11,
+  "dateCreated": "2024-09-25T18:14:40.017+03:00",
+  "serverVersion": 1095
+}

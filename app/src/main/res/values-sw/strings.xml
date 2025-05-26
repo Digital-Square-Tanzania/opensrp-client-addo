@@ -139,5 +139,25 @@
     <string name="addo_visit">Tembeleo DLDM</string>
 
     <string name="referrals_linkages"> Rufaa/Miunganisho </string>
+    <string name="medicine_dispensed"> Dawa:  </string>
+    <string name="visit_date">Tarehe: </string>
+    <string name="toast_client_not_in_focused_group">Umebofya mteja ambaye hayuko kwenye kundi la uchunguzi.</string>
+    <string name="error_loading_history">Hitilafu wakati wa kupakia historia ya ziara</string>
 
+    <!-- Strings for FamilyFocusedMemberProfileActivity -->
+    <string name="tab_visit_actions">Hatua za Ziara</string>
+    <string name="tab_last_visits">Ziara Zilizopita</string>
+    <string name="history_error_title">Hitilafu</string>
+    <string name="error_loading_history_client_id_missing">Imeshindwa kupakia historia ya ziara. Kitambulisho cha mteja hakipo.</string>
+    <string name="medication_not_dispensed">Dawa Hazikutolewa</string>
+    <string name="no_details_for_visit_type">Hakuna maelezo yanayopatikana kwa aina hii ya ziara: %s</string>
+    <string name="no_visits_title">Hakuna Ziara</string>
+    <string name="no_previous_visits_found">Hakuna ziara za awali zilizopatikana.</string>
+    <string name="date_not_available">Tarehe Haipatikani</string>
+    <string name="details_not_available">Maelezo Hayapatikani</string>
+    <string name="label_visit_type">Aina ya Ziara: %s</string>
+    <string name="label_observations">\nUchunguzi: </string>
+    <string name="prefix_observation_item">\n - </string>
+    <string name="separator_observation_item">: </string>
+    <string name="toast_client_not_in_focused_group">Umebofya mteja ambaye hayuko kwenye kundi la uchunguzi.</string>
 </resources>

@@ -201,22 +201,27 @@
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabs"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/other_member_profile_bg"
-                android:visibility="gone"
                 app:tabGravity="fill"
                 app:tabIndicatorColor="#E2E363"
-                app:tabIndicatorHeight="0dp"
-                app:tabMaxWidth="0dp"
                 app:tabMode="fixed"
-                app:tabSelectedTextColor="@color/text_black"
+                app:tabTextColor="@color/colorBlack"
+                app:tabSelectedTextColor="@color/addo_primary"
                 app:tabTextAppearance="@style/CustomFontTextViewStyle.tabIndicator.sub.white" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
         <include android:id="@+id/action_items_focused_member"
             layout="@layout/view_record_addo_visit"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

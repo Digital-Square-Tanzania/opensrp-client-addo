@@ -103,7 +103,6 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
     private ImageView commoditiesCheckView;
     private ImageView dispenseDoneCheckView;
     private CustomFontTextView ctvScreeningMed, ctvCommodities, ctvDispense;
-    private CustomFontTextView recordAddoVisit;
     private ProgressBar progressBar;
     private View familyHeadView;
     private View primaryCaregiverView;
@@ -189,7 +188,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         progressBar.setVisibility(View.GONE);
         ctvDispense.setOnClickListener(this);
 
-        recordAddoVisit = findViewById(R.id.textview_record_addo_visit);
+        CustomFontTextView recordAddoVisit = findViewById(R.id.textview_record_addo_visit);
         recordAddoVisit.setOnClickListener(this);
         checkIfVisitTasksDone();
     }

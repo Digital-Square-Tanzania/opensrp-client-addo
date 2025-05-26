@@ -37,7 +37,6 @@ public class AddoUtils extends Utils {
             // Check if the focused group client is present or not; if not skip to dispensing
             if (isClientPresent(form)) {
                 String dangerSigns;
-                String suggestedMeds;
 
                 JSONObject step2 = form.getJSONObject(JsonFormUtils.STEP2);
                 JSONArray step2Fields = step2.getJSONArray(JsonFormUtils.FIELDS);

@@ -45,7 +45,6 @@ public class AddoVillageClientsProvider implements RecyclerViewProvider<AddoVill
     private final View.OnClickListener paginationClickListener;
     private final Context context;
     private final Set<org.smartregister.configurableviews.model.View> visibleColumns;
-    private final String villageSelected;
 
     public AddoVillageClientsProvider(Context context, View.OnClickListener paginationClickListener, View.OnClickListener onClickListener,
                                       Set<org.smartregister.configurableviews.model.View> visibleColumns, String villageSelected) {
@@ -54,7 +53,6 @@ public class AddoVillageClientsProvider implements RecyclerViewProvider<AddoVill
         this.paginationClickListener = paginationClickListener;
         this.context = context;
         this.visibleColumns = visibleColumns;
-        this.villageSelected = villageSelected;
     }
 
     @Override

@@ -174,8 +174,8 @@ android {
             buildConfigField "String", 'opensrp_url_debug', '"http://170.187.199.69:8082/opensrp/"'
             buildConfigField "String", 'opensrp_url_staging', '"http://http://170.187.199.69:8082/opensrp/"'
             buildConfigField "String[]", "LOCATION_HIERACHY", '{"Country","Region","District","Ward" , "MOH Jhpiego Facility Name", "Health Facility", "Village", "Village Sublocations"}'
-            buildConfigField "String[]", "ALLOWED_LOCATION_LEVELS", '{"Ward" , "Facility", "Health Facility", "Village", "Village Sublocations"}'
-            buildConfigField "String[]", "ALLOWED_LOCATION_LEVELS_DEBUG", '{"Ward", "Facility", "Health Facility", "Village", "Village Sublocations"}'
+            buildConfigField "String[]", "ALLOWED_LOCATION_LEVELS", '{"Village"}'
+            buildConfigField "String[]", "ALLOWED_LOCATION_LEVELS_DEBUG", '{"Village"}'
             buildConfigField "String", 'DEFAULT_LOCATION', '"Village Sublocations"'
             buildConfigField "String", 'DEFAULT_LOCATION_DEBUG', '"Village"'
             buildConfigField "long", "MAPBOX_DOWNLOAD_TILE_LIMIT", "6001"

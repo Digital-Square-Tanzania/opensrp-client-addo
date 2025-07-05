@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.0.4] - 2025-07-3
+### Fixed
+- Fixed location level listing facility
+
 ## [v1.0.3] - 2025-06-13
 ### Added
 - Medication history feature the focus group clients

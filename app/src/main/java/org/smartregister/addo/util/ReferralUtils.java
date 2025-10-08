@@ -41,7 +41,13 @@ public class ReferralUtils {
         task.setBusinessStatus(CoreConstants.BUSINESS_STATUS.REFERRED);
         task.setPriority(3);
         task.setCode(CoreConstants.JsonAssets.REFERRAL_CODE);
-        task.setDescription(referralProblems);
+
+        if (focus.equalsIgnoreCase("Diabetes And Hypertension Testing")) {
+            task.setDescription("Risk for diabetes and hypertension");
+        } else {
+            task.setDescription(referralProblems);
+        }
+
         task.setFocus(focus);
         task.setForEntity(baseEntityId);
         DateTime now = new DateTime();

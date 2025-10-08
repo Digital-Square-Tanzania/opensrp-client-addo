@@ -1,0 +1,690 @@
+{
+
+  "properties_file_name": "addo_diabetes_hypertension_screening",
+  "count": "4",
+  "encounter_type": "Diabetes and Hypertension Screening",
+  "skip_blank_steps": true,
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "global": {},
+  "step1": {
+    "title": "{{step1_title}}",
+    "next": "step2",
+    "fields": [
+      {
+        "key": "consent_message",
+        "type": "toaster_notes",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "text": "{{step1_consent_message}}",
+        "toaster_type": "info",
+        "text_color": "#1199F9"
+      },
+      {
+        "key": "agree_with_screening_procedure",
+        "type": "spinner",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "agree_with_screening_procedure",
+        "openmrs_data_type": "select one",
+        "hint": "{{step1_agree_with_screening_procedure_hint}}",
+        "values": [
+          "Yes",
+          "No"
+        ],
+        "openmrs_choice_ids": {
+          "Yes": "Yes",
+          "No": "No"
+        },
+        "v_required": {
+          "value": true,
+          "err": "{{step1_agree_with_screening_procedure_hint_err}}"
+        }
+      },
+      {
+        "key": "reasons_for_declining",
+        "type": "check_box",
+        "label": "{{step1_reasons_for_declining_label}}",
+        "combine_checkbox_option_values": "true",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "reasons_for_declining",
+        "openmrs_entity_parent": "",
+        "exclusive": [],
+        "options": [
+          {
+            "key": "not_well",
+            "text": "{{step1_reasons_for_declining_key_not_well}}",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "not_well"
+          },
+          {
+            "key": "in_hurry",
+            "text": "{{step1_reasons_for_declining_key_in_hurry}}",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "in_hurry"
+          },
+          {
+            "key": "need_permission",
+            "text": "{{step1_reasons_for_declining_key_need_permission}}",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "need_permission"
+          },
+          {
+            "key": "privacy_trust",
+            "text": "{{step1_reasons_for_declining_key_privacy_trust}}",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "privacy_trust"
+          },
+          {
+            "key": "lack_trust_chw",
+            "text": "{{step1_reasons_for_declining_key_lack_trust_chw}}",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "lack_trust_chw"
+          },
+          {
+            "key": "feel_healthy",
+            "text": "{{step1_reasons_for_declining_key_feel_healthy}}",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "feel_healthy"
+          },
+          {
+            "key": "confusion_process",
+            "text": "{{step1_reasons_for_declining_key_confusion_process}}",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "confusion_process"
+          },
+          {
+            "key": "fear_anxiety",
+            "text": "{{step1_reasons_for_declining_key_fear_anxiety}}",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "fear_anxiety"
+          },
+          {
+            "key": "fear_referral",
+            "text": "{{step1_reasons_for_declining_key_fear_referral}}",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "fear_referral"
+          },
+          {
+            "key": "religious_reasons",
+            "text": "{{step1_reasons_for_declining_key_religious_reasons}}",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "religious_reasons"
+          },
+          {
+            "key": "fear_technology",
+            "text": "{{step1_reasons_for_declining_key_fear_technology}}",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "fear_technology"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "{{step1_reasons_for_declining_options_err}}"
+        },
+        "relevance": {
+          "step1:agree_with_screening_procedure": {
+            "type": "string",
+            "ex": "equalTo(., \"No\")"
+          }
+        }
+      }
+    ]
+  },
+  "step2": {
+    "title": "{{step2_title}}",
+    "next": "step3",
+    "fields": [
+      {
+        "key": "diagnosed_diabetes",
+        "type": "spinner",
+        "hint": "{{step2_diagnosed_diabetes_hint}}",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "{diagnosed_diabetes}",
+        "values": ["Yes", "No"],
+        "openmrs_choice_ids": {
+          "Yes": "Yes",
+          "No": "No"
+        },
+        "v_required": {
+          "value": true,
+          "err": "{{step2_diagnosed_diabetes_hint_err}}"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "medicines_diabetes",
+        "type": "spinner",
+        "hint": "Are you taking medicines for diabetes?",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "medicines_diabetes",
+        "values": ["Yes", "No"],
+        "openmrs_choice_ids": {
+          "Yes": "Yes",
+          "No": "No"
+        },
+        "v_required": {
+          "value": true,
+          "err": "{{step2_medicines_diabetes_hint_err}}"
+        },
+        "relevance": {
+          "step1:agree_with_screening_procedure": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "medicines_hypertension",
+        "type": "spinner",
+        "hint": "{{step2_medicines_diabetes_hint}}",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "medicines_hypertension",
+        "values": ["Yes", "No"],
+        "openmrs_choice_ids": {
+          "Yes": "Yes",
+          "No": "No"
+        },
+        "v_required": {
+          "value": true,
+          "err": "{{step2_medicines_diabetes_hint_err}}"
+        },
+        "relevance": {
+          "step1:agree_with_screening_procedure": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "screened_hypertension_last_12m",
+        "type": "spinner",
+        "hint": "{{step2_screened_hypertension_12m_hint}}",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "screened_hypertension_last_12m",
+        "values": ["Yes", "No"],
+        "openmrs_choice_ids": {
+          "Yes": "Yes",
+          "No": "No"
+        },
+        "v_required": {
+          "value": true,
+          "err": "{{step2_screened_hypertension_12m_hint_err}}"
+        },
+        "relevance": {
+          "step1:agree_with_screening_procedure": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "routine_clinic_visits",
+        "type": "spinner",
+        "hint": "{{step2_routine_clinic_visits_hint}}",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "routine_clinic_visits",
+        "values": ["Yes", "No"],
+        "openmrs_choice_ids": {
+          "Yes": "Yes",
+          "No": "No"
+        },
+        "v_required": {
+          "value": true,
+          "err": "{{step2_routine_clinic_visits_hint_err}}"
+        },
+        "relevance": {
+          "step1:agree_with_screening_procedure": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      }
+    ]
+  },
+  "step3": {
+    "title": "{{step3_title}}",
+    "next": "step4",
+    "fields": [
+      {
+        "key": "age",
+        "type": "hidden",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "age",
+        "openmrs_entity_parent": ""
+      },
+      {
+        "key": "family_history_diabetes",
+        "type": "spinner",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "family_history_diabetes",
+        "openmrs_data_type": "select one",
+        "hint": "{{step3_family_history_diabetes_hint}}",
+        "values": [
+          "Yes",
+          "No"
+        ],
+        "openmrs_choice_ids": {
+          "Yes": "Yes",
+          "No": "No"
+        },
+        "v_required": {
+          "value": true,
+          "err": "{{step3_family_history_diabetes_hint_err}}"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "waist_circumference",
+        "type": "edit_text",
+        "hint": "{{step3_waist_circumference_hint}}",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "waist_circumference",
+        "openmrs_entity_parent": "",
+        "v_numeric": {
+          "value": "true",
+          "err": "Please Number"
+        },
+        "v_min": {
+          "value": "30",
+          "err": "{{step3_waist_circumference_30_err}}"
+        },
+        "v_max": {
+          "value": "300",
+          "err": "{{step3_waist_circumference_300_err}}"
+        },
+        "v_required": {
+          "value": true,
+          "err": "{{step3_waist_circumference_hint_err}}"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "systolic_bp",
+        "type": "edit_text",
+        "hint": "{{step3_systolic_bp_hint}}",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "systolic_bp",
+        "openmrs_entity_parent": "",
+        "v_numeric": {
+          "value": "true",
+          "err": "Please enter Number value"
+        },
+        "v_min": {
+          "value": "50",
+          "err": "{{step3_diastolic_bp_50_err}}"
+        },
+        "v_max": {
+          "value": "320",
+          "err": "{{step3_diastolic_bp_320_err}}"
+        },
+        "v_required": {
+          "value": true,
+          "err": "{{step3_systolic_bp_hint_err}}"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "diastolic_bp",
+        "type": "edit_text",
+        "hint": "{{step3_diastolic_bp_hint}}",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "diastolic_bp",
+        "openmrs_entity_parent": "",
+        "v_numeric": {
+          "value": "true",
+          "err": "Please enter Number value"
+        },
+        "v_min": {
+          "value": "30",
+          "err": "{{step3_diastolic_bp_30_err}}"
+        },
+        "v_max": {
+          "value": "200",
+          "err": "{{step3_diastolic_bp_200_err}}"
+        },
+        "v_required": {
+          "value": true,
+          "err": "{{step3_diastolic_bp_hint_err}}"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "step4": {
+    "title": "{{step_4_title}}",
+    "fields": [
+      {
+        "key": "diabetes_risk_score_output",
+        "type": "edit_text",
+        "hint": "{{step4_diabetes_risk_score_output}}",
+        "read_only": true,
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "diabetes_risk_score_output",
+        "openmrs_entity_parent": "",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_calculation.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "risk_present_toaster",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "{{step4_risk_present_toaster_text}}",
+        "text_color": "#000000",
+        "toaster_type": "problem",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_calculation.yml"
+            }
+          }
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "client_refused_assessment",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "{{step4_client_refused_assessment_text}}",
+        "text_color": "#000000",
+        "toaster_type": "warning",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_calculation.yml"
+            }
+          }
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "prescreening_client_has_condition_toaster",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "{{step4_prescreening_client_has_condition_toaster_text}}",
+        "text_color": "#000000",
+        "toaster_type": "info",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_calculation.yml"
+            }
+          }
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "no_risk_present_toaster",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "{{step4_no_risk_present_toaster}}",
+        "text_color": "#000000",
+        "toaster_type": "positive",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "service_before_referral",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "service_before_referral",
+        "type": "check_box",
+        "label": "{{step4_service_before_referral}}",
+        "label_text_style": "normal",
+        "text_color": "#C0C0C0",
+        "combine_checkbox_option_values": "true",
+        "exclusive": [
+          "chk_none"
+        ],
+        "options": [
+          {
+            "key": "ors",
+            "text": "{{step4_service_before_referral_given_ORS}}",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "ors",
+            "openmrs_entity_parent": ""
+          },
+          {
+            "key": "panadol",
+            "text": "{{step4_service_before_referral_given_Panadol}}",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "panadol",
+            "openmrs_entity_parent": ""
+          },
+          {
+            "key": "other_treatment",
+            "text": "{{step4_service_before_referral_given_Other_treatment}}",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "other_treatment",
+            "openmrs_entity_parent": ""
+          },
+          {
+            "key": "chk_none",
+            "text": "{{step4_service_before_referral_given_chk_none}}",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "chk_none",
+            "openmrs_entity_parent": ""
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Please select one"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "chw_referral_hf",
+        "type": "spinner",
+        "searchable": true,
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "chw_referral_hf",
+        "openmrs_data_type": "select one",
+        "openmrs_entity_parent": "",
+        "hint": "{{step4_chw_referral_hf_hint}}",
+        "exclusive": [],
+        "options": [],
+        "v_required": {
+          "value": "true",
+          "err": "Please select one"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "referral_appointment_date",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "referral_appointment_date",
+        "type": "date_picker",
+        "hint": "{{step4_referral_appointment_date_hint}}",
+        "expanded": false,
+        "min_date": "today",
+        "max_date": "today+30d",
+        "v_required": {
+          "value": "true",
+          "err": "{{step4_referral_appointment_date_err}}"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "spacer",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "spacer",
+        "type": "spacer",
+        "spacer_height": "20dp"
+      },
+      {
+        "key": "save_n_refer",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "save_n_refer",
+        "type": "button",
+        "hint": "{{step4_save_n_refer}}",
+        "btn_bg_color": "#FF840952",
+        "action": {
+          "behaviour": "finish_form"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "save",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "save",
+        "type": "button",
+        "hint": "{{step4_save}}",
+        "btn_bg_color": "#3596c0",
+        "action": {
+          "behaviour": "finish_form"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

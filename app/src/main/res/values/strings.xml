@@ -531,4 +531,6 @@
     <string name="separator_observation_item">: </string>
     <string name="toast_client_not_in_focused_group">You have clicked a client that is not in a focused group.</string>
 
+    <!-- String for NCD Screening -->
+    <string name="diabetes_and_hypertension_screening_form_title">Diabetes &amp; Hypertension Screening</string>
 </resources>

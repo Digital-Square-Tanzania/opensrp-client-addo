@@ -4,29 +4,41 @@ import android.app.Activity;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.tuple.Triple;
+import org.joda.time.DateTime;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.addo.R;
-import org.smartregister.addo.contract.FamilyFocusedMemberProfileContract;
+import org.smartregister.addo.application.AddoApplication;
 import org.smartregister.addo.contract.FamilyOtherMemberProfileExtendedContract;
 import org.smartregister.addo.contract.FamilyProfileExtendedContract;
-import org.smartregister.addo.interactor.FamilyFocusedMemberProfileInteractor;
 import org.smartregister.addo.interactor.FamilyOtherMemberProfileInteractor;
 import org.smartregister.addo.interactor.FamilyProfileInteractor;
 import org.smartregister.addo.model.FamilyProfileModel;
+import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.tag.FormTag;
 import org.smartregister.family.contract.FamilyOtherMemberContract;
 import org.smartregister.family.contract.FamilyProfileContract;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.presenter.BaseFamilyOtherMemberProfileActivityPresenter;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
+import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.sync.helper.ECSyncHelper;
+import org.smartregister.util.DateTimeTypeConverter;
 
 import java.lang.ref.WeakReference;
 import java.text.MessageFormat;
 import java.util.Map;
+import java.util.UUID;
 
 import timber.log.Timber;
 
 import static org.smartregister.util.Utils.getName;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class FamilyOtherMemberActivityPresenter extends BaseFamilyOtherMemberProfileActivityPresenter
         implements FamilyOtherMemberProfileExtendedContract.Presenter,
@@ -42,6 +54,9 @@ public class FamilyOtherMemberActivityPresenter extends BaseFamilyOtherMemberPro
     private FamilyProfileContract.Interactor profileInteractor;
     private FamilyProfileContract.Model profileModel;
     private FamilyOtherMemberProfileInteractor interactor;
+
+    public static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
 
     public FamilyOtherMemberActivityPresenter(FamilyOtherMemberProfileExtendedContract.View view, FamilyOtherMemberContract.Model model,
                                               String viewConfigurationIdentifier, String familyBaseEntityId, String baseEntityId,
@@ -72,6 +87,40 @@ public class FamilyOtherMemberActivityPresenter extends BaseFamilyOtherMemberPro
         if (viewReference.get() != null) {
             viewReference.get().showProgressDialog(R.string.submit);
             interactor.submitVisit(false, baseEntityId, formForSubmission, this);
+        }
+    }
+
+
+    @Override
+    public void submitReferralEvent(String baseEntityId, JSONArray jsonArray, FormTag formTag) {
+        try{
+            final ECSyncHelper syncHelper = AddoApplication.getInstance().getEcSyncHelper();
+            JSONObject metadata= new JSONObject();
+            Event event = org.smartregister.util.JsonFormUtils.createEvent(jsonArray, metadata, formTag, baseEntityId,"Referral Registration","ec_referral");
+            event.setEventId(UUID.randomUUID().toString());
+            JSONObject eventJson = new JSONObject(gson.toJson(event));
+            Timber.e("%S", eventJson);
+            syncHelper.addEvent(baseEntityId, eventJson);
+        }catch (JSONException e){
+            Timber.e(e);
+        }
+    }
+
+    @Override
+    public void submitDiabetesAndHypertensionScreeningEvent(String baseEntityId, JSONArray jsonArray, FormTag formTag,
+                                                            String chwLocationId, String encounterType) {
+        try{
+            LocationHelper locationHelper = LocationHelper.getInstance();
+            final ECSyncHelper syncHelper = AddoApplication.getInstance().getEcSyncHelper();
+            JSONObject metadata= new JSONObject();
+            Event event = org.smartregister.util.JsonFormUtils.createEvent(jsonArray, metadata, formTag, baseEntityId,encounterType,"ec_ncd_register");
+            event.setEventId(UUID.randomUUID().toString());
+            event.setLocationId(locationHelper.getOpenMrsLocationId(chwLocationId));
+            JSONObject eventJson = new JSONObject(gson.toJson(event));
+            Timber.e("%S", eventJson);
+            syncHelper.addEvent(baseEntityId, eventJson);
+        }catch (JSONException e){
+            Timber.e(e);
         }
     }
 

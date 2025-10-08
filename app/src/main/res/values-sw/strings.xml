@@ -159,4 +159,7 @@
     <string name="label_observations">\nUchunguzi: </string>
     <string name="prefix_observation_item">\n - </string>
     <string name="separator_observation_item">: </string>1`
+
+    <!-- String for NCD Screening -->
+    <string name="diabetes_and_hypertension_screening_form_title">Diabetes &amp; Hypertension Screening</string>
 </resources>

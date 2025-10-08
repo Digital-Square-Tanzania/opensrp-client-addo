@@ -180,6 +180,7 @@ public class CoreConstants {
         private static final String PNC_REFERRAL_FORM = "pnc_referral_form";
         private static final String FAMILY_PLANNING_REGISTRATION_FORM = "family_planning_registration";
         private static final String FAMILY_PLANNING_CHANGE_METHOD_FORM = "family_planning_change_method";
+        public static final String DIABETES_SCREENING_FORM = "diabetes_hypertension_screening_form";
         public static AssetManager assetManager;
         public static Locale locale;
 
@@ -216,6 +217,10 @@ public class CoreConstants {
         public static String getAdolescentAddoScreening() { return ADOLESCENT_ADDO_SCREENING; }
 
         public static String getDangerSignsMedicationAdolescent() { return DANGER_SIGNS_MEDICATION_ADOLESCENT; }
+
+        public static String getDiabetesScreeningForm() {
+            return DIABETES_SCREENING_FORM;
+        }
 
         public static String getChildReferralForm() {
             return CHILD_REFERRAL_FORM;

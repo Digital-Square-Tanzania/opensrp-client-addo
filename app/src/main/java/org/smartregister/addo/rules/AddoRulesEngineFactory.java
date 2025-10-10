@@ -33,10 +33,10 @@ public class AddoRulesEngineFactory extends RulesEngineFactory {
 
     public AddoRulesEngineFactory(Context context, Map<String, String> globalValues) {
         super(context, globalValues);
-        this.addoRulesEngineHelper = new AddoRulesEngineHelper();
         this.globalValues = globalValues;
         this.ruleMap = new HashMap<>();
         this.context = context;
+        this.addoRulesEngineHelper = new AddoRulesEngineHelper(this.context);
 
     }
 

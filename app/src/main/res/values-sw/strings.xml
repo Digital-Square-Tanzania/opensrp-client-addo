@@ -161,5 +161,8 @@
     <string name="separator_observation_item">: </string>1`
 
     <!-- String for NCD Screening -->
-    <string name="diabetes_and_hypertension_screening_form_title">Diabetes &amp; Hypertension Screening</string>
+    <string name="diabetes_and_hypertension_screening_form_title">Uchunguzi wa kisukari na shinikizo la damu</string>
+    <string name="both_diabetes_and_hypertension">kisukari na shinikizo la damu</string>
+    <string name="only_diabetes">kisukari</string>
+    <string name="only_hypertension">shinikizo la damu</string>
 </resources>

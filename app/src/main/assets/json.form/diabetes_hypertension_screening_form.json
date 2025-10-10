@@ -72,9 +72,10 @@
         "openmrs_entity_id": "agree_with_screening_procedure",
         "openmrs_data_type": "select one",
         "hint": "{{step1_agree_with_screening_procedure_hint}}",
+        "keys": ["Yes", "No"],
         "values": [
-          "Yes",
-          "No"
+          "{{value_yes}}",
+          "{{value_no}}"
         ],
         "openmrs_choice_ids": {
           "Yes": "Yes",
@@ -96,10 +97,10 @@
         "exclusive": [],
         "options": [
           {
-            "key": "not_well",
-            "text": "{{step1_reasons_for_declining_key_not_well}}",
+            "key": "not_well_not_prepared",
+            "text": "{{step1_reasons_for_declining_key_not_well_not_prepared}}",
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "not_well"
+            "openmrs_entity_id": "not_well_not_prepared"
           },
           {
             "key": "in_hurry",
@@ -108,22 +109,10 @@
             "openmrs_entity_id": "in_hurry"
           },
           {
-            "key": "need_permission",
-            "text": "{{step1_reasons_for_declining_key_need_permission}}",
-            "openmrs_entity": "concept",
-            "openmrs_entity_id": "need_permission"
-          },
-          {
             "key": "privacy_trust",
             "text": "{{step1_reasons_for_declining_key_privacy_trust}}",
             "openmrs_entity": "concept",
             "openmrs_entity_id": "privacy_trust"
-          },
-          {
-            "key": "lack_trust_chw",
-            "text": "{{step1_reasons_for_declining_key_lack_trust_chw}}",
-            "openmrs_entity": "concept",
-            "openmrs_entity_id": "lack_trust_chw"
           },
           {
             "key": "feel_healthy",
@@ -132,34 +121,16 @@
             "openmrs_entity_id": "feel_healthy"
           },
           {
-            "key": "confusion_process",
-            "text": "{{step1_reasons_for_declining_key_confusion_process}}",
-            "openmrs_entity": "concept",
-            "openmrs_entity_id": "confusion_process"
-          },
-          {
             "key": "fear_anxiety",
             "text": "{{step1_reasons_for_declining_key_fear_anxiety}}",
             "openmrs_entity": "concept",
             "openmrs_entity_id": "fear_anxiety"
           },
           {
-            "key": "fear_referral",
-            "text": "{{step1_reasons_for_declining_key_fear_referral}}",
+            "key": "other_reason",
+            "text": "{{step1_reasons_for_declining_key_other_reason}}",
             "openmrs_entity": "concept",
-            "openmrs_entity_id": "fear_referral"
-          },
-          {
-            "key": "religious_reasons",
-            "text": "{{step1_reasons_for_declining_key_religious_reasons}}",
-            "openmrs_entity": "concept",
-            "openmrs_entity_id": "religious_reasons"
-          },
-          {
-            "key": "fear_technology",
-            "text": "{{step1_reasons_for_declining_key_fear_technology}}",
-            "openmrs_entity": "concept",
-            "openmrs_entity_id": "fear_technology"
+            "openmrs_entity_id": "other_reason"
           }
         ],
         "v_required": {
@@ -170,6 +141,29 @@
           "step1:agree_with_screening_procedure": {
             "type": "string",
             "ex": "equalTo(., \"No\")"
+          }
+        }
+      },
+      {
+        "key": "other_reason_for_declining",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "other_reason_for_declining",
+        "type": "edit_text",
+        "hint": "{{step1_other_reason_for_declining_hint}}",
+        "v_required": {
+          "value": true,
+          "err": "{{step1_other_reason_for_declining_err}}"
+        },
+        "relevance": {
+          "step1:reasons_for_declining": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "other_reason"
+                ]
+              }
+            ]
           }
         }
       }
@@ -185,8 +179,12 @@
         "hint": "{{step2_diagnosed_diabetes_hint}}",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
-        "openmrs_entity_id": "{diagnosed_diabetes}",
-        "values": ["Yes", "No"],
+        "openmrs_entity_id": "diagnosed_diabetes",
+        "keys": ["Yes", "No"],
+        "values": [
+          "{{value_yes}}",
+          "{{value_no}}"
+        ],
         "openmrs_choice_ids": {
           "Yes": "Yes",
           "No": "No"
@@ -206,11 +204,15 @@
       {
         "key": "medicines_diabetes",
         "type": "spinner",
-        "hint": "Are you taking medicines for diabetes?",
+        "hint": "{{step2_medicines_diabetes_hint}}",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "medicines_diabetes",
-        "values": ["Yes", "No"],
+        "keys": ["Yes", "No"],
+        "values": [
+          "{{value_yes}}",
+          "{{value_no}}"
+        ],
         "openmrs_choice_ids": {
           "Yes": "Yes",
           "No": "No"
@@ -223,17 +225,76 @@
           "step1:agree_with_screening_procedure": {
             "type": "string",
             "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "screened_diabetes_12m",
+        "type": "spinner",
+        "hint": "{{step2_screened_diabetes_12m_hint}}",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "screened_diabetes_12m",
+        "keys": ["Yes", "No"],
+        "values": [
+          "{{value_yes}}",
+          "{{value_no}}"
+        ],
+        "openmrs_choice_ids": {
+          "Yes": "Yes",
+          "No": "No"
+        },
+        "v_required": {
+          "value": true,
+          "err": "{{step2_screened_diabetes_12m_hint_err}}"
+        },
+        "relevance": {
+          "step1:agree_with_screening_procedure": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "diagnosed_hypertension",
+        "type": "spinner",
+        "hint": "{{step2_diagnosed_hypertension_hint}}",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "diagnosed_hypertension",
+        "keys": ["Yes", "No"],
+        "values": [
+          "{{value_yes}}",
+          "{{value_no}}"
+        ],
+        "openmrs_choice_ids": {
+          "Yes": "Yes",
+          "No": "No"
+        },
+        "v_required": {
+          "value": true,
+          "err": "{{step2_diagnosed_hypertension_hint_err}}"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
           }
         }
       },
       {
         "key": "medicines_hypertension",
         "type": "spinner",
-        "hint": "{{step2_medicines_diabetes_hint}}",
+        "hint": "{{step2_medicines_hypertension_hint}}",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "medicines_hypertension",
-        "values": ["Yes", "No"],
+        "keys": ["Yes", "No"],
+        "values": [
+          "{{value_yes}}",
+          "{{value_no}}"
+        ],
         "openmrs_choice_ids": {
           "Yes": "Yes",
           "No": "No"
@@ -250,20 +311,24 @@
         }
       },
       {
-        "key": "screened_hypertension_last_12m",
+        "key": "screened_hypertension_last12m",
         "type": "spinner",
-        "hint": "{{step2_screened_hypertension_12m_hint}}",
+        "hint": "{{step2_screened_hypertension_last_12m_hint}}",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
-        "openmrs_entity_id": "screened_hypertension_last_12m",
-        "values": ["Yes", "No"],
+        "openmrs_entity_id": "screened_hypertension_last12m",
+        "keys": ["Yes", "No"],
+        "values": [
+          "{{value_yes}}",
+          "{{value_no}}"
+        ],
         "openmrs_choice_ids": {
           "Yes": "Yes",
           "No": "No"
         },
         "v_required": {
           "value": true,
-          "err": "{{step2_screened_hypertension_12m_hint_err}}"
+          "err": "{{step2_screened_hypertension_last_12m_hint_err}}"
         },
         "relevance": {
           "step1:agree_with_screening_procedure": {
@@ -279,7 +344,11 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "routine_clinic_visits",
-        "values": ["Yes", "No"],
+        "keys": ["Yes", "No"],
+        "values": [
+          "{{value_yes}}",
+          "{{value_no}}"
+        ],
         "openmrs_choice_ids": {
           "Yes": "Yes",
           "No": "No"
@@ -316,9 +385,10 @@
         "openmrs_entity_id": "family_history_diabetes",
         "openmrs_data_type": "select one",
         "hint": "{{step3_family_history_diabetes_hint}}",
+        "keys": ["Yes", "No"],
         "values": [
-          "Yes",
-          "No"
+          "{{value_yes}}",
+          "{{value_no}}"
         ],
         "openmrs_choice_ids": {
           "Yes": "Yes",
@@ -437,7 +507,7 @@
       {
         "key": "diabetes_risk_score_output",
         "type": "edit_text",
-        "hint": "{{step4_diabetes_risk_score_output}}",
+        "hint": "{{step4_diabetes_risk_score_output_hint}}",
         "read_only": true,
         "openmrs_entity": "concept",
         "openmrs_entity_id": "diabetes_risk_score_output",
@@ -523,6 +593,23 @@
         }
       },
       {
+        "key": "prescreening_client_has_condition_toaster_not_using_meds",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "{{step4_prescreening_client_has_condition_toaster_not_using_meds}}",
+        "text_color": "#000000",
+        "toaster_type": "info",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "diabetes_hypertension_screening_relevance.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "no_risk_present_toaster",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
@@ -584,7 +671,7 @@
         ],
         "v_required": {
           "value": "true",
-          "err": "Please select one"
+          "err": "{{step4_service_before_referral_err}}"
         },
         "relevance": {
           "rules-engine": {
@@ -648,12 +735,12 @@
         "spacer_height": "20dp"
       },
       {
-        "key": "save_n_refer",
+        "key": "db_save_n_refer",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
-        "openmrs_entity_id": "save_n_refer",
+        "openmrs_entity_id": "db_save_n_refer",
         "type": "button",
-        "hint": "{{step4_save_n_refer}}",
+        "hint": "{{step4_db_save_n_refer}}",
         "btn_bg_color": "#FF840952",
         "action": {
           "behaviour": "finish_form"

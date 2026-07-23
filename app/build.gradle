@@ -2,13 +2,13 @@ buildscript {
 
     repositories {
         google()
-        maven { url "https://central.sonatype.com/" }
+        mavenCentral()
         mavenLocal()
-        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.2'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
+        // AGP is declared once, in the root build.gradle. Declaring it here too
+        // risks two AGP versions on the plugin classpath, which AGP 7 rejects outright.
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.3'
     }
 }
 
@@ -19,7 +19,7 @@ apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'com.google.firebase.crashlytics'
 
 jacoco {
-    toolVersion = "0.8.5"
+    toolVersion = "0.8.8"
 }
 
 android {
@@ -56,13 +56,6 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [liberiaBuild: false, tanzaniaBuild: true]
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                includeCompileClasspath true
-            }
-        }
-
     }
 
     // Instead, use the bundle block to control which types of configuration APKs
@@ -77,12 +70,7 @@ android {
         }
     }
 
-    dexOptions {
-        javaMaxHeapSize "4g"
-    }
-
     lintOptions {
-        lintConfig file("lint.xml")
         abortOnError false
     }
 
@@ -154,9 +142,7 @@ android {
     }
 
     flavorDimensions 'baseDimension'
-    productFlavors {
 
-    }
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
@@ -201,8 +187,6 @@ configurations{
 def githubProperties = new Properties()
 githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
 repositories {
-
-    maven { url "https://central.sonatype.com/" }
 
     maven {
         name = "GitHubPackages"

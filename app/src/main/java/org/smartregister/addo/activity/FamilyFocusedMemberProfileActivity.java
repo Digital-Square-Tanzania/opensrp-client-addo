@@ -43,6 +43,7 @@ import org.smartregister.addo.dao.FamilyDao;
 import org.smartregister.addo.dao.PNCDao;
 import org.smartregister.addo.dao.VisitDao;
 import org.smartregister.addo.presenter.FamilyFocusedMemberProfileActivityPresenter;
+import org.smartregister.addo.util.AddoUtils;
 import org.smartregister.addo.util.ChildDBConstants;
 import org.smartregister.addo.util.CoreConstants;
 import org.smartregister.addo.util.JsonFormUtils;
@@ -650,11 +651,17 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
         try{
             JSONArray fields = JsonFormUtils.fields(jsonForm);
             JSONObject hf_facilities = JsonFormUtils.getFieldJSONObject(fields, "chw_referral_hf");
-            JSONArray facilityArrayOption = hf_facilities.getJSONArray("options");
-            JSONArray facilityArrayOptionExclusive = hf_facilities.getJSONArray("exclusive");
+            if (hf_facilities == null) {
+                Timber.e("Form has no chw_referral_hf field; referral facilities not populated");
+                return;
+            }
+            JSONArray facilityArrayOption = AddoUtils.requireFieldArray(hf_facilities, "options");
+            JSONArray facilityArrayOptionExclusive = AddoUtils.requireFieldArray(hf_facilities, "exclusive");
 
             List<JSONObject> facilities= org.smartregister.addo.util.Utils.getWardFacilities();
-            assert facilities != null;
+            if (facilities.isEmpty()) {
+                Timber.e("No facilities in this ward's location hierarchy; the referral spinner will be empty");
+            }
             for (JSONObject facility : facilities) {
                 JSONObject node = facility.getJSONObject("node");
                 String locationId = node.getString("locationId");
@@ -673,7 +680,7 @@ public class FamilyFocusedMemberProfileActivity extends BaseProfileActivity impl
                 facilityArrayOption.put(newOption);
             }
         }catch (JSONException e){
-            Timber.e(e);
+            Timber.e(e, "Failed to populate referral facilities on chw_referral_hf");
         }
     }
 

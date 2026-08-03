@@ -298,10 +298,18 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
                     if (!buttonAction.isEmpty()) {
                         String facilityValue = JsonFormUtils.getValue(form, "chw_referral_hf");
                         String facilityName = getWardFacilityName(facilityValue);
-                        FormTag formTag = formTag(allSharedPreferences);
+
+                        // The screening and referral events MUST carry different form submission ids.
+                        // EventClientRepository.addEvent treats formSubmissionId as an update key, so a
+                        // shared id makes the referral event overwrite the screening event's row instead
+                        // of inserting alongside it. This mirrors the CHW workflow, where the referral
+                        // event is given its own id and the task's reasonReference points at that id
+                        // (ReferralUtil.createReferralTask -> task.setReasonReference(event.getFormSubmissionId())).
+                        FormTag screeningFormTag = formTag(allSharedPreferences);
+                        FormTag referralFormTag = formTag(allSharedPreferences);
 
                         presenter().submitDiabetesAndHypertensionScreeningEvent(baseEntityId, getDiabetesAndHypertensionScreeningObs(form),
-                                formTag, villageTown, DIABETES_AND_HYPERTENSION_SCREENING, form.optJSONObject("metadata"));
+                                screeningFormTag, villageTown, DIABETES_AND_HYPERTENSION_SCREENING, form.optJSONObject("metadata"));
 
                         // Check if the client has referral already or not
                         if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID_2, facilityValue, baseEntityId, CoreConstants.JsonAssets.REFERRAL_CODE)) {
@@ -311,11 +319,11 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
                                     // Close referral
                                     FamilyDao.archiveHFTasksForEntity(baseEntityId);
 
-                                    // Open a new referral
-                                    ReferralUtils.createReferralTask(baseEntityId, "Diabetes And Hypertension Testing", jsonString, villageTown, facilityValue, formTag.formSubmissionId);
+                                    // Referral event first, then the task that references it — the order
+                                    // CHW's BaseIssueReferralInteractor uses.
+                                    presenter().submitReferralEvent(baseEntityId, createReferralForm(jsonString, encounterType), referralFormTag, facilityName);
 
-                                    // Create a referral event
-                                    presenter().submitReferralEvent(baseEntityId, createReferralForm(jsonString, encounterType), formTag, facilityName);
+                                    ReferralUtils.createReferralTask(baseEntityId, "Diabetes And Hypertension Testing", jsonString, villageTown, facilityValue, referralFormTag.formSubmissionId);
                                 }
 
                                 @Override
@@ -325,9 +333,9 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
                             });
                         } else {
                             //refer
-                            ReferralUtils.createReferralTask(baseEntityId, "Diabetes And Hypertension Testing", jsonString, villageTown, facilityValue, formTag.formSubmissionId);
-                            // Create a referral event
-                            presenter().submitReferralEvent(baseEntityId, createReferralForm(jsonString, encounterType), formTag, facilityName);
+                            presenter().submitReferralEvent(baseEntityId, createReferralForm(jsonString, encounterType), referralFormTag, facilityName);
+
+                            ReferralUtils.createReferralTask(baseEntityId, "Diabetes And Hypertension Testing", jsonString, villageTown, facilityValue, referralFormTag.formSubmissionId);
                         }
 
                     } else {

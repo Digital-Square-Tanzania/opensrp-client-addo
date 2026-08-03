@@ -295,6 +295,14 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
                         }
                     }
 
+                    // Every submission of this form produces a screening event, whichever button
+                    // finished it. A low-risk screening (plain Save) and a declined screening are
+                    // both outcomes the pipeline needs; only the referral event and its task are
+                    // gated on db_save_n_refer below.
+                    FormTag screeningFormTag = formTag(allSharedPreferences);
+                    presenter().submitDiabetesAndHypertensionScreeningEvent(baseEntityId, getDiabetesAndHypertensionScreeningObs(form),
+                            screeningFormTag, villageTown, DIABETES_AND_HYPERTENSION_SCREENING, form.optJSONObject("metadata"));
+
                     if (!buttonAction.isEmpty()) {
                         String facilityValue = JsonFormUtils.getValue(form, "chw_referral_hf");
                         String facilityName = getWardFacilityName(facilityValue);
@@ -305,11 +313,7 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
                         // of inserting alongside it. This mirrors the CHW workflow, where the referral
                         // event is given its own id and the task's reasonReference points at that id
                         // (ReferralUtil.createReferralTask -> task.setReasonReference(event.getFormSubmissionId())).
-                        FormTag screeningFormTag = formTag(allSharedPreferences);
                         FormTag referralFormTag = formTag(allSharedPreferences);
-
-                        presenter().submitDiabetesAndHypertensionScreeningEvent(baseEntityId, getDiabetesAndHypertensionScreeningObs(form),
-                                screeningFormTag, villageTown, DIABETES_AND_HYPERTENSION_SCREENING, form.optJSONObject("metadata"));
 
                         // Check if the client has referral already or not
                         if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID_2, facilityValue, baseEntityId, CoreConstants.JsonAssets.REFERRAL_CODE)) {

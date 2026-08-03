@@ -16,7 +16,7 @@ Gradle-cache AAR with `javap`, not from memory).
 
 | | |
 |---|---|
-| Implemented | C1, C2, C5, C6, C10, C11, C12, C13, C14, C15, C16 |
+| Implemented | C1, C2, C5, C6, C10, C11, C12, C13, C14, C15, C16, C18 |
 | Retracted | C3, C4 (form authority is CHW), C7, C8, C9 (reference says otherwise) |
 | Closed, won't fix | C17 |
 | Open | nothing in the change list — only device verification remains |
@@ -35,9 +35,11 @@ Everything below needs one Save-and-Refer submission on a device set to `Africa/
 The timezone matters: a UTC device hides item 4.
 
 1. **Two event rows, not one** — `SELECT eventType, formSubmissionId FROM event WHERE baseEntityId = '<id>'`
-2. `start` / `end` obs present on the screening event (C2)
-3. `service_before_referral` obs shape — **expected to still differ**, see §2.4
-4. Timestamps carrying `+03:00` rather than a mislabelled `Z` (C11)
+2. **A screening event on the plain Save path too** (C18) — repeat the submission without referring,
+   and on a declined screening; both must produce a `Diabetes and Hypertension Screening` row
+3. `start` / `end` obs present on the screening event (C2)
+4. `service_before_referral` obs shape — **expected to still differ**, see §2.4
+5. Timestamps carrying `+03:00` rather than a mislabelled `Z` (C11)
 
 Then diff obs-by-obs on `fieldCode | fieldType | fieldDataType | parentCode | values |
 humanReadableValues` against the server reference.
@@ -297,11 +299,22 @@ addition to `submitDiabetesAndHypertensionScreeningEvent`. `submitForm` routes t
 event under a different encounter type, with its own `formSubmissionId`. Not a duplicate screening
 event, but it doubles the data reaching the server. See Q5.
 
-**No screening event on the plain Save path.**
-`submitDiabetesAndHypertensionScreeningEvent` sits inside `if (!buttonAction.isEmpty())`, and
-`buttonAction` is only set by `db_save_n_refer`. A client screened with no referral produces **no
-screening event at all**, so low-risk screenings are currently invisible to the pipeline. This is
-a real gap and is not covered by any change in this document.
+**No screening event on the plain Save path — fixed (C18).**
+`submitDiabetesAndHypertensionScreeningEvent` sat inside `if (!buttonAction.isEmpty())`, and
+`buttonAction` is only ever set by `db_save_n_refer`. A client screened with no referral therefore
+produced **no screening event at all**, so low-risk screenings and declined screenings were both
+invisible to the pipeline — only referred clients generated one.
+
+The submission is now hoisted above that branch and runs for every completion of the form,
+whichever button finished it. Only the referral event and its task remain gated on
+`db_save_n_refer`. The screening event keeps its own `FormTag`, so C16 still holds on the referral
+path; on the plain Save path only the screening tag is created.
+
+Note the `else` branch still calls `checkDSPresentProposedMedsAndDispense(form)`, which is the
+**danger-signs** flow and has no fields in common with this form. It is harmless today only
+because `isClientPresent()` is entirely commented out and returns `false` unconditionally, so the
+method always falls through to `dispenseMedication(null, null, null)`. Whether a dispense prompt
+belongs at the end of a low-risk screening is a product question, untouched here.
 
 ---
 

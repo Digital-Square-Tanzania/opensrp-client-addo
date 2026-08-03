@@ -29,7 +29,6 @@ import org.smartregister.addo.util.CoreConstants;
 import org.smartregister.chw.anc.AncLibrary;
 import org.smartregister.chw.pnc.PncLibrary;
 import org.smartregister.chw.referral.ReferralLibrary;
-import org.smartregister.chw.referral.domain.ReferralMetadata;
 import org.smartregister.commonregistry.AllCommonsRepository;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
@@ -51,7 +50,6 @@ import org.smartregister.sync.helper.ECSyncHelper;
 import org.smartregister.view.activity.DrishtiApplication;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Locale;
 
 import timber.log.Timber;
@@ -110,9 +108,9 @@ public class AddoApplication extends DrishtiApplication {
 
         FamilyLibrary.getInstance().setClientProcessorForJava(AddoClientProcessor.getInstance(getApplicationContext()));
         SimPrintsLibrary.init(mInstance, BuildConfig.SIMPRINT_PROJECT_ID, BuildConfig.SIMPRINT_MODULE_ID, getRepository());
-        ReferralMetadata referralMetadata = new ReferralMetadata();
-        referralMetadata.setLocationIdMap(new HashMap<>());
-        ReferralLibrary.init(context, getRepository(), referralMetadata, BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
+        ReferralLibrary.init(this);
+        ReferralLibrary.getInstance().setAppVersion(BuildConfig.VERSION_CODE);
+        ReferralLibrary.getInstance().setDatabaseVersion(BuildConfig.DATABASE_VERSION);
         AncLibrary.init(context, getRepository(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
         PncLibrary.init(context, getRepository(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
         // Init Reporting library

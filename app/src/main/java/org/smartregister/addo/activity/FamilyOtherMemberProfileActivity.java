@@ -26,7 +26,6 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.nerdstone.neatformcore.domain.model.NFormViewData;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
 
@@ -44,6 +43,7 @@ import org.smartregister.addo.dao.PNCDao;
 import org.smartregister.addo.fragment.FamilyOtherMemberProfileFragment;
 import org.smartregister.addo.listeners.FloatingMenuListener;
 import org.smartregister.addo.presenter.FamilyOtherMemberActivityPresenter;
+import org.smartregister.addo.util.AddoUtils;
 import org.smartregister.addo.util.CoreConstants;
 import org.smartregister.addo.util.CoreJsonFormUtils;
 import org.smartregister.addo.util.JsonFormUtils;
@@ -96,6 +96,8 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
     private FormUtils formUtils;
     public static final String REFERRAL_BUSINESS_STATUS = "PENDING";
     public static final String REFERRAL_TYPE = "addo_to_facility_referral";
+    // Capitalisation matches the server reference and the referral task focus.
+    public static final String CHW_REFERRAL_SERVICE = "Diabetes And Hypertension Screening";
     public static final String ADDO_VISIT_OTHER_CLIENTS = "Addo Visit - Other Clients";
     public static final String DIABETES_AND_HYPERTENSION_SCREENING = "Diabetes and Hypertension Screening";
 
@@ -286,7 +288,7 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
 
                     for (int i = 0; i < a.length(); i++) {
                         org.json.JSONObject jo = a.getJSONObject(i);
-                        if (jo.getString("key").compareToIgnoreCase("save_n_refer") == 0) {
+                        if (jo.getString("key").compareToIgnoreCase("db_save_n_refer") == 0) {
                             if (jo.optString("value") != null && jo.optString("value").compareToIgnoreCase("true") == 0) {
                                 buttonAction = jo.getJSONObject("action").getString("behaviour");
                             }
@@ -295,10 +297,11 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
 
                     if (!buttonAction.isEmpty()) {
                         String facilityValue = JsonFormUtils.getValue(form, "chw_referral_hf");
+                        String facilityName = getWardFacilityName(facilityValue);
                         FormTag formTag = formTag(allSharedPreferences);
 
                         presenter().submitDiabetesAndHypertensionScreeningEvent(baseEntityId, getDiabetesAndHypertensionScreeningObs(form),
-                                formTag, villageTown, DIABETES_AND_HYPERTENSION_SCREENING);
+                                formTag, villageTown, DIABETES_AND_HYPERTENSION_SCREENING, form.optJSONObject("metadata"));
 
                         // Check if the client has referral already or not
                         if (ReferralUtils.hasReferralTask(CoreConstants.REFERRAL_PLAN_ID_2, facilityValue, baseEntityId, CoreConstants.JsonAssets.REFERRAL_CODE)) {
@@ -312,7 +315,7 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
                                     ReferralUtils.createReferralTask(baseEntityId, "Diabetes And Hypertension Testing", jsonString, villageTown, facilityValue, formTag.formSubmissionId);
 
                                     // Create a referral event
-                                    presenter().submitReferralEvent(baseEntityId, createReferralForm(jsonString, encounterType), formTag);
+                                    presenter().submitReferralEvent(baseEntityId, createReferralForm(jsonString, encounterType), formTag, facilityName);
                                 }
 
                                 @Override
@@ -324,7 +327,7 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
                             //refer
                             ReferralUtils.createReferralTask(baseEntityId, "Diabetes And Hypertension Testing", jsonString, villageTown, facilityValue, formTag.formSubmissionId);
                             // Create a referral event
-                            presenter().submitReferralEvent(baseEntityId, createReferralForm(jsonString, encounterType), formTag);
+                            presenter().submitReferralEvent(baseEntityId, createReferralForm(jsonString, encounterType), formTag, facilityName);
                         }
 
                     } else {
@@ -482,11 +485,17 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
         try{
             JSONArray fields = JsonFormUtils.fields(jsonForm);
             JSONObject hf_facilities = JsonFormUtils.getFieldJSONObject(fields, "chw_referral_hf");
-            JSONArray facilityArrayOption = hf_facilities.getJSONArray("options");
-            JSONArray facilityArrayOptionExclusive = hf_facilities.getJSONArray("exclusive");
+            if (hf_facilities == null) {
+                Timber.e("Form has no chw_referral_hf field; referral facilities not populated");
+                return;
+            }
+            JSONArray facilityArrayOption = AddoUtils.requireFieldArray(hf_facilities, "options");
+            JSONArray facilityArrayOptionExclusive = AddoUtils.requireFieldArray(hf_facilities, "exclusive");
 
             List<JSONObject> facilities= org.smartregister.addo.util.Utils.getWardFacilities();
-            assert facilities != null;
+            if (facilities.isEmpty()) {
+                Timber.e("No facilities in this ward's location hierarchy; the referral spinner will be empty");
+            }
             for (JSONObject facility : facilities) {
                 JSONObject node = facility.getJSONObject("node");
                 String locationId = node.getString("locationId");
@@ -505,7 +514,7 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
                 facilityArrayOption.put(newOption);
             }
         }catch (JSONException e){
-            Timber.e(e);
+            Timber.e(e, "Failed to populate referral facilities on chw_referral_hf");
         }
     }
 
@@ -515,23 +524,14 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
             JSONArray referralFormArray = form.getJSONObject("step4").getJSONArray("fields");
             JSONArray fields = JsonFormUtils.fields(form);
 
+            // service_before_referral is already carried by step4 as a concept-typed check_box, so
+            // it is not re-added here — doing so emitted a second obs whose value was the
+            // toString() of an NFormViewData instance.
 
-            // Service before referral
-            String serviceBReferralValue = JsonFormUtils.getValue(form, "service_before_referral");
-            JSONArray serviceBReferralArray = new JSONArray(serviceBReferralValue);
-            HashMap<String, NFormViewData> serviceBReferralNFormValue = new HashMap<>();
-            for(int i=0; i < serviceBReferralArray.length(); i++){
-                String serviceValue = serviceBReferralArray.getString(i);
-                NFormViewData valueItem = createFormViewData( serviceValue, null, metaData("", serviceValue, ""));
-                serviceBReferralNFormValue.put(serviceValue, valueItem);
-            }
-            referralFormArray.put(createReferralFormField("service_before_referral",
-                    createFormViewData(serviceBReferralNFormValue, "MultiChoiceCheckBox",
-                            metaData("concept", "service_before_referral", ""))));
-
-            // Diabetes risk score
+            // Diabetes risk score. The reference event carries the plain value under
+            // diabetes_risk_score; diabetes_risk_score_output is screening-only.
             String dbRiskScore = JsonFormUtils.getValue(new JSONObject(jsonString), "diabetes_risk_score_output");
-            referralFormArray.put(createReferralFormField("diabetes_risk_score", createFormViewData(dbRiskScore,"Calculation",null)));
+            referralFormArray.put(createReferralFormField("diabetes_risk_score", dbRiskScore));
 
 
             //Convert referral appointment date to timestamp
@@ -539,13 +539,16 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
 
             //Add other referral form fields
             referralFormArray.put(createReferralFormField("referral_status", REFERRAL_BUSINESS_STATUS));
-            referralFormArray.put(createReferralFormField("chw_referral_service", "Diabetes and Hypertension Screening"));
+            referralFormArray.put(createReferralFormField("chw_referral_service", CHW_REFERRAL_SERVICE));
             referralFormArray.put(createReferralFormField("referral_date", Long.toString(Calendar.getInstance().getTimeInMillis())));
             referralFormArray.put(createReferralFormField("referral_type", REFERRAL_TYPE));
             referralFormArray.put(createReferralFormField("referral_time", referralTime()));
 
-            // Remove unwanted fields
-            removeFieldsFromJSONArray(referralFormArray, "asterisk_symbol", "save_n_refer");
+            // Remove unwanted fields. The buttons carry an OpenMRS concept id, so they would
+            // otherwise be emitted as obs on the Referral Registration event.
+            // diabetes_risk_score_output belongs to the screening event only.
+            removeFieldsFromJSONArray(referralFormArray, "asterisk_symbol", "db_save_n_refer", "save", "spacer",
+                    "diabetes_risk_score_output");
 
             return  referralFormArray;
         }catch (JSONException e){
@@ -620,6 +623,25 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
             alert.dismiss();
         });
         alert.show();
+    }
+
+    /**
+     * Resolves a facility's display name from its OpenMRS location id, so the referral event can
+     * carry it as the human readable value of chw_referral_hf.
+     */
+    private String getWardFacilityName(String locationId) {
+        if (locationId == null || locationId.isEmpty()) return "";
+        try {
+            for (JSONObject facility : org.smartregister.addo.util.Utils.getWardFacilities()) {
+                JSONObject node = facility.getJSONObject("node");
+                if (locationId.equals(node.getString("locationId"))) {
+                    return node.getString("name");
+                }
+            }
+        } catch (JSONException e) {
+            Timber.e(e, "Could not resolve the referral facility name for %s", locationId);
+        }
+        return "";
     }
 
     public String referralTime(){
@@ -800,20 +822,4 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
         startActivityForResult(intent, org.smartregister.family.util.JsonFormUtils.REQUEST_CODE_GET_JSON);
     }
 
-    private NFormViewData createFormViewData(Object value, String type, HashMap<String, Object> metaData) {
-        NFormViewData data = new NFormViewData();
-        data.setValue(value);
-        data.setType(type);
-        data.setVisible(true);
-        data.setMetadata(metaData);
-        return data;
-    }
-
-    private HashMap<String, Object> metaData(String openmrs_entity,String openmrs_entity_id, String openmrs_entity_parent) {
-        HashMap<String, Object> metadata = new HashMap<>();
-        metadata.put("openmrs_entity", openmrs_entity);
-        metadata.put("openmrs_entity_id", openmrs_entity_id);
-        metadata.put("openmrs_entity_parent", openmrs_entity_parent);
-        return metadata;
-    }
 }

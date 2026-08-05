@@ -39,9 +39,16 @@ public class ReferralUtils {
         task.setGroupIdentifier(facility);
         task.setStatus(Task.TaskStatus.READY);
         task.setBusinessStatus(CoreConstants.BUSINESS_STATUS.REFERRED);
-        task.setPriority(3);
+        // FHIR request priority ordering: 1 = routine, which is what the server reference carries.
+        task.setPriority(1);
         task.setCode(CoreConstants.JsonAssets.REFERRAL_CODE);
-        task.setDescription(referralProblems);
+
+        if (focus.equalsIgnoreCase("Diabetes And Hypertension Testing")) {
+            task.setDescription("Risk for diabetes and hypertension");
+        } else {
+            task.setDescription(referralProblems);
+        }
+
         task.setFocus(focus);
         task.setForEntity(baseEntityId);
         DateTime now = new DateTime();

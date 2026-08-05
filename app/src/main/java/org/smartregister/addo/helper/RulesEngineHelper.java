@@ -30,7 +30,7 @@ public class RulesEngineHelper {
 
     }
 
-    private Rules getRulesFromAsset(String fileName) {
+    public Rules getRulesFromAsset(String fileName) {
         try {
             if (!ruleMap.containsKey(fileName)) {
 

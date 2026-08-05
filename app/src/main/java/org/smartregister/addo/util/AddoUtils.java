@@ -175,15 +175,40 @@ public class AddoUtils extends Utils {
         return formUtils;
     }
 
+    /**
+     * Returns the named array on a form field, attaching an empty one first if the form asset
+     * omitted it. {@code getJSONArray} throws on a missing key, which previously aborted facility
+     * population one line before the loop and surfaced only as an empty spinner — see
+     * docs/specs/ncd-screening-parity-port.md §11.5.
+     *
+     * <p>{@code chw_referral_hf} must declare both an {@code options} and an {@code exclusive}
+     * array in every form asset that carries it, whatever widget type the field uses.
+     */
+    public static JSONArray requireFieldArray(JSONObject field, String arrayName) throws JSONException {
+        JSONArray array = field.optJSONArray(arrayName);
+        if (array == null) {
+            Timber.w("chw_referral_hf is missing its '%s' array in the form asset; adding it", arrayName);
+            array = new JSONArray();
+            field.put(arrayName, array);
+        }
+        return array;
+    }
+
     public static String displayReferralFacilities(JSONObject jsonForm){
         try{
             JSONArray fields = JsonFormUtils.fields(jsonForm);
             JSONObject hf_facilities = JsonFormUtils.getFieldJSONObject(fields, "chw_referral_hf");
-            JSONArray facilityArrayOption = hf_facilities.getJSONArray("options");
-            JSONArray facilityArrayOptionExclusive = hf_facilities.getJSONArray("exclusive");
+            if (hf_facilities == null) {
+                Timber.e("Form has no chw_referral_hf field; referral facilities not populated");
+                return jsonForm.toString();
+            }
+            JSONArray facilityArrayOption = requireFieldArray(hf_facilities, "options");
+            JSONArray facilityArrayOptionExclusive = requireFieldArray(hf_facilities, "exclusive");
 
             List<JSONObject> facilities= org.smartregister.addo.util.Utils.getWardFacilities();
-            assert facilities != null;
+            if (facilities.isEmpty()) {
+                Timber.e("No facilities in this ward's location hierarchy; the referral spinner will be empty");
+            }
             for (JSONObject facility : facilities) {
                 JSONObject node = facility.getJSONObject("node");
                 String locationId = node.getString("locationId");
@@ -203,7 +228,7 @@ public class AddoUtils extends Utils {
             }
             return jsonForm.toString();
         }catch (JSONException e){
-            Timber.e(e);
+            Timber.e(e, "Failed to populate referral facilities on chw_referral_hf");
         }
         return null;
     }

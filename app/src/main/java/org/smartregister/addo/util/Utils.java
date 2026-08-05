@@ -44,6 +44,7 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -355,6 +356,13 @@ public class Utils extends org.smartregister.family.util.Utils {
         return context().allSharedPreferences().fetchUserLocalityId(context().allSharedPreferences().fetchRegisteredANM());
     }
 
+    /**
+     * Facilities tagged "Facility" in the logged-in user's location hierarchy.
+     * Never returns null — callers iterate the result directly, and every one of them used to
+     * rely on an {@code assert} that Android strips at runtime.
+     *
+     * @return the ward's facilities, or an empty list if the hierarchy is missing or unreadable
+     */
     public static List<JSONObject> getWardFacilities() {
 
         try {
@@ -363,10 +371,10 @@ public class Utils extends org.smartregister.family.util.Utils {
             JSONObject locationsHierarchyMap = locationsHierarchy.getJSONObject("map");
             return getChildrenLocation(locationsHierarchyMap, "Facility");
         } catch (JSONException e) {
-            Timber.e(e);
+            Timber.e(e, "Could not read the location hierarchy; no ward facilities available");
         }
 
-        return null;
+        return Collections.emptyList();
     }
 
     public static List<String> getWardFacilitiesIds() {

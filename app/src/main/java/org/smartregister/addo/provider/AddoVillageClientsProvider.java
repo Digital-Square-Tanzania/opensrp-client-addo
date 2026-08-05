@@ -66,10 +66,10 @@ public class AddoVillageClientsProvider implements RecyclerViewProvider<AddoVill
     private void populatePatientColumn(CommonPersonObjectClient pc, final AddoVillageClientsProvider.RegisterViewHolder viewHolder) {
         try {
             String fname = getName(
-                    Utils.getValue(pc.getColumnmaps(), DBConstants.KEY.FIRST_NAME, true),
-                    Utils.getValue(pc.getColumnmaps(), DBConstants.KEY.MIDDLE_NAME, true));
+                    Utils.getValue(pc.getColumnmaps(), DBConstants.Key.FIRST_NAME, true),
+                    Utils.getValue(pc.getColumnmaps(), DBConstants.Key.MIDDLE_NAME, true));
 
-            String patientName = getName(fname, Utils.getValue(pc.getColumnmaps(), DBConstants.KEY.LAST_NAME, true));
+            String patientName = getName(fname, Utils.getValue(pc.getColumnmaps(), DBConstants.Key.LAST_NAME, true));
             viewHolder.patientName.setText(patientName);
 
             setAddressAndGender(pc, viewHolder);

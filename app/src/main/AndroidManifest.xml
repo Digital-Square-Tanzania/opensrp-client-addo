@@ -91,7 +91,12 @@
             android:exported="false"
             android:theme="@style/FamilyTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-      
+        <activity
+            android:name=".activity.NcdFormWizardActivity"
+            android:launchMode="singleTask"
+            android:exported="false"
+            android:theme="@style/FamilyTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name="com.vijay.jsonwizard.activities.JsonFormActivity"
             android:exported="false"

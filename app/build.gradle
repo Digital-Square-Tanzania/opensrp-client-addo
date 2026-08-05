@@ -2,24 +2,24 @@ buildscript {
 
     repositories {
         google()
-        maven { url "https://central.sonatype.com/" }
+        mavenCentral()
         mavenLocal()
-        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.2'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
+        // AGP is declared once, in the root build.gradle. Declaring it here too
+        // risks two AGP versions on the plugin classpath, which AGP 7 rejects outright.
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.3'
     }
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.gms.google-services'
 
 jacoco {
-    toolVersion = "0.8.5"
+    toolVersion = "0.8.8"
 }
 
 android {
@@ -56,13 +56,6 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [liberiaBuild: false, tanzaniaBuild: true]
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                includeCompileClasspath true
-            }
-        }
-
     }
 
     // Instead, use the bundle block to control which types of configuration APKs
@@ -77,12 +70,7 @@ android {
         }
     }
 
-    dexOptions {
-        javaMaxHeapSize "4g"
-    }
-
     lintOptions {
-        lintConfig file("lint.xml")
         abortOnError false
     }
 
@@ -126,8 +114,13 @@ android {
             buildConfigField("String", "SIMPRINT_PRODUCTION_PROJECT_ID", ' "8rlGBhsk6371eW2KLZm6" ')
             buildConfigField("String", "SIMPRINT_USER_ID", ' "global_user" ')
             buildConfigField("String", "SIMPRINT_MODULE_ID", ' "global_module" ')
-            ext.enableCrashlytics = false
-            testCoverageEnabled true
+            // Unit-test coverage only. Android (on-device) coverage instruments the entire
+            // runtime classpath at dex time, and several OpenSRP AARs are published with
+            // JaCoCo instrumentation already baked in — JaCoCo refuses to double-instrument
+            // them ("Cannot process instrumented class"). Re-enable if upstream ships
+            // non-instrumented artifacts.
+            enableUnitTestCoverage true
+            enableAndroidTestCoverage false
         }
     }
 
@@ -154,9 +147,7 @@ android {
     }
 
     flavorDimensions 'baseDimension'
-    productFlavors {
 
-    }
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
@@ -174,9 +165,12 @@ android {
             buildConfigField "String", 'opensrp_url_debug', '"http://170.187.199.69:8082/opensrp/"'
             buildConfigField "String", 'opensrp_url_staging', '"http://http://170.187.199.69:8082/opensrp/"'
             buildConfigField "String[]", "LOCATION_HIERACHY", '{"Country","Region","District","Ward" , "MOH Jhpiego Facility Name", "Health Facility", "Village", "Village Sublocations"}'
-            buildConfigField "String[]", "ALLOWED_LOCATION_LEVELS", '{"Village"}'
-            buildConfigField "String[]", "ALLOWED_LOCATION_LEVELS_DEBUG", '{"Village"}'
-            buildConfigField "String", 'DEFAULT_LOCATION', '"Village Sublocations"'
+            buildConfigField "String[]", "ALLOWED_LOCATION_LEVELS", '{"Village", "Hamlet"}'
+            buildConfigField "String[]", "ALLOWED_LOCATION_LEVELS_DEBUG", '{"Village", "Hamlet"}'
+            // DEFAULT_LOCATION must be a member of ALLOWED_LOCATION_LEVELS above.
+            // LocationHelper.init() silently no-ops when it is not, leaving the singleton
+            // null and NPE-ing every getInstance() caller (sync included).
+            buildConfigField "String", 'DEFAULT_LOCATION', '"Village"'
             buildConfigField "String", 'DEFAULT_LOCATION_DEBUG', '"Village"'
             buildConfigField "long", "MAPBOX_DOWNLOAD_TILE_LIMIT", "6001"
             buildConfigField "int", "DATABASE_VERSION", '27'
@@ -193,16 +187,48 @@ configurations{
     implementation.exclude module:'gauva-jdk5'
     all*.exclude group: 'com.google.guava', module: 'listenablefuture'
 
-    //Fix duplicate kotlin library
-    implementation.exclude module:'kotlin-stdlib'
-    all*.exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+    // NOTE: kotlin-stdlib must NOT be excluded. kotlin-stdlib-jdk7/jdk8 are thin add-on
+    // artifacts (12 entries) that hold none of the core runtime — kotlin.jvm.internal.Intrinsics
+    // lives in kotlin-stdlib itself. Excluding it dexes an APK without Intrinsics, and every
+    // Kotlin-authored dependency (opensrp-client-chw-referral 1.3.x, neat-form-core) dies with
+    // NoClassDefFoundError on first call. The "duplicate kotlin library" problem this exclusion
+    // was papering over is a version-skew problem, solved below by forcing one Kotlin version.
+
+    // opensrp-client-core still pulls the legacy Fabric Crashlytics SDK (2.10.1) transitively.
+    // Its CrashlyticsInitProvider auto-initialises before Application.onCreate and hard-crashes
+    // with "The Crashlytics build ID is missing" because that build_id resource was only ever
+    // generated by the io.fabric Gradle plugin, dropped in c7c127b0 when we moved to
+    // com.google.firebase:firebase-crashlytics. Nothing on the classpath calls the legacy API
+    // (core's CrashLyticsTree is gated on its own BuildConfig.DEBUG, which is true in the
+    // published AAR), so drop the whole Fabric stack.
+    all*.exclude group: 'com.crashlytics.sdk.android'
+    all*.exclude group: 'io.fabric.sdk.android'
+}
+
+// One Kotlin version across the whole graph. Mixing kotlin-stdlib X with kotlin-stdlib-jdk8 Y is
+// what produces the "Duplicate class kotlin.*" dex errors; pinning removes the cause instead of
+// deleting the stdlib. Pin UP to the highest version anything asks for — androidx core-ktx 1.10.1
+// and annotation-jvm 1.6.0 are compiled against 1.8.x, so pinning down to neat-form's 1.4.20 would
+// trade the NoClassDefFoundError for a NoSuchMethodError. From 1.8.0 the jdk7/jdk8 artifacts are
+// empty shims folded into kotlin-stdlib, so at this version the duplicate-class class of problem
+// cannot recur at all.
+ext.kotlinVersion = '1.8.10'
+
+configurations.all {
+    resolutionStrategy {
+        force "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        force "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion"
+        force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+        force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+        // kotlin-reflect must track the stdlib version exactly — Kotlin does not support
+        // running reflect against a different stdlib.
+        force "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+    }
 }
 
 def githubProperties = new Properties()
 githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
 repositories {
-
-    maven { url "https://central.sonatype.com/" }
 
     maven {
         name = "GitHubPackages"
@@ -280,6 +306,7 @@ repositories {
     }
 
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    mavenLocal()
 }
 
 dependencies {
@@ -296,7 +323,7 @@ dependencies {
         exclude group: 'com.rengwuxian.materialedittext', module: 'library'
     }
 
-    implementation('org.smartregister:opensrp-client-configurable-views:1.1.3-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-configurable-views:1.1.5-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
         exclude group: 'com.android.support', module: 'appcompat-v7'
@@ -311,7 +338,7 @@ dependencies {
         exclude group: 'org.smartregister', module: 'opensrp-client-native-form'
     }
 
-    implementation('org.smartregister:opensrp-client-immunization:1.4.14-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-immunization:2.0.3-beta2-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
         exclude group: 'org.smartregister', module: 'opensrp-client-native-form'
@@ -360,7 +387,7 @@ dependencies {
         exclude group: 'com.simprints', module: 'libsimprints'
     }
 
-    implementation ("org.smartregister:android-p2p-sync:0.3.3-SNAPSHOT"){
+    implementation ("org.smartregister:android-p2p-sync:0.3.6-SNAPSHOT"){
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
         exclude group: 'com.android.support', module: 'appcompat-v7'
@@ -369,7 +396,7 @@ dependencies {
         exclude group: 'com.rengwuxian.materialedittext', module: 'library'
     }
 
-    implementation ('org.smartregister:opensrp-client-reporting:0.0.17-SNAPSHOT@aar') {
+    implementation ('org.smartregister:opensrp-client-reporting:0.0.23-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
         exclude group: 'com.android.support', module: 'appcompat-v7'
@@ -378,7 +405,7 @@ dependencies {
         exclude group: 'com.rengwuxian.materialedittext', module: 'library'
     }
 
-    implementation ("org.smartregister:opensrp-client-chw-referral:1.1.2-SNAPSHOT@aar"){
+    implementation ("org.smartregister:opensrp-client-chw-referral:1.3.16-NACP-SNAPSHOT@aar"){
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
         exclude group: 'com.android.support', module: 'appcompat-v7'
@@ -388,6 +415,10 @@ dependencies {
         exclude group: 'com.github.chivorns.androidx', module: 'smartmaterialspinner'
         exclude group: 'com.nerdstone', module: 'neat-form-core'
     }
+
+    // Declared explicitly so the Kotlin runtime is a first-class dependency of the APK rather
+    // than an accident of whichever transitive graph happens to survive resolution.
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
     implementation 'com.nerdstone:neat-form-core:1.1.4'
     implementation 'org.smartregister:opensrp-client-materialedittext:2.1.6-SNAPSHOT'

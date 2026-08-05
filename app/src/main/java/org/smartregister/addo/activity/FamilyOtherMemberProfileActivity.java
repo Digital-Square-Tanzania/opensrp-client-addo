@@ -29,6 +29,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -545,6 +546,19 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
             String dbRiskScore = JsonFormUtils.getValue(new JSONObject(jsonString), "diabetes_risk_score_output");
             referralFormArray.put(createReferralFormField("diabetes_risk_score", dbRiskScore));
 
+            // Screening measurements. These are captured in step3, but referralFormArray is seeded
+            // from step4, so they have to be pulled out of the whole form explicitly —
+            // JsonFormUtils.getValue searches every step. The keys are renamed on the way to the
+            // concept ids the reference Referral Registration event carries: the form's
+            // systolic_bp/diastolic_bp/family_history_diabetes are not what the server expects.
+            putReferralFieldIfNotBlank(referralFormArray, "family_history_of_dm",
+                    JsonFormUtils.getValue(form, "family_history_diabetes"));
+            putReferralFieldIfNotBlank(referralFormArray, "waist_circumference",
+                    JsonFormUtils.getValue(form, "waist_circumference"));
+            putReferralFieldIfNotBlank(referralFormArray, "systolic",
+                    JsonFormUtils.getValue(form, "systolic_bp"));
+            putReferralFieldIfNotBlank(referralFormArray, "diastolic",
+                    JsonFormUtils.getValue(form, "diastolic_bp"));
 
             //Convert referral appointment date to timestamp
             convertAppointmentDate(fields);
@@ -589,6 +603,16 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
             Timber.e(e);
         }
         return null;
+    }
+
+    /**
+     * Appends a referral obs only when the screening actually captured a value. An obs carrying an
+     * empty string is worse than an absent one for the receiving facility, so blanks are skipped.
+     */
+    private void putReferralFieldIfNotBlank(JSONArray referralFormArray, String key, String value) {
+        if (StringUtils.isNotBlank(value)) {
+            referralFormArray.put(createReferralFormField(key, value));
+        }
     }
 
     private void convertAppointmentDate(JSONArray fields) {

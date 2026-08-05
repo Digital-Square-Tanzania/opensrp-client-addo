@@ -222,6 +222,43 @@ Reference: `"community_to_facility_referral"`. App: `"addo_to_facility_referral"
 **This divergence is intentional and correct.** The referral genuinely originates at an ADDO
 rather than in the community, so the distinct value carries meaning. No code change (2026-08-03).
 
+### 2.10 Screening measurements were absent from the referral event — fixed (C17)
+
+The reference Referral Registration event carries the clinical evidence behind the referral:
+
+| Reference obs | Value in reference | ADDO form key (step3) |
+|---|---|---|
+| `family_history_of_dm` | `"No"` | `family_history_diabetes` |
+| `waist_circumference` | `"40"` | `waist_circumference` |
+| `systolic` | `"160"` | `systolic_bp` |
+| `diastolic` | `"98"` | `diastolic_bp` |
+
+The app emitted **none** of them, so a receiving facility saw the `problem` code and
+`diabetes_risk_score` with nothing underneath.
+
+The cause is structural rather than an omitted line. `createReferralForm` seeds its obs array from
+`form.getJSONObject("step4").getJSONArray("fields")`, but all four measurements are captured in
+**step3** — they are unreachable from that array. `diabetes_risk_score` only survives because
+§2.6's fix pulls it in by hand.
+
+CHW never hits this because `HpsMemberProfileActivity.createReferralForm` builds a
+`HashMap<String, NFormViewData>` and pulls each key individually via
+`JsonFormUtils.getValue(wholeForm, key)`, which searches every step.
+
+The addo fix keeps the existing array-based approach and adds four explicit pulls, mirroring CHW's
+per-field non-blank guards. **The rename matters**: the form's `systolic_bp` / `diastolic_bp` /
+`family_history_diabetes` keys are not the concept ids the server expects — the obs must go out as
+`systolic`, `diastolic`, `family_history_of_dm`. `waist_circumference` is the one key that is
+already correct.
+
+Blank values are skipped rather than emitted empty (`putReferralFieldIfNotBlank`); an obs carrying
+`""` is worse than an absent one for the receiving facility. Consistent with C7, these synthetic
+obs carry no `openmrs_entity_parent`.
+
+Note the four fields are added to the referral event only. They remain on the screening event
+through their own step3 field definitions — this is duplication by design, matching the reference,
+because the referral has to stand alone.
+
 ### 2.9 Retracted proposals
 Three first-pass proposals were made before the real Referral Registration reference arrived, and
 are wrong. Recorded so they are not re-attempted:
